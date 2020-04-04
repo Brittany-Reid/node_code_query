@@ -1,0 +1,22 @@
+{
+  "name": "node-repl",
+  "version": "1.0.0",
+  "description": "Node REPL to query samples from libraries",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/damorimRG/node_code_query.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "all-the-package-names": "^1.3905.0",
+    "axios": "^0.19.2",
+    "fs": "0.0.1-security",
+    "shelljs": "^0.8.3"
+  }
+}
