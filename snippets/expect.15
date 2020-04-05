@@ -1,0 +1,3 @@
+# lessThan/below: asserts <
+expect(0).to.be.below(3);
+expect(1).to.be.lessThan(3);

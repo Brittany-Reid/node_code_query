@@ -1,0 +1,5 @@
+# key/keys: asserts the presence of a key. Supports the only modifier
+expect({ a: 'b' }).to.have.key('a');
+expect({ a: 'b', c: 'd' }).to.only.have.keys('a', 'c');
+expect({ a: 'b', c: 'd' }).to.only.have.keys(['a', 'c']);
+expect({ a: 'b', c: 'd' }).to.not.only.have.key('a');

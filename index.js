@@ -1,32 +1,64 @@
-const shell = require('shelljs');
-const names = require("all-the-package-names");
-const axios = require('axios');
-const fs = require('fs').promises;
+const repl = require('repl');
+const fs = require('fs');
+const path = require('path');
 
-// constants
-const MAX=100;
-const HTML_DIR="./package_home_pages"
+/* constants */
+const version = "1.0.0"
+const snippets_dir = "./snippets"
 
-fs.mkdir(HTML_DIR, (err) => {if (err) throw err; });
+/* library description */
+const library_desc = {}
 
-console.log(`Total of ${names.length} npm packages found, processing ${MAX}.`);
-for (let count=0; count <MAX; count++) {
-    shell.exec(`./view.sh ${names[count]}`, {silent:true}, function(code, stdout, stderr) {
-        url=stdout.replace(/[^\x20-\x7E]/g, '');
-        url=url.slice(4,url.length-4); // TODO: horrible hack. fix it.
-        read_data(names[count], url); // async read page and write to file
+/* read description of snippets from snippets dir */
+fs.readdir(snippets_dir, (err, files) => {
+    files.forEach(file => {
+        // update dictionary with library descriptions
+        if (path.extname(file) == ".desc") {
+            var filepath = path.join(snippets_dir, file)
+            var text = fs.readFileSync(filepath,'utf8');
+            library_desc[file]=text;
+        }
     });
-}
+});
 
-// function will be called asynchronously
-async function read_data(name, url) {
-    try {
-        // blocking until page is completely downloaded
-        let response = await axios.get(url);
-        console.log(`${name} ${url}`);
-        // blocking until file is completely written
-        await fs.writeFile(`${HTML_DIR}/${name}.html`, response.data);
-    } catch (error) {
-        console.error(`could not print to file ${error}`);
-    }
-}
+/* creating REPL */
+const myRepl = repl.start({prompt: "NQL> ", ignoreUndefined: true});
+
+Object.assign(myRepl.context,{
+    help() {
+        console.log("howto(keywords)            searches for snippets from string of keywords");
+        console.log("list_packages(keywords)    searches for packages from string of keywords");        
+        console.log("howto_tasks                searches for snippets from tasks");
+        console.log("tasks                      lists all catalogued tasks");
+        console.log("version                    prints version of library");
+    }});
+
+Object.assign(myRepl.context,{
+    howto(string) {
+        let keywords = string.split(" ");
+        keywords.forEach(key => { console.log(key) })
+    }});
+
+Object.assign(myRepl.context,{
+    list_packages(string) {
+        let keywords = string.split(" ");
+        //TODO: search for keywords
+        console.log(library_desc);
+    }});
+
+Object.assign(myRepl.context,{
+    howto_tasks() {
+        console.log(`--- ONLY listing library descriptions ---}`);
+        console.log(library_desc);
+    }});
+
+Object.assign(myRepl.context,{
+    tasks() {
+        console.log(`--- Not yet implemented ---}`);        
+    }});
+
+
+Object.assign(myRepl.context,{
+    version() {
+        console.log(`Node Query Library (NQL) version ${version}`);        
+    }});

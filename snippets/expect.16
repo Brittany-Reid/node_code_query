@@ -1,0 +1,3 @@
+# fail: explicitly forces failure.
+expect().fail()
+expect().fail("Custom failure message")
