@@ -16,9 +16,11 @@
   "dependencies": {
     "all-the-package-names": "^1.3905.0",
     "axios": "^0.19.2",
+    "bert-as-service": "^1.0.1",
     "fs": "0.0.1-security",
     "path": "^0.12.7",
     "repl": "^0.1.3",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.3",
+    "string-similarity": "^4.0.1"
   }
 }
