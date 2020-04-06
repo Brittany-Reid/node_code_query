@@ -61,8 +61,8 @@ Object.assign(myRepl.context,{
                 console.log(body);
             }
         });
-        
-    }});
+    }
+});
 
 /* list_packages */
 Object.assign(myRepl.context,{
