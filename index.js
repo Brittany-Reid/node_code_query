@@ -1,12 +1,15 @@
 const repl = require('repl');
 const fs = require('fs');
 const path = require('path');
-var string_similarity = require('string-similarity');
+const string_similarity = require('string-similarity');
+const natural = require('natural');
+
 
 /* constants */
 const version = "1.0.0";
 const snippets_dir = "./snippets";
 const threshold_sim = 0.25;
+const tname = "NQL";
 
 /* library description */
 const library_desc = {};
@@ -14,14 +17,19 @@ const library_desc = {};
 /* snippet description */
 const snippets = {};
 
-/* read description of snippets from snippets dir */
+// keywords extracted from package description and snippet description (needs to clean up)
+const tfidf = new natural.TfIdf();
+
+/* read description of snippets from snippets dir and update variable
+ * library_desc and snippets */
 fs.readdir(snippets_dir, (err, files) => {
     files.forEach(file => {
-        var filepath = path.join(snippets_dir, file);
-        var text = fs.readFileSync(filepath, 'utf8');
+        const filepath = path.join(snippets_dir, file);
+        const text = fs.readFileSync(filepath, 'utf8');
         // update dictionaries with library and snippet descriptions
         if (path.extname(file) == ".desc") {
             library_desc[file] = text;
+            tfidf.addDocument(text);
         } else {
             lines = text.split("\n");
             desc = ""; rest = "";
@@ -32,20 +40,28 @@ fs.readdir(snippets_dir, (err, files) => {
                     rest += line + "\n";
                 }                
             });
+            tfidf.addDocument(desc);
+            tfidf.addDocument(rest);
             snippets[desc] = rest.trim();
         }
     });
 });
 
-/* creating REPL */
-const myRepl = repl.start({prompt: "NQL> ", ignoreUndefined: true});
+/* auto-completion function passed to repl.start as option. See:
+ * https://nodejs.org/api/readline.html#readline_use_of_the_completer_function */
+function completer(line) {
+    tfidf.tfidfs('expect', function(i, measure) {
+        console.log('document #' + i + ' is ' + measure);
+    });
+    
+    const completions = '.help .exit version stack reset '.split(' ');
+    const hits = completions.filter((c) => c.startsWith(line));
+    // Show all completions if none found
+    return [hits.length ? hits : completions, line];
+}
 
-Object.assign(myRepl.context,{
-    help() {
-        console.log("list_s(keywords)           searches for snippets from string of keywords");
-        console.log("list_p(keywords)           searches for packages from string of keywords");        
-        console.log("version                    prints version of library");
-    }});
+/* creating REPL */
+const myRepl = repl.start({prompt: tname+"> ", ignoreUndefined: true, completer: completer});
 
 /* list_snippets */
 Object.assign(myRepl.context,{
