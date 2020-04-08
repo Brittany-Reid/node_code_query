@@ -50,11 +50,21 @@ fs.readdir(snippets_dir, (err, files) => {
 /* auto-completion function passed to repl.start as option. See:
  * https://nodejs.org/api/readline.html#readline_use_of_the_completer_function */
 function completer(line) {
-    tfidf.tfidfs('expect', function(i, measure) {
-        console.log('document #' + i + ' is ' + measure);
-    });
+
+    /* showing a list of keywords with lowest (more popular) tfidfs */
+    const terms = {}
+    for (a=0; a<tfidf.documents.length; a++) {
+        tfidf.listTerms(a).forEach(function(item) {
+            terms[item.term] = item.tfidf;
+        });
+    }
+    invTerms={}; Object.keys(terms).forEach(key => invTerms[terms[key]] = key)
+    const sortedKeys = Object.keys(invTerms).map(parseFloat).sort(function(a,b){return a-b;})
+    const common_tfidfs = sortedKeys.slice(0,4); //TODO: create a constant
+    completions = []
+    common_tfidfs.forEach(val => { completions.push(invTerms[val]) })
     
-    const completions = '.help .exit version stack reset '.split(' ');
+    // completions
     const hits = completions.filter((c) => c.startsWith(line));
     // Show all completions if none found
     return [hits.length ? hits : completions, line];
