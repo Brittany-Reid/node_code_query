@@ -35,6 +35,8 @@ fs.readdir(snippets_dir, (err, files) => {
             tfidf.addDocument(removeStopWords(text));
         } else {
             lines = text.split("\n");
+            // separate comments (variable desc) from actual code
+            // (variable rest)
             desc = ""; rest = "";
             lines.forEach(line => {
                 if (line.startsWith("#")) {
