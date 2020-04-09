@@ -1,7 +1,7 @@
 const repl = require('repl');
 const fs = require('fs');
 const path = require('path');
-const string_similarity = require('string-similarity');
+const ss = require('string-similarity-js');
 const natural = require('natural');
 const en = require("stopwords").english;
 const acorn = require("acorn");
@@ -24,7 +24,7 @@ const snippets = {};
 const tfidf = new natural.TfIdf();
 
 // my stop words
-const our_stopwords = [ "package", "js", "based" ]
+const our_stopwords = [ "package", "js", "based", "zero", "providing", "massive", "amounts" ]
 
 /* read description of snippets from snippets dir and update variable
  * library_desc and snippets */
@@ -35,24 +35,19 @@ fs.readdir(snippets_dir, (err, files) => {
         // update dictionaries with library and snippet descriptions
         extension = path.extname(file)
         if (extension == ".desc") {
-            library_desc[file] = text;
+            name = path.basename(file, ".desc")
+            library_desc[name] = text;
+            tfidf.addDocument(name);
             tfidf.addDocument(removeStopWords(text));
-        } else if (! extension == ".ignore") {
-            lines = text.split("\n");
-            // separate comments (variable desc) from actual code
-            // (variable rest)
-            desc = ""; rest = "";
-            lines.forEach(line => {
-                if (line.startsWith("#")) {
-                    desc += line;
-                } else {
-                    rest += line + "\n";
-                }                
-            });
-            console.log(file);
-            tfidf.addDocument(removeStopWords(desc));
-            tfidf.addDocument(removeStopWords(parseJS(rest)));
-            snippets[desc] = rest.trim();
+        } else if (extension != ".ignore") {
+            // associate snippets to packages
+            name = path.basename(file).split(".")[0];
+            set = snippets[name]
+            if (set === undefined) {
+                set = new Set()
+                snippets[name] = set
+            }
+            set.add(text)
         }
     });
 });
@@ -79,57 +74,81 @@ function parseJS(text) {
 /* auto-completion function passed to repl.start as option. See:
  * https://nodejs.org/api/readline.html#readline_use_of_the_completer_function */
 function completer(line) {
-    /* showing a list of keywords with lowest (more popular) tfidfs */
-    const terms = {}
-    for (a=0; a<tfidf.documents.length; a++) {
-        tfidf.listTerms(a).forEach(function(item) {
-            terms[item.term] = item.tfidf;
-        });
-    }
-    // invTerms={}; Object.keys(terms).forEach(key => invTerms[terms[key]] = key)
-    // const sortedKeys = Object.keys(invTerms).map(parseFloat).sort(function(a,b){return a-b;})
-    // const common_tfidfs = sortedKeys.slice(0, NUM_KEYWORDS); //TODO: create a constant
-
-    // 1) add to a set (to remove dups), 2) move to array (to sort), 3) slice most relevant (NUM_KEYS)
-    const common_tfidfs = Array.from(new Set(Object.values(terms))).sort(function(a,b){return a-b;}).slice(0, NUM_KEYWORDS);
-    completions = []
-    Object.keys(terms).forEach(key => { if (common_tfidfs.includes(terms[key]) && !our_stopwords.includes(key)) { completions.push(key) }})
+    const completions = "list() package(<str>) samples<str> tasks<str> help()".split(" ")
     // completions
     const hits = completions.filter((c) => c.startsWith(line));
     // Show all completions if none found
     return [hits.length ? hits : completions, line];
 }
 
+
+    // /* showing a list of keywords with lowest (more popular) tfidfs */
+    // const terms = {}
+    // for (a=0; a<tfidf.documents.length; a++) {
+    //     tfidf.listTerms(a).forEach(function(item) {
+    //         terms[item.term] = item.tfidf;
+    //     });
+    // }
+    // // 1) add to a set (to remove dups), 2) move to array (to sort), 3) slice most relevant (NUM_KEYS)
+    // const common_tfidfs = Array.from(new Set(Object.values(terms))).sort(function(a,b){return a-b;}).slice(0, NUM_KEYWORDS);
+    // completions = []
+    // Object.keys(terms).forEach(key => { if (common_tfidfs.includes(terms[key]) && !our_stopwords.includes(key)) { completions.push(key) }})
+
+
 /* creating REPL */
 const myRepl = repl.start({prompt: tname+"> ", ignoreUndefined: true, completer: completer});
 
-/* list_snippets */
-Object.assign(myRepl.context,{
-    list_s(keys_string) {
-        const keys = Object.keys(snippets);
-        keys.forEach(key => {
-            /* this is a nesty hack. should take code into account*/
-            doc = key;
-            body = snippets[key];
-            var sim = string_similarity.compareTwoStrings(keys_string, doc /* description of snippet */);
-            if (sim >= threshold_sim) {
-                console.log(doc);
-                console.log(body);
-            }
-        });
-    }
-});
-
 /* list_packages */
 Object.assign(myRepl.context,{
-    list_p(string) {
+    list(string) {
+        Object.keys(library_desc).forEach(s => process.stdout.write(s+" "))
+        console.log();
+    }});
+
+Object.assign(myRepl.context,{
+    package(string) {
         for ([key, val] of Object.entries(library_desc)) {
-            console.log(`${key}      ${val}`);
+            if (ss.stringSimilarity(key, string)>0.8) {
+                console.log(`${key}      ${val}`);
+            } else {
+                try {
+                    val.split(" ").forEach(s => {
+                        if (ss.stringSimilarity(s.toLowerCase(), string.toLowerCase())>0.8) {
+                            console.log(`${key}      ${val}`);
+                            throw "break"; /* forEach is unbreakable */
+                        }
+                    })
+                } catch(e) {}
+            }
         }
     }});
+
+/* list_snippets */
+Object.assign(myRepl.context,{
+    samples(string) {
+        set = snippets[string.trim()]
+        if (set == undefined) {
+            console.log("could not find any sample for this package")
+        } else {
+            set.forEach(s => { console.log(s.trim()); console.log("-----") } );
+        }
+
+        
+    }
+});
 
 /* version */
 Object.assign(myRepl.context,{
     version() {
         console.log(`Node Query Library (NQL) version ${version}`);        
+    }});
+
+
+Object.assign(myRepl.context,{
+    help() {
+        console.log("<tab>                     shows functions")
+        console.log(`list()               list packages related to keywords`);
+        console.log(`package(<package-name>)   describe a given package`);
+        console.log(`samples(<package-name>)   list samples catalogued for that package`);
+        console.log(`tasks(<str>)              list tasks related to keywords (may involve multiple packages)`);        
     }});
