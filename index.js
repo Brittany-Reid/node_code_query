@@ -12,7 +12,7 @@ const version = "1.0.0";
 const snippets_dir = "./snippets";
 const threshold_sim = 0.25;
 const tname = "NQL";
-const NUM_KEYWORDS = 5;
+const NUM_KEYWORDS = 20;
 
 /* library description */
 const library_desc = {};
@@ -23,6 +23,9 @@ const snippets = {};
 // keywords extracted from package description and snippet description (needs to clean up)
 const tfidf = new natural.TfIdf();
 
+// my stop words
+const our_stopwords = [ "package", "js", "based" ]
+
 /* read description of snippets from snippets dir and update variable
  * library_desc and snippets */
 fs.readdir(snippets_dir, (err, files) => {
@@ -30,10 +33,11 @@ fs.readdir(snippets_dir, (err, files) => {
         const filepath = path.join(snippets_dir, file);
         const text = fs.readFileSync(filepath, 'utf8');
         // update dictionaries with library and snippet descriptions
-        if (path.extname(file) == ".desc") {
+        extension = path.extname(file)
+        if (extension == ".desc") {
             library_desc[file] = text;
             tfidf.addDocument(removeStopWords(text));
-        } else {
+        } else if (! extension == ".ignore") {
             lines = text.split("\n");
             // separate comments (variable desc) from actual code
             // (variable rest)
@@ -45,6 +49,7 @@ fs.readdir(snippets_dir, (err, files) => {
                     rest += line + "\n";
                 }                
             });
+            console.log(file);
             tfidf.addDocument(removeStopWords(desc));
             tfidf.addDocument(removeStopWords(parseJS(rest)));
             snippets[desc] = rest.trim();
@@ -81,14 +86,15 @@ function completer(line) {
             terms[item.term] = item.tfidf;
         });
     }
-    invTerms={}; Object.keys(terms).forEach(key => invTerms[terms[key]] = key)
-    const sortedKeys = Object.keys(invTerms).map(parseFloat).sort(function(a,b){return a-b;})
-    const common_tfidfs = sortedKeys.slice(0, NUM_KEYWORDS); //TODO: create a constant
-    completions = []
-    common_tfidfs.forEach(val => { completions.push(invTerms[val]) })
-    
-    // completions
+    // invTerms={}; Object.keys(terms).forEach(key => invTerms[terms[key]] = key)
+    // const sortedKeys = Object.keys(invTerms).map(parseFloat).sort(function(a,b){return a-b;})
+    // const common_tfidfs = sortedKeys.slice(0, NUM_KEYWORDS); //TODO: create a constant
 
+    // 1) add to a set (to remove dups), 2) move to array (to sort), 3) slice most relevant (NUM_KEYS)
+    const common_tfidfs = Array.from(new Set(Object.values(terms))).sort(function(a,b){return a-b;}).slice(0, NUM_KEYWORDS);
+    completions = []
+    Object.keys(terms).forEach(key => { if (common_tfidfs.includes(terms[key]) && !our_stopwords.includes(key)) { completions.push(key) }})
+    // completions
     const hits = completions.filter((c) => c.startsWith(line));
     // Show all completions if none found
     return [hits.length ? hits : completions, line];
