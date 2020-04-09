@@ -1,0 +1,8 @@
+it('should be able to validate job expriration key', function (done) {
+  var validJobExpiryKey = Queue._getJobExpiryKey(uuid.v1());
+
+  expect(Queue._isJobExpiryKey(validJobExpiryKey)).to.be.true;
+  expect(Queue._isJobExpiryKey(faker.name.findName())).to.be.false;
+
+  done();
+ });

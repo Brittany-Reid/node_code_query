@@ -1,0 +1,7 @@
+# example
+
+const rates = { usd_eur: 0.91, eur_usd: 1.10 };
+
+responder.on('convert', (req, cb) => {
+    cb(null, req.amount * rates[`${req.from}_${req.to}`]);
+});

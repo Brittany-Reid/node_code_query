@@ -1,0 +1,13 @@
+# Usage with PM2
+
+// In thise case, we choose only the third app instance (2 because it is zero based) to instantiate a "SERVER"
+// any number from 0 through 9 can be used, instead of 2
+if (process.env.pm_id == 2) {
+   const cote = require('cote');
+   const timeService = new cote.Responder({
+      name: 'Time Service'
+   });
+   timeService.on('time', (req, cb) => {
+     cb(new Date());
+   });
+}

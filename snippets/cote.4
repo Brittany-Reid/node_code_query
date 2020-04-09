@@ -1,0 +1,7 @@
+# Let's create and send a convert request, to ask for conversion from USD into EUR.
+
+const request = { type: 'convert', from: 'usd', to: 'eur', amount: 100 };
+
+requester.send(request, (err, res) => {
+  console.log(res);
+});

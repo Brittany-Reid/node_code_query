@@ -1,0 +1,17 @@
+# Example with promises 
+# responder.js
+
+const cote = require('cote');
+const UserModel = require('UserModel'); // a promise-based model API such as
+                                        // mongoose.
+
+const userResponder = new cote.Responder({ name: 'User Responder' });
+
+# requester.js
+
+const userRequester = new cote.Requester({ name: 'User Requester' });
+
+userRequester
+    .send({ type: 'find', query: { username: 'foo' } })
+    .then((user) => console.log(user))
+    .then(process.exit);

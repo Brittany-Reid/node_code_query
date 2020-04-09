@@ -1,0 +1,13 @@
+# Creating a subscriber
+
+const subscriber = new cote.Subscriber({ name: 'arbitration subscriber' });
+
+subscriber.on('rate updated', (update) => {
+    rates[update.currencies] = update.rate;
+});
+
+#conversion-service.js
+const responder = new cote.Responder({ name: 'currency conversion responder', key: 'conversion' });
+
+#client.js
+const requester = new cote.Requester({ name: 'currency conversion requester', key: 'conversion' });
