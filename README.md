@@ -13,4 +13,4 @@ Descriptions.
 ## Instructions:
 
 $> npm install<br>
-$> node index.js
+$> python nql.py
