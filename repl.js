@@ -82,19 +82,6 @@ function completer(line) {
 }
 
 
-    // /* showing a list of keywords with lowest (more popular) tfidfs */
-    // const terms = {}
-    // for (a=0; a<tfidf.documents.length; a++) {
-    //     tfidf.listTerms(a).forEach(function(item) {
-    //         terms[item.term] = item.tfidf;
-    //     });
-    // }
-    // // 1) add to a set (to remove dups), 2) move to array (to sort), 3) slice most relevant (NUM_KEYS)
-    // const common_tfidfs = Array.from(new Set(Object.values(terms))).sort(function(a,b){return a-b;}).slice(0, NUM_KEYWORDS);
-    // completions = []
-    // Object.keys(terms).forEach(key => { if (common_tfidfs.includes(terms[key]) && !our_stopwords.includes(key)) { completions.push(key) }})
-
-
 /* creating REPL */
 const myRepl = repl.start({prompt: tname+"> ", ignoreUndefined: true, completer: completer});
 
