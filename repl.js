@@ -7,12 +7,14 @@ const en = require("stopwords").english;
 const acorn = require("acorn");
 const acornwalk = require("acorn-walk");
 
+
+ARG_PACKS=process.argv.slice(2).reduce((acc,y)=>{acc=acc+y+" "; return acc}, "").trim()
+
 var BASE=__dirname
 parts = BASE.split("/")
 if (parts[parts.length-1] != "node_code_query") {
     BASE=BASE+"/.."
 }
-
 
 /* constants */
 const version = "1.0.0";
@@ -91,7 +93,7 @@ function completer(line) {
 
 
 /* creating REPL */
-const myRepl = repl.start({prompt: tname+"> ", ignoreUndefined: true, completer: completer});
+const myRepl = repl.start({prompt: tname+"["+ARG_PACKS+"]> ", ignoreUndefined: true, completer: completer});
 
 /* list_packages */
 Object.assign(myRepl.context,{
@@ -139,9 +141,9 @@ Object.assign(myRepl.context,{
 
 Object.assign(myRepl.context,{
     help() {
-        console.log("<tab>                     shows functions")
-        console.log(`list()               list packages related to keywords`);
-        console.log(`package(<package-name>)   describe a given package`);
-        console.log(`samples(<package-name>)   list samples catalogued for that package`);
-        console.log(`tasks(<str>)              list tasks related to keywords (may involve multiple packages)`);        
+        console.log("<tab>                    shows functions")
+//        console.log(`list()               list packages related to keywords`);
+        console.log(`package(str)             shows description of a given package`);
+        console.log(`samples(str)             lists samples catalogued for that package`);
+        console.log(`tasks(<str>)             lists tasks related to keywords (may involve multiple packages)`);        
     }});
