@@ -10,7 +10,7 @@ The general goal is to improve the productivity of nodejs developers by providin
 
 Here is a demo I prepared to give a very rough idea of the project.
 
-[![Playground REPL video](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z/0.jpg)](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z)
+[![REPL video](https://img.1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z/0.jpg)](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z)
 
 
 ## Installation
