@@ -1,0 +1,10 @@
+# Exceptions that occur using synchronous operations are thrown immediately and may be handled using try…catch, or may be allowed to bubble up.
+
+const fs = require('fs');
+
+try {
+  fs.unlinkSync('/tmp/hello');
+  console.log('successfully deleted /tmp/hello');
+} catch (err) {
+  // handle the error
+}

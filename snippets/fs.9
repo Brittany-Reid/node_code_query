@@ -1,0 +1,7 @@
+# URL object support
+## For most fs module functions, the path or filename argument may be passed as a WHATWG URL object. Only URL objects using the file: protocol are supported.
+
+const fs = require('fs');
+const fileUrl = new URL('file:///tmp/hello');
+
+fs.readFileSync(fileUrl);

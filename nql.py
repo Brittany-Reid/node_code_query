@@ -1,4 +1,4 @@
-import click
+#import click
 import os
 from cmd import Cmd
 import glob

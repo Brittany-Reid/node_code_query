@@ -35,6 +35,22 @@ const tfidf = new natural.TfIdf();
 // my stop words
 const our_stopwords = [ "package", "js", "based", "zero", "providing", "massive", "amounts" ]
 
+/*
+ASSÍNCRONO
+fs.readFile(filename, [encoding], [callback])
+
+fs.readFile('/etc/passwd', function (err, data) {
+  if (err) throw err;
+  console.log(data);
+});
+
+SÍNCRONO
+fs.readFileSync(filename, [encoding])
+
+var text = fs.readFileSync('test.md','utf8')
+console.log (text)
+/*
+
 
 /* read description of snippets from snippets dir and update variable
  * library_desc and snippets */

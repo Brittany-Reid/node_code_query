@@ -1,0 +1,3 @@
+# If options is a string, then it specifies the encoding:
+
+fs.appendFileSync('message.txt', 'data to append', 'utf8');

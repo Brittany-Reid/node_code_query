@@ -30,3 +30,4 @@ async function read_data(name, url) {
         console.error(`could not print to file ${error}`);
     }
 }
+

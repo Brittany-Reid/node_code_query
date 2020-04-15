@@ -1,0 +1,11 @@
+# fs.accessSync(path[, mode])
+# Synchronously tests a user's permissions for the file or directory specified by path. The mode argument is an optional integer that specifies the accessibility checks to be performed. Check File Access Constants for possible values of mode. It is possible to create a mask consisting of the bitwise OR of two or more values (e.g. fs.constants.W_OK | fs.constants.R_OK).
+
+try {
+  fs.accessSync('etc/passwd', fs.constants.R_OK | fs.constants.W_OK);
+  console.log('can read/write');
+} catch (err) {
+  console.error('no access!');
+}
+
+

@@ -1,0 +1,11 @@
+# fs.appendFileSync(path, data[, options])
+# Synchronously append data to a file, creating the file if it does not yet exist. data can be a string or a Buffer.
+
+try {
+  fs.appendFileSync('message.txt', 'data to append');
+  console.log('The "data to append" was appended to file!');
+} catch (err) {
+  /* Handle the error */
+}
+
+

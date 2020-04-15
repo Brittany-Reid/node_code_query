@@ -1,0 +1,13 @@
+# file: URLs with drive letters must use : as a separator just after the drive letter. Using another separator will result in a throw.
+# On all other platforms, file: URLs with a host name are unsupported and will result in a throw:
+
+// On other platforms:
+
+// - WHATWG file URLs with hostname are unsupported
+// file://hostname/p/a/t/h/file => throw!
+fs.readFileSync(new URL('file://hostname/p/a/t/h/file'));
+// TypeError [ERR_INVALID_FILE_URL_PATH]: must be absolute
+
+// - WHATWG file URLs convert to absolute path
+// file:///tmp/hello => /tmp/hello
+fs.readFileSync(new URL('file:///tmp/hello'));

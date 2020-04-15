@@ -1,0 +1,13 @@
+# Example using a relative path on POSIX (relative to process.cwd()):
+
+fs.opfs.open('file.txt', 'r', (err, fd) => {
+  if (err) throw err;
+  fs.close(fd, (err) => {
+    if (err) throw err;
+  });
+});en('file.txt', 'r', (err, fd) => {
+  if (err) throw err;
+  fs.close(fd, (err) => {
+    if (err) throw err;
+  });
+});

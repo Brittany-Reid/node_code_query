@@ -1,0 +1,25 @@
+# bigint version:
+
+BigIntStats {
+  dev: 2114n,
+  ino: 48064969n,
+  mode: 33188n,
+  nlink: 1n,
+  uid: 85n,
+  gid: 100n,
+  rdev: 0n,
+  size: 527n,
+  blksize: 4096n,
+  blocks: 8n,
+  atimeMs: 1318289051000n,
+  mtimeMs: 1318289051000n,
+  ctimeMs: 1318289051000n,
+  birthtimeMs: 1318289051000n,
+  atimeNs: 1318289051000000000n,
+  mtimeNs: 1318289051000000000n,
+  ctimeNs: 1318289051000000000n,
+  birthtimeNs: 1318289051000000000n,
+  atime: Mon, 10 Oct 2011 23:24:11 GMT,
+  mtime: Mon, 10 Oct 2011 23:24:11 GMT,
+  ctime: Mon, 10 Oct 2011 23:24:11 GMT,
+  birthtime: Mon, 10 Oct 2011 23:24:11 GMT }
