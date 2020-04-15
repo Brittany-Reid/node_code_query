@@ -13,8 +13,6 @@ Here is a demo I prepared to give a very rough idea of the project.
 [![Playground REPL video](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z/0.jpg)](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z)
 
 
-<iframe src="https://onedrive.live.com/embed?cid=99204CD5AC16BF81&resid=99204CD5AC16BF81%211988&authkey=AKysgPziI6tLpOo" width="98" height="120" frameborder="0" scrolling="no" allowfullscreen></iframe>
-
 ## Installation
 
 OS X & Linux:
