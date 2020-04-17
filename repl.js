@@ -100,7 +100,7 @@ function parseJS(text) {
 /* auto-completion function passed to repl.start as option. See:
  * https://nodejs.org/api/readline.html#readline_use_of_the_completer_function */
 function completer(line) {
-    const completions = "list() samples<str> tasks<str> help()".split(" ")
+    const completions = "list() samples(<str>) tasks(<str>) help()".split(" ")
     // completions
     const hits = completions.filter((c) => c.startsWith(line));
     // Show all completions if none found
@@ -112,11 +112,11 @@ function completer(line) {
 const myRepl = repl.start({prompt: tname+"["+ARG_PACKS+"]> ", ignoreUndefined: true, completer: completer});
 
 /* list_packages */
-Object.assign(myRepl.context,{
-    list(string) {
-        Object.keys(library_desc).forEach(s => process.stdout.write(s+" "))
-        console.log();
-    }});
+// Object.assign(myRepl.context,{
+//     list(string) {
+//         Object.keys(library_desc).forEach(s => process.stdout.write(s+" "))
+//         console.log();
+//     }});
 
 // Object.assign(myRepl.context,{
 //     package(string) {
@@ -135,6 +135,13 @@ Object.assign(myRepl.context,{
 //             }
 //         }
 //     }});
+
+Object.assign(myRepl.context,{
+    exit(string) {
+        process.exit(0);
+    }
+});
+
 
 /* list_snippets */
 Object.assign(myRepl.context,{

@@ -1,4 +1,4 @@
-#import click
+#!/usr/bin/env python3
 import os
 from cmd import Cmd
 import glob
@@ -23,7 +23,7 @@ class MyPrompt(Cmd):
    def do_list_packages(self, inp):
       '''List packages...'''
       path = os.path.join(HERE, "snippets")
-      files = [f for f in glob.glob(path + "**/*.desc", recursive=False)]
+      files = [f for f in glob.glob(path + "**/*.desc")]
       name = ""
       for f in files:
          name += os.path.basename(f).split(".")[0] + "  "
