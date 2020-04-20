@@ -1,0 +1,6 @@
+# fs.exists(path, callback)
+
+fs.exists('/etc/passwd', (exists) => {
+  console.log(exists ? 'it\'s there' : 'no passwd!');
+});
+

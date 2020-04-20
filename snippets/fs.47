@@ -1,0 +1,11 @@
+# When the path is a directory, the behavior of fs.readFile() and fs.readFileSync() is platform-specific. 
+
+// macOS, Linux, and Windows
+fs.readFile('<directory>', (err, data) => {
+  // => [Error: EISDIR: illegal operation on a directory, read <directory>]
+});
+
+//  FreeBSD
+fs.readFile('<directory>', (err, data) => {
+  // => null, <data>
+});

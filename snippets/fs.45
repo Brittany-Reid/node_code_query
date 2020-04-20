@@ -1,0 +1,6 @@
+# Asynchronously reads the entire contents of a file.
+
+fs.readFile('/etc/passwd', (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});

@@ -1,0 +1,6 @@
+# Asynchronously rename file at oldPath to the pathname provided as newPath
+
+fs.rename('oldFile.txt', 'newFile.txt', (err) => {
+  if (err) throw err;
+  console.log('Rename complete!');
+});

@@ -1,0 +1,12 @@
+# read (NOT RECOMMENDED)
+
+fs.exists('myfile', (exists) => {
+  if (exists) {
+    fs.open('myfile', 'r', (err, fd) => {
+      if (err) throw err;
+      readMyData(fd);
+    });
+  } else {
+    console.error('myfile does not exist');
+  }
+});

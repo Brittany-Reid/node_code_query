@@ -8,9 +8,7 @@
 
 The general goal is to improve the productivity of nodejs developers by providing better access to snippets/samples of packages and self-contained tasks, and an environment that enables them to quickly reproduce these artifacts.
 
-Here is a demo I prepared to give a very rough idea of the project.
-
-[![REPL video](https://img.1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z/0.jpg)](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z)
+[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.
 
 
 ## Installation

@@ -1,0 +1,14 @@
+# fs.ftruncate(fd[, len], callback)
+
+console.log(fs.readFileSync('temp.txt', 'utf8'));
+// Prints: Node.js
+
+// get the file descriptor of the file to be truncated
+const fd = fs.openSync('temp.txt', 'r+');
+
+// Truncate the file to first four bytes
+fs.ftruncate(fd, 4, (err) => {
+  assert.ifError(err);
+  console.log(fs.readFileSync('temp.txt', 'utf8'));
+});
+// Prints: Node
