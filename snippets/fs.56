@@ -1,0 +1,6 @@
+# If options is a string, then it specifies the encoding:
+
+fs.writeFile('message.txt', 'Hello Node.js', 'utf8', callback);
+
+
+

@@ -1,0 +1,14 @@
+# opening a directory on macOS and Linux with the 'a+' flag, as in the example below, will return an error. In contrast, on Windows and FreeBSD, a file descriptor or a FileHandle will be returned.
+
+// macOS and Linux
+fs.open('<directory>', 'a+', (err, fd) => {
+  // => [Error: EISDIR: illegal operation on a directory, open <directory>]
+});
+
+// Windows and FreeBSD
+fs.open('<directory>', 'a+', (err, fd) => {
+  // => null, <fd>
+});
+
+
+

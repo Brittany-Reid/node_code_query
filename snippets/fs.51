@@ -1,0 +1,3 @@
+# Relative targets are relative to the link’s parent directory.
+
+fs.symlink('./mew', './example/mewtwo', callback);

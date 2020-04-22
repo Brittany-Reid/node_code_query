@@ -25,6 +25,7 @@
     "fs": "0.0.1-security",
     "inquirer": "^7.1.0",
     "natural": "^0.6.3",
+    "nltk": "0.0.1",
     "path": "^0.12.7",
     "prompts": "^2.3.2",
     "repl": "^0.1.3",

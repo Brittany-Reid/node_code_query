@@ -1,0 +1,21 @@
+# Changes the ownership of a file then resolves the Promise with no arguments upon success.
+
+const {
+  promises: fsPromises,
+  constants: {
+    COPYFILE_EXCL
+  }
+} = require('fs');
+
+// destination.txt will be created or overwritten by default.
+fsPromises.copyFile('source.txt', 'destination.txt')
+  .then(() => console.log('source.txt was copied to destination.txt'))
+  .catch(() => console.log('The file could not be copied'));
+
+// By using COPYFILE_EXCL, the operation will fail if destination.txt exists.
+fsPromises.copyFile('source.txt', 'destination.txt', COPYFILE_EXCL)
+  .then(() => console.log('source.txt was copied to destination.txt'))
+  .catch(() => console.log('The file could not be copied'));
+
+
+

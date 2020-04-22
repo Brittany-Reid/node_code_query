@@ -21,6 +21,8 @@ sudo npm install -g npm@latest
 sudo npm cache clean -f
 sudo npm install -g n
 sudo n stable
+pip3 install lxml
+pip3 install jupyterlab
 ```
 
 Windows:
