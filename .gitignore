@@ -4,3 +4,4 @@ package_home_pages
 tmp1 
 readmes
 popular.json
+*.pyc
