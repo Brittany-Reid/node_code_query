@@ -1,7 +1,11 @@
+*.pyc
+.DS_Store
+.vscode/settings.json
+
 **/*~
 node_modules
 package_home_pages
 tmp1 
 readmes
 popular.json
-*.pyc
+
