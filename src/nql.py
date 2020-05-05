@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import glob
+import sys
 import shutil
 import asyncio
 import selectors
@@ -8,9 +9,11 @@ from cli.prompt_cmd import PromptCmd
 from data_handler import DataHandler
 from cli.suggestion_completer import SuggestionCompleter
 from prompt_toolkit import PromptSession
+import prompt_toolkit
 import cli.key_bindings
 import cli.bottom_toolbar
 import globals
+from cli.interactive_shell import InteractiveShell
 
 HERE=os.path.dirname(os.path.realpath(__file__))
 counter=0
@@ -47,6 +50,14 @@ class MyPrompt(PromptCmd):
             name += f + " "
         print(name)
 
+    #test function for handling node shell
+    def do_shell(self, inp):
+        try:
+            InteractiveShell().run()
+        except KeyboardInterrupt:
+            #do things here
+            print("exited")
+        
     ## repl
     def do_repl(self, inp):
         print (inp)
@@ -59,6 +70,9 @@ class MyPrompt(PromptCmd):
                 return False
         counter=counter + 1
         pathname=os.path.join(HERE, "tmp"+str(counter))
+        #if directory exists 
+        if os.path.exists(pathname):
+            shutil.rmtree(pathname, ignore_errors=True)
         ## create directory
         os.mkdir(pathname)
         ## copy repl.js and package.json.* within
@@ -144,4 +158,11 @@ class Nql():
 
 
 if __name__ == '__main__':
-    Nql().run()
+    try:
+        Nql().run()
+    #catch ctrl c and close cleanly
+    except KeyboardInterrupt:
+        try:
+            sys.exit(1)
+        except SystemExit:
+            os._exit(1)
