@@ -13,7 +13,7 @@ The general goal is to improve the productivity of nodejs developers by providin
 
 ## Installation
 
-OS X & Linux:
+#### OS X & Linux:
 
 ```sh
 sudo apt-get install npm
@@ -25,17 +25,17 @@ pip3 install lxml
 pip3 install jupyterlab
 ```
 
-Windows:
+#### Windows:
 
-```sh
-...
-```
+1. Download and install Node.js (https://nodejs.org/en/).
+2. Clone Repository.
+3. run `npm install` in the repository directory to install dependencies.
 
 ## Instructions:
 
 ```sh
 npm install
-python nql.py
+node ncq/ncq
 ```
 
 ## Usage example
