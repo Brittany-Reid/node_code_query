@@ -43,6 +43,9 @@ class Suggestion extends AutoComplete {
   getHistory(action = "prev") {
     if (!this.store) return this.alert();
     var prev = this.data.past;
+    if(!prev || prev.length < 1){
+      return this.alert();
+    }
 
     if (this.hIndex == -1) {
       this.hIndex = prev.length;
