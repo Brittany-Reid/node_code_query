@@ -2,7 +2,7 @@
   "name": "node_code_query",
   "version": "1.0.0",
   "description": "Node REPL to query samples from libraries",
-  "main": "ncq.js",
+  "main": "ncq/ncq.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/damorimRG/node_code_query.git"
