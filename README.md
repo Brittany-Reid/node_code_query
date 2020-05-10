@@ -29,13 +29,13 @@ pip3 install jupyterlab
 
 1. Download and install Node.js (https://nodejs.org/en/).
 2. Clone Repository.
-3. run `npm install` in the repository directory to install dependencies.
+3. Run `npm install` in the repository directory to install dependencies.
 
 ## Instructions:
 
 ```sh
 npm install
-node ncq/ncq
+npm start
 ```
 
 ## Usage example

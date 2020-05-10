@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/damorimRG/node_code_query.git"
   },
+  "scripts": {
+    "start": "node ncq/ncq"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

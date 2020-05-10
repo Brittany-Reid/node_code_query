@@ -11,6 +11,10 @@ Our main program. From here we can start a repl with specified packages.
 */
 
 var ROOT = process.cwd();
+//fall back if we run from node_code_query/ncq
+if(path.dirname(ROOT) != "node_code_query"){
+  ROOT = path.join(ROOT, "../");
+}
 var SNIPPETDIR = path.join(ROOT, "data/snippets");
 var packages = [];
 var counter = 0;
