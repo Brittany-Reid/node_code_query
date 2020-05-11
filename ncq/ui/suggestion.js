@@ -2,6 +2,8 @@ const { AutoComplete } = require("enquirer");
 const { keypress } = require("enquirer");
 const unique = arr => arr.filter((v, i) => arr.lastIndexOf(v) === i);
 const compact = arr => unique(arr).filter(Boolean);
+const chalk = require("chalk");
+const {to_width, width_of} = require("to-width");
 
 class Suggestion extends AutoComplete {
   constructor(options) {
@@ -20,6 +22,10 @@ class Suggestion extends AutoComplete {
     //to display suggestions
     this.isSuggesting = false;
     this.hIndex = -1;
+
+    //formatting
+    this.maxwitdh = 0;
+    this.filtered = [];
   }
 
   /**
@@ -145,19 +151,36 @@ class Suggestion extends AutoComplete {
   suggest(input = this.input, choices = this.state._choices) {
     //if we are not suggesting, return no suggestions
     if (!this.isSuggesting) {
-      return [];
+      this.filtered = [];
+      return this.filtered;
     }
 
     //get string to use as a substring from when we pressed tab and what we have written now
     let str = input.toLowerCase().substring(this.suggestionStart, this.cursor);
 
-    const filtered = choices
+    this.filtered = choices
       .filter((ch) => !ch._userInput)
       .filter((ch) => ch.message.toLowerCase().includes(str));
-    if (!filtered.length && this.options.inputNoChoice) {
-      return [];
+    if (!this.filtered.length && this.options.inputNoChoice) {
+      this.filtered = [];
+      return this.filtered;
     }
-    return filtered;
+
+    this.getWidth(this.filtered);
+
+    return this.filtered;
+  }
+
+  /**
+   * Calculate max width of suggestions.
+   */
+  getWidth(choices){
+    var max = 0;
+    choices.forEach(element => {
+      var width = width_of(element.message);
+      max = Math.max(max, width);
+    });
+    this.maxwitdh = max;
   }
 
   /**
@@ -180,6 +203,68 @@ class Suggestion extends AutoComplete {
 
     //set cursor
     this.cursor = cursor;
+  }
+
+/**
+ * Overwrite choice rendering to add background colour.
+ */
+  async renderChoice(choice, i) {
+    await this.onChoice(choice, i);
+
+    let focused = this.index === i;
+    let pointer = await this.pointer(choice, i);
+    let check = await this.indicator(choice, i) + (choice.pad || '');
+    let hint = await this.resolve(choice.hint, this.state, choice, i);
+
+    if (hint && !utils.hasColor(hint)) {
+      hint = this.styles.muted(hint);
+    }
+
+    let ind = this.indent(choice);
+    let msg = await this.choiceMessage(choice, i);
+    let line = () => [this.margin[3], ind + pointer + check, msg, this.margin[1], hint].filter(Boolean).join(' ');
+
+    if (choice.role === 'heading') {
+      return line();
+    }
+
+    if (choice.disabled) {
+      if (!utils.hasColor(msg)) {
+        msg = this.styles.disabled(msg);
+      }
+      return line();
+    }
+
+
+    //set width of message
+    msg = to_width(msg, this.maxwitdh+2, {align: 'left'})
+    //if we're displaying more than allowed add arrows
+    if(this.filtered.length > this.limit){
+      if(i == 0){
+        msg = msg + "▲";
+      }
+      else if(i==this.limit-1){
+        msg = msg + "▼"
+      }
+    }
+    msg = to_width(msg, this.maxwitdh+4, {align: 'left'})
+    msg = to_width(msg, this.maxwitdh+5, {align: 'right'})
+
+    //set colours
+    if (focused) {
+      msg = chalk.bgRgb(100, 100, 100)(msg);
+    }
+    else{
+      msg = chalk.bgRgb(130, 130, 130)(msg);
+      msg = chalk.black(msg);
+    }
+
+    //indent to where we pressed tab
+    var indent = width_of(this.state.prompt + this.input.substring(0, this.suggestionStart));
+    msg = to_width("", indent) + msg;
+
+
+    return line();
   }
 
   /**

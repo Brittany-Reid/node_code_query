@@ -1,6 +1,7 @@
 const Suggestion = require("./suggestion");
 const Store = require('data-store');
 const actions = require('enquirer/lib/combos');
+const colors = require('ansi-colors');
 const custom = {tab: 'tab'};
 actions.keys = { ...actions.keys, ...custom };
 

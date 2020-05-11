@@ -14,13 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^4.0.0",
     "data-store": "^4.0.3",
     "enquirer": "^2.3.5",
-    "event-stream": "^4.0.1",
     "fs": "0.0.1-security",
     "fs-extra": "^9.0.0",
     "natural": "^2.1.3",
     "rimraf": "^3.0.2",
-    "stopwords": "0.0.9"
+    "stopwords": "0.0.9",
+    "to-width": "^1.0.4"
   }
 }
