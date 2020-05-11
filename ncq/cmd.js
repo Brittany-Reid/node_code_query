@@ -1,13 +1,12 @@
-const es = require("event-stream");
-var readline = require("readline");
+const readline = require("readline");
+const Prompt = require("./ui/prompt");
 
 /**
  * Adapted from python Cmd. Extend to add or overwrite functions.
  */
 class Cmd {
-  constructor(input=process.stdin, output=process.stdout) {
+  constructor(input) {
     this.input = input;
-    this.output = output;
     this.lastcmd = "";
     this.doc_leader = "";
     this.doc_header = "Documented commands (type help <topic>):";
@@ -21,29 +20,43 @@ class Cmd {
    * Main run function. Starts up the cmd.
    */
   run() {
-    //begin taking input
-    this.acceptInput();
+    this.cmdLoop();
+  }
+
+  async acceptInput() {
+    return await this.input.run();
+  }
+
+  cmdLoop() {
+    this.acceptInput().then((response) => {
+      this.oncmd(response);
+      this.cmdLoop();
+    }).catch((e) => {
+      console.log(e);
+    });
   }
 
   /**
-   * Accepst input from stdin.
+   * https://github.com/SBoudrias/Inquirer.js/issues/792
+   * We need to 'reset' the stdin before running a child_process.
    */
-  acceptInput() {
-    //process.stdin.pipe(es.split()).on("data", this.oncmd.bind(this));
-
-    var rl = readline.createInterface({
-      input: this.input,
-      output: this.output,
-      terminal: false,
+  resetStdin() {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
     });
-    rl.on("line", this.oncmd.bind(this));
+    rl.close();
   }
 
+  /**
+   * Preform some action on command.
+   * Looks for functions starting with do_
+   */
   oncmd(line) {
     var parsed = this.parseline(line);
     var cmd = parsed[0];
     var args = parsed[1];
-
+    
     if (line == "") {
       return this.emptyline();
     }
@@ -64,16 +77,6 @@ class Cmd {
       }
       return func.call(this, args);
     }
-  }
-
-  getnames() {
-    let methods = new Set();
-    var obj = this;
-    while ((obj = Reflect.getPrototypeOf(obj))) {
-      let keys = Reflect.ownKeys(obj);
-      keys.forEach((k) => methods.add(k));
-    }
-    return methods;
   }
 
   parseline(line) {
@@ -99,6 +102,16 @@ class Cmd {
     var cmd = line.substring(0, i);
     var args = line.substring(i).trim();
     return [cmd, args, line];
+  }
+
+  getnames() {
+    let methods = new Set();
+    var obj = this;
+    while ((obj = Reflect.getPrototypeOf(obj))) {
+      let keys = Reflect.ownKeys(obj);
+      keys.forEach((k) => methods.add(k));
+    }
+    return methods;
   }
 
   help_exit(arg) {

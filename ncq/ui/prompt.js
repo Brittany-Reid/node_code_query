@@ -9,23 +9,26 @@ actions.keys = { ...actions.keys, ...custom };
  */
 class Prompt{
     constructor(suggestions = [], prefix = "NCQ", message = ""){
+        this.suggestions = suggestions;
+        this.prefix = prefix;
+        this.message = message;
+    }
+
+    async run(){
         this.prompt = new Suggestion({
             name: "",
-            message: message,
+            message: this.message,
             separator: "> ",
-            prefix: prefix,
+            prefix: this.prefix,
             limit: 4,
             inputNoChoice: true,
             initial: 2,
-            choices: suggestions,
+            choices: this.suggestions,
             history: {
                 store : new Store({ path: `${process.cwd()}/history.json` }),
                 autosave: true,
             }
         });
-    }
-
-    async run(){
         return await this.prompt.run();
     }
 }
