@@ -28,12 +28,14 @@ class Cmd {
   }
 
   cmdLoop() {
-    this.acceptInput().then((response) => {
-      this.oncmd(response);
-      this.cmdLoop();
-    }).catch((e) => {
-      console.log(e);
-    });
+    this.acceptInput()
+      .then((response) => {
+        this.oncmd(response);
+        this.cmdLoop();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   /**
@@ -56,7 +58,7 @@ class Cmd {
     var parsed = this.parseline(line);
     var cmd = parsed[0];
     var args = parsed[1];
-    
+
     if (line == "") {
       return this.emptyline();
     }

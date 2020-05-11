@@ -123,7 +123,7 @@ class ncqCmd extends Cmd {
     var args = ["repl.js"];
     args.push(required);
     args.push("--save");
-    cprocess.execSync("node repl.js " + required.join(" ") + " --save", {stdio : 'inherit'});
+    cprocess.execSync("node repl.js " + required.join(" "), {stdio : 'inherit'});
 
     //return to our directory
     process.chdir(ROOT);

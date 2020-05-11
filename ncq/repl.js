@@ -49,38 +49,44 @@ ARG_PACKS = process.argv
 /* read description of snippets from snippets dir and update variable
  * library_desc and snippets */
 fs.readdir(snippets_dir, (err, files) => {
-  files.forEach(file => {
-      const filepath = path.join(snippets_dir, file);
-      const text = fs.readFileSync(filepath, 'utf8');
-      // update dictionaries with library and snippet descriptions
-      extension = path.extname(file)
-      if (extension == ".desc") {
-          name = path.basename(file, ".desc")
-          library_desc[name] = text;
-          tfidf.addDocument(name);
-          tfidf.addDocument(removeStopWords(text));
-      } else if (extension != ".ignore") {
-          // associate snippets to packages
-          name = path.basename(file).split(".")[0];
-          set = snippets[name]
-          if (set === undefined) {
-              set = new Set()
-              snippets[name] = set
-          }
-          set.add(text)
+  files.forEach((file) => {
+    const filepath = path.join(snippets_dir, file);
+    const text = fs.readFileSync(filepath, "utf8");
+    // update dictionaries with library and snippet descriptions
+    extension = path.extname(file);
+    if (extension == ".desc") {
+      name = path.basename(file, ".desc");
+      library_desc[name] = text;
+      tfidf.addDocument(name);
+      tfidf.addDocument(removeStopWords(text));
+    } else if (extension != ".ignore") {
+      // associate snippets to packages
+      name = path.basename(file).split(".")[0];
+      set = snippets[name];
+      if (set === undefined) {
+        set = new Set();
+        snippets[name] = set;
       }
+      set.add(text);
+    }
   });
 });
 
 /* remove stopwords from text */
 function removeStopWords(text) {
-  textClean = "" 
-  text.split(" ").forEach(s => { if (!en.includes(s.trim())) textClean = textClean+" "+s })
+  textClean = "";
+  text.split(" ").forEach((s) => {
+    if (!en.includes(s.trim())) textClean = textClean + " " + s;
+  });
   return textClean;
 }
 
 //get a readable that uses prompts for input
-var pReadable = new PromptReadable(["This is a suggestion."], tname, "["+ARG_PACKS+"]");
+var pReadable = new PromptReadable(
+  ["This is a suggestion."],
+  tname,
+  "[" + ARG_PACKS + "]"
+);
 
 //set up repl with this as input and stdout as output
 var myRepl = repl.start({
