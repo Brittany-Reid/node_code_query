@@ -1,16 +1,17 @@
 const stream = require("stream");
-//const PromptHandler = require("./prompthandlers/prompthandler");
-const CodePromptHandler = require("./prompthandlers/codeprompthandler");
+const PromptHandler = require("./prompt-handler");
+const CodePrompt = require("./prompts/code-prompt");
 
 /**
  * Custom extended Readable that prompts a user for input on read().
  */
 class PromptReadable extends stream.Readable {
-  constructor(suggestions = [], prefix="NCQ", message ="", options) {
+  constructor(suggestions = [], prefix="NCQ", message ="", snippets = [], options) {
     super(options);
     this.suggestions = suggestions;
     this.prefix = prefix;
     this.message = message;
+    this.snippets = snippets;
   }
 
   /**
@@ -18,7 +19,13 @@ class PromptReadable extends stream.Readable {
    * Overwrite this to use a custom prompt.
    */
   async prompt() {
-    this.p = new CodePromptHandler([], this.prefix, this.message);
+    this.p = new PromptHandler(CodePrompt, {
+      prefix : this.prefix,
+      message : this.message,
+      snippets : this.snippets,
+      multiline : true,
+      history : {},
+    });
     //this.p = new Prompt(this.suggestions, this.prefix, this.message);
   }
 

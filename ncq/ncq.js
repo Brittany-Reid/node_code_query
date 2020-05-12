@@ -4,7 +4,10 @@ const path = require("path");
 const rimraf = require("rimraf");
 const fse = require("fs-extra");
 const cprocess = require("child_process");
-const PromptHandler = require("./ui/prompthandlers/prompthandler");
+//const PromptHandler = require("./ui/prompthandlers/prompthandler");
+const {Input} = require("enquirer");
+const SuggestionPrompt = require("./ui/prompts/suggestion-prompt");
+const PromptHandler = require("./ui/prompt-handler");
 
 /*
 Our main program. From here we can start a repl with specified packages.
@@ -90,12 +93,12 @@ class ncqCmd extends Cmd {
 
     //check packages
     var required = inp.split(" ");
-    required.forEach((pack) => {
-      if (!packages.includes(pack)) {
-        console.log("could not find package " + pack + " cannot create repl");
+    for (let i = 0; i < required.length; i++) {
+      if (!packages.includes(required[i])) {
+        console.log("could not find package " + required[i] + " cannot create repl");
         return false;
       }
-    });
+    }
 
     //make temp
     counter++;
@@ -146,6 +149,12 @@ class ncqCmd extends Cmd {
 
 loadPackages();
 
-var myPrompt = new PromptHandler(packages.slice());
+var myPrompt = new PromptHandler(SuggestionPrompt, {
+  choices : packages.slice(),
+});
+//myPrompt.run();
+
+
+// var myPrompt = new PromptHandler(packages.slice());
 
 new ncqCmd(myPrompt).run();

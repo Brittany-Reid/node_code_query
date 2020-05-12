@@ -85,7 +85,8 @@ function removeStopWords(text) {
 var pReadable = new PromptReadable(
   ["This is a suggestion."],
   tname,
-  "[" + ARG_PACKS + "]"
+  "[" + ARG_PACKS + "]",
+  ["var a = 0;\n a=a+1;\n", "console.log(\"string\");"]
 );
 
 //set up repl with this as input and stdout as output

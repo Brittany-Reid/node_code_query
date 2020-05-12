@@ -7,7 +7,6 @@ const { Input } = require("enquirer");
 class CodePrompt extends Input {
   constructor(options) {
     super(options);
-    console.log(this.multiline);
     this.snippetIndex = -1;
     this.snippets = this.options.snippets;
     if (this.snippets.length > 0) {
