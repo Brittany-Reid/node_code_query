@@ -24,6 +24,8 @@ class PromptReadable extends stream.Readable {
       message : this.message,
       snippets : this.snippets,
       multiline : true,
+      choices : ["a", "b"],
+      initial : "",
       history : {},
     });
     //this.p = new Prompt(this.suggestions, this.prefix, this.message);

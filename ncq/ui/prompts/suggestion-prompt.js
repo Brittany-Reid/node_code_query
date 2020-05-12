@@ -259,12 +259,22 @@ class SuggestionPrompt extends AutoComplete {
       msg = chalk.black(msg);
     }
 
-    //indent to where we pressed tab
-    var indent = width_of(this.state.prompt + this.input.substring(0, this.suggestionStart));
-    msg = to_width("", indent) + msg;
+    msg = this.addIndent(msg);
 
 
     return line();
+  }
+
+  /**
+   * Adds an indent to a given choice.
+   * This is a function so we can extend it for multiline
+   * in code-prompt
+   */
+  addIndent(msg){
+    //indent to where we pressed tab
+    var indent = width_of(this.state.prompt + this.input.substring(0, this.suggestionStart));
+    msg = to_width("", indent) + msg;
+    return msg;
   }
 
   /**

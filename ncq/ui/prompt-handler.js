@@ -20,6 +20,7 @@ class PromptHandler{
             message : "",
             separator : "> ",
             limit: 4,
+            initial: "",
             choices: [],
             inputNoChoice: true,
             history: {
