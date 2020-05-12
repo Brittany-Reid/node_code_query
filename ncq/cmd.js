@@ -1,5 +1,4 @@
 const readline = require("readline");
-const Prompt = require("./ui/prompt");
 
 /**
  * Adapted from python Cmd. Extend to add or overwrite functions.

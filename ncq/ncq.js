@@ -1,11 +1,10 @@
 const Cmd = require("./cmd");
-const PromptReadable = require("./ui/prompt-readable");
 const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 const fse = require("fs-extra");
 const cprocess = require("child_process");
-const Prompt = require("./ui/prompt");
+const PromptHandler = require("./ui/prompthandlers/prompthandler");
 
 /*
 Our main program. From here we can start a repl with specified packages.
@@ -78,14 +77,14 @@ class ncqCmd extends Cmd {
     });
   }
 
-    /**
+  /**
    * Help for repl command.
    */
   help_repl(inp) {
     console.log("Runs a node.js repl.");
   }
 
-  do_repl(inp){
+  do_repl(inp) {
     //print packages
     console.log(inp);
 
@@ -107,23 +106,36 @@ class ncqCmd extends Cmd {
     fs.mkdirSync(tmpDir);
 
     //copy repl
-    fs.copyFileSync(path.join(ROOT, "ncq/repl.js"), path.join(tmpDir, "repl.js"));
+    fs.copyFileSync(
+      path.join(ROOT, "ncq/repl.js"),
+      path.join(tmpDir, "repl.js")
+    );
     //copy dependant files
     fse.copySync(path.join(ROOT, "ncq/ui"), path.join(tmpDir, "ui"));
-    fs.copyFileSync(path.join(ROOT, "package.json"), path.join(tmpDir, "package.json"));
-    fs.copyFileSync(path.join(ROOT, "package-lock.json"), path.join(tmpDir, "package-lock.json"));
+    fs.copyFileSync(
+      path.join(ROOT, "package.json"),
+      path.join(tmpDir, "package.json")
+    );
+    fs.copyFileSync(
+      path.join(ROOT, "package-lock.json"),
+      path.join(tmpDir, "package-lock.json")
+    );
 
     //change directory
     process.chdir(tmpDir);
     // install packages within that directory
-    cprocess.execSync("npm install " + required.join(" ") + " --save", {stdio: [process.stdin, process.stdout, process.stdout]});
+    cprocess.execSync("npm install " + required.join(" ") + " --save", {
+      stdio: [process.stdin, process.stdout, process.stdout],
+    });
     this.resetStdin();
 
     //do repl
     var args = ["repl.js"];
     args.push(required);
     args.push("--save");
-    cprocess.execSync("node repl.js " + required.join(" "), {stdio : 'inherit'});
+    cprocess.execSync("node repl.js " + required.join(" "), {
+      stdio: "inherit",
+    });
 
     //return to our directory
     process.chdir(ROOT);
@@ -134,6 +146,6 @@ class ncqCmd extends Cmd {
 
 loadPackages();
 
-var myPrompt = new Prompt(packages.slice());
+var myPrompt = new PromptHandler(packages.slice());
 
 new ncqCmd(myPrompt).run();

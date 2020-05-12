@@ -1,14 +1,13 @@
-const Suggestion = require("./suggestion");
+const SuggestionPrompt = require("../prompts/suggestion-prompt");
 const Store = require('data-store');
 const actions = require('enquirer/lib/combos');
-const colors = require('ansi-colors');
 const custom = {tab: 'tab'};
 actions.keys = { ...actions.keys, ...custom };
 
 /**
  * Spawns a new prompt for us.
  */
-class Prompt{
+class PromptHandler{
     constructor(suggestions = [], prefix = "NCQ", message = ""){
         this.suggestions = suggestions;
         this.prefix = prefix;
@@ -16,7 +15,7 @@ class Prompt{
     }
 
     async run(){
-        this.prompt = new Suggestion({
+        this.prompt = new SuggestionPrompt({
             name: "",
             message: this.message,
             separator: "> ",
@@ -34,4 +33,4 @@ class Prompt{
     }
 }
 
-module.exports = Prompt;
+module.exports = PromptHandler;

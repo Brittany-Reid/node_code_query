@@ -5,7 +5,7 @@ const compact = arr => unique(arr).filter(Boolean);
 const chalk = require("chalk");
 const {to_width, width_of} = require("to-width");
 
-class Suggestion extends AutoComplete {
+class SuggestionPrompt extends AutoComplete {
   constructor(options) {
     super(options);
 
@@ -336,4 +336,4 @@ class Suggestion extends AutoComplete {
   }
 }
 
-module.exports = Suggestion;
+module.exports = SuggestionPrompt;
