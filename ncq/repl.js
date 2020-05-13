@@ -83,10 +83,10 @@ function removeStopWords(text) {
 
 //get a readable that uses prompts for input
 var pReadable = new PromptReadable(
-  ["This is a suggestion."],
+  ARG_PACKS.split(" "),
   tname,
   "[" + ARG_PACKS + "]",
-  ["var a = 0;\n a=a+1;\n", "console.log(\"string\");"]
+  [],
 );
 
 //set up repl with this as input and stdout as output
@@ -146,10 +146,14 @@ Object.assign(myRepl.context, {
     if (set == undefined) {
       console.log("could not find any sample for this package");
     } else {
-      set.forEach((s) => {
-        console.log(s.trim());
-        console.log("-----");
-      });
+      //convert set to array
+      var array = Array.from(set);
+      //set snippets to be cyclable
+      myRepl.inputStream.setSnippets(array);
+      // set.forEach((s) => {
+      //   console.log(s.trim());
+      //   console.log("-----");
+      // });
     }
   },
 });

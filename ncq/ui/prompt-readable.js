@@ -4,6 +4,7 @@ const CodePrompt = require("./prompts/code-prompt");
 
 /**
  * Custom extended Readable that prompts a user for input on read().
+ * This is how we send input to the REPL.
  */
 class PromptReadable extends stream.Readable {
   constructor(suggestions = [], prefix="NCQ", message ="", snippets = [], options) {
@@ -12,6 +13,14 @@ class PromptReadable extends stream.Readable {
     this.prefix = prefix;
     this.message = message;
     this.snippets = snippets;
+  }
+
+  setSnippets(snippets = []){
+    this.snippets = snippets;
+  }
+
+  setSuggestions(suggestions = []){
+    this.suggestions = suggestions;
   }
 
   /**
@@ -24,7 +33,7 @@ class PromptReadable extends stream.Readable {
       message : this.message,
       snippets : this.snippets,
       multiline : true,
-      choices : ["a", "b"],
+      choices : this.suggestions,
       initial : "",
       history : {},
     });
