@@ -38,6 +38,27 @@ npm install
 npm start
 ```
 
+Outside REPL:
+
+| **comand**       | **description**                                   |
+|------------------|---------------------------------------------------|
+|<kbd>tab</kbd>    | Open and close autocompletes.                     |
+|<kbd>return</kbd>| Enter selected autocomplete.                      |
+|<kbd>up/down</kbd>| Scroll autocompletes                              |
+| `repl <package>`| Start REPL with entered package/s.                  |
+
+REPL:
+
+| **comand**           | **description**                                    |
+|----------------------|----------------------------------------------------|
+|`samples("<package>")`| Get snippets for package.                          |
+|<kbd>`</kbd>          | Cycle snippets in REPL (after using samples())     |
+|<kbd>tab</kbd>        | Open and close autocompletes.                      |
+|<kbd>return</kbd>     | (Autocomplete Open) Enter selected autocomplete.   |
+|<kbd>return</kbd>     | (Autocomplete Closed) Newline                      |
+|<kbd>return</kbd> <kbd>return</kbd> | Submit input.                        |
+|<kbd>up/down</kbd>    | Scroll autocompletes                               |
+
 ## Usage example
 
 A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
