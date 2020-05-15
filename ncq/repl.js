@@ -4,6 +4,9 @@ const path = require("path");
 const natural = require("natural");
 const en = require("stopwords").english;
 const fs = require("fs");
+const cprocess = require("child_process");
+const winston = require("winston");
+const fse = require("fs-extra");
 
 /*Constants*/
 var BASE = __dirname;
@@ -11,6 +14,7 @@ parts = BASE.split("/");
 if (parts[parts.length - 1] != "node_code_query") {
   BASE = path.join(BASE, "..");
 }
+var LOGDIR = path.join(BASE, "logs/repl");
 const version = "1.0.0";
 const snippets_dir = path.join(BASE, "data/snippets");
 const threshold_sim = 0.25;
@@ -36,6 +40,26 @@ const our_stopwords = [
   "massive",
   "amounts",
 ];
+
+//set up logger for main process
+if(!fs.existsSync(LOGDIR)){
+  //make dir if it doesnt exist
+  fse.mkdirSync(LOGDIR, {recursive : true});
+}
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.simple(),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    //debug for debugging
+    new winston.transports.File({ filename: path.join(LOGDIR, '/debug' + Math.floor(Date.now() /1000) + '.log'), level: 'debug' }),
+    //info for results
+    new winston.transports.File({ filename: path.join(LOGDIR, '/run' + Math.floor(Date.now() /1000) + '.log'), level: 'info' })
+  ]
+});
+
+logger.log("debug", "Base directory: " + BASE);
+logger.log("debug", "Logger initialized at: " + LOGDIR);
 
 //get arguments
 ARG_PACKS = process.argv
