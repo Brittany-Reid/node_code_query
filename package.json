@@ -8,7 +8,9 @@
     "url": "https://github.com/damorimRG/node_code_query.git"
   },
   "scripts": {
-    "start": "node ncq/ncq"
+    "start": "node ncq/ncq",
+    "test": "mocha tests",
+    "coverage": "nyc npm run test"
   },
   "keywords": [],
   "author": "",
@@ -24,5 +26,10 @@
     "stopwords": "0.0.9",
     "to-width": "^1.0.4",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.2",
+    "nyc": "^15.0.1",
+    "sinon": "^9.0.2"
   }
 }

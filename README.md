@@ -63,6 +63,28 @@ REPL:
 
 A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
 
+## Testing
+
+To run tests, install DevDependencies:
+
+```
+npm install --only=dev
+```
+
+Then use:
+
+```
+npm test
+```
+
+You can see test coverage using:
+
+```
+npm run coverage
+```
+
+We use mocha, nyc and sinon for testing.
+
 <!--
 _For more examples and usage, please refer to the [Wiki][wiki]._
 -->

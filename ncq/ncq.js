@@ -40,6 +40,8 @@ function loadPackages() {
       packages.push(path.basename(file, ext));
     }
   });
+
+  return packages;
 }
 
 class ncqCmd extends Cmd {
@@ -174,3 +176,5 @@ var myPrompt = new PromptHandler(SuggestionPrompt, {
 });
 
 new ncqCmd(myPrompt).run();
+
+exports.loadPackages = loadPackages;

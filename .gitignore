@@ -10,6 +10,7 @@ tmp2
 logs
 readmes
 popular.json
+.nyc_output
 
 ncq/history.json
 history.json
