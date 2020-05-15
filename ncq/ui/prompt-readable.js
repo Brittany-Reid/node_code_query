@@ -15,6 +15,10 @@ class PromptReadable extends stream.Readable {
     this.snippets = snippets;
   }
 
+  setMessage(message = ""){
+    this.message = message;
+  }
+
   setSnippets(snippets = []){
     this.snippets = snippets;
   }
