@@ -7,8 +7,11 @@ node_modules
 package_home_pages
 tmp1 
 tmp2
+logs
 readmes
 popular.json
+.nyc_output
 
 ncq/history.json
 history.json
+*.log

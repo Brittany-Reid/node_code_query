@@ -29,11 +29,13 @@ class Cmd {
   cmdLoop() {
     this.acceptInput()
       .then((response) => {
-        this.oncmd(response);
-        this.cmdLoop();
+        var stop = this.oncmd(response);
+        if(stop!=true){
+          this.cmdLoop()
+        };
       })
       .catch((e) => {
-        console.log(e);
+        this.print(e);
       });
   }
 
@@ -58,10 +60,7 @@ class Cmd {
     var cmd = parsed[0];
     var args = parsed[1];
 
-    if (line == "") {
-      return this.emptyline();
-    }
-    if (!line) {
+    if (!line || line == "") {
       return this.emptyline();
     }
     if (!cmd) {
@@ -116,15 +115,16 @@ class Cmd {
   }
 
   help_exit(arg) {
-    console.log("Exits the application. Shorthand: Ctrl-D.");
+    this.print("Exits the application. Shorthand: Ctrl-D.");
   }
 
   do_exit(arg) {
     process.exit(0);
+    return true;
   }
 
   help_help(arg) {
-    console.log(
+    this.print(
       'List available commands with "help" or detailed help with "help cmd".'
     );
   }
@@ -134,7 +134,7 @@ class Cmd {
       var fn = "help_" + arg;
       var func = this[fn];
       if (!(typeof func === "function")) {
-        console.log(this.nohelp + arg);
+        this.print(this.nohelp + arg);
         return;
       }
       return func.call(this);
@@ -158,7 +158,7 @@ class Cmd {
         }
       });
     }
-    console.log(this.doc_leader);
+    this.print(this.doc_leader);
     this.print_topics(this.doc_header, cmds_doc, 15, 80);
     this.print_topics(this.misc_header, Object.keys(help), 15, 80);
     this.print_topics(this.undoc_header, cmds_undoc, 15, 80);
@@ -166,24 +166,24 @@ class Cmd {
 
   print_topics(header, cmds, cmdlen, maxcol) {
     if (cmds && cmds.length != 0) {
-      console.log(header);
+      this.print(header);
       if (this.ruler && this.ruler != "") {
-        console.log(this.ruler.repeat(header.length));
+        this.print(this.ruler.repeat(header.length));
       }
       this.columnize(cmds, maxcol - 1);
-      console.log();
+      this.print();
     }
   }
 
   columnize(list = [], displaywidth = 80) {
     if (!list || list === []) {
-      console.log("<empty>");
+      this.print("<empty>");
       return;
     }
 
     var size = list.length;
     if (size === 1) {
-      console.log(list[0]);
+      this.print(list[0]);
       return;
     }
     var nr,
@@ -233,18 +233,25 @@ class Cmd {
         }
         texts.push(x);
       }
-      console.log(texts.join("  "));
+      this.print(texts.join("  "));
     }
   }
 
   default(line) {
-    console.log("*** Unknown syntax: " + line);
+    this.print("*** Unknown syntax: " + line);
   }
 
   emptyline() {
     if (this.lastcmd) {
       this.oncmd(this.lastcmd);
     }
+  }
+
+  /**
+   * Print output. Overwrite for different output handling.
+   */
+  print(string) {
+    console.log(string);
   }
 }
 
