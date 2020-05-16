@@ -39,8 +39,9 @@ class PromptReadable extends stream.Readable {
       multiline : true,
       choices : this.suggestions,
       initial : "",
-      history : {},
     });
+    //reset snippets for next prompt
+    this.snippets = [];
     //this.p = new Prompt(this.suggestions, this.prefix, this.message);
   }
 

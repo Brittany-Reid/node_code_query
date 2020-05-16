@@ -58,8 +58,9 @@ REPL:
 |<kbd>tab</kbd>        | Open and close autocompletes.                      |
 |<kbd>return</kbd>     | (Autocomplete Open) Enter selected autocomplete.   |
 |<kbd>return</kbd>     | (Autocomplete Closed) Newline                      |
-|<kbd>return</kbd> <kbd>return</kbd> | Submit input.                        |
-|<kbd>up/down</kbd>    | Scroll autocompletes                               |
+|<kbd>return</kbd> <kbd>return</kbd>                                  | Submit input.                                      |
+|<kbd>up/down</kbd>                                                   | Scroll autocompletes                               |
+|<kbd>shift</kbd> + <kbd>up</kbd> / <kbd>shift</kbd> + <kbd>down</kbd>| Navigate multiline prompt.                         |
 
 ## Usage example
 

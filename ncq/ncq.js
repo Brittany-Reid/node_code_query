@@ -6,7 +6,7 @@ const fse = require("fs-extra");
 const cprocess = require("child_process");
 const SuggestionPrompt = require("./ui/prompts/suggestion-prompt");
 const PromptHandler = require("./ui/prompt-handler");
-const winston = require('winston');
+const winston = require("winston");
 
 /*
 Our main program. From here we can start a repl with specified packages.
@@ -20,7 +20,7 @@ if (
 ) {
   BASE = path.join(BASE, "../");
 }
-var LOGDIR = path.join(BASE, 'logs/main');
+var LOGDIR = path.join(BASE, "logs/main");
 var SNIPPETDIR = path.join(BASE, "data/snippets");
 var packages = [];
 var counter = 0;
@@ -90,15 +90,20 @@ class ncqCmd extends Cmd {
   }
 
   do_repl(inp) {
-    //print packages
-    console.log(inp);
-
-    //check packages
-    var required = inp.split(" ");
-    for (let i = 0; i < required.length; i++) {
-      if (!packages.includes(required[i])) {
-        console.log("could not find package " + required[i] + " cannot create repl");
-        return false;
+    //if packages
+    var required = [];
+    if (inp.trim() != "") {
+      //print packages
+      console.log(inp);
+      //check packages
+      required = inp.split(" ");
+      for (let i = 0; i < required.length; i++) {
+        if (!packages.includes(required[i])) {
+          console.log(
+            "could not find package " + required[i] + " cannot create repl"
+          );
+          return false;
+        }
       }
     }
 
@@ -150,20 +155,32 @@ class ncqCmd extends Cmd {
 }
 
 //set up logger for main process
-if(!fs.existsSync(LOGDIR)){
+if (!fs.existsSync(LOGDIR)) {
   //make dir if it doesnt exist
-  fse.mkdirSync(LOGDIR, {recursive : true});
+  fse.mkdirSync(LOGDIR, { recursive: true });
 }
 const logger = winston.createLogger({
-  level: 'info',
+  level: "info",
   format: winston.format.simple(),
-  defaultMeta: { service: 'user-service' },
+  defaultMeta: { service: "user-service" },
   transports: [
     //debug for debugging
-    new winston.transports.File({ filename: path.join(LOGDIR, '/debug' + Math.floor(Date.now() /1000) + '.log'), level: 'debug' }),
+    new winston.transports.File({
+      filename: path.join(
+        LOGDIR,
+        "/debug" + Math.floor(Date.now() / 1000) + ".log"
+      ),
+      level: "debug",
+    }),
     //info for results
-    new winston.transports.File({ filename: path.join(LOGDIR, '/run' + Math.floor(Date.now() /1000) + '.log'), level: 'info' })
-  ]
+    new winston.transports.File({
+      filename: path.join(
+        LOGDIR,
+        "/run" + Math.floor(Date.now() / 1000) + ".log"
+      ),
+      level: "info",
+    }),
+  ],
 });
 
 logger.log("debug", "Base directory: " + BASE);
@@ -172,7 +189,7 @@ logger.log("debug", "Logger initialized at: " + LOGDIR);
 loadPackages();
 
 var myPrompt = new PromptHandler(SuggestionPrompt, {
-  choices : packages.slice(),
+  choices: packages.slice(),
 });
 
 new ncqCmd(myPrompt).run();

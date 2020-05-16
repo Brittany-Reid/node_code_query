@@ -13,6 +13,11 @@ class CodePrompt extends SuggestionPrompt {
     this.snippetIndex = -1;
     this.initial = this.options.initial;
     this.cursor = this.input.length;
+    //set initial
+    if(this.snippets && this.snippets.length > 0){
+      this.input = this.snippets[0];
+      this.snippetIndex = 0;
+    }
   }
 
   cycle() {
@@ -77,6 +82,7 @@ class CodePrompt extends SuggestionPrompt {
     }
     return super.format(input);
   }
+  
 
   async keypress(input, key = {}) {
     //no choices being displayed
@@ -98,6 +104,88 @@ class CodePrompt extends SuggestionPrompt {
       return super.keypress(input, key);
     }
     return super.keypress(input, key);
+  }
+
+  /**
+   * Returns the current line and position on that line.
+   */
+  getCurrentLine(){
+    var lines = this.input.split("\n");
+    if(lines.length < 2) return [0, this.cursor];
+
+    var current = this.cursor;
+    var index = 0;
+    for (let i = 0; i < lines.length; i++) {
+      var l = lines[i].length + 1;
+      current = current - l;
+      if(current < 0){
+        //set current back
+        current = current + l;
+        break;
+      }
+      index++;
+    }
+
+    return [index, current];
+  }
+
+  scrollUp(i = 0) {
+    if(this.isSuggesting){
+      return super.scrollUp(i);
+    }
+    if(this.cursor < 1) return;
+
+    //get line and pos on line
+    var currentLine = this.getCurrentLine();
+    var index = currentLine[0];
+    var current = currentLine[1];
+    if(index < 1) return;
+
+    //calculate new cursor, one above
+    var lines = this.input.split("\n");
+    var ncursor = 0;
+    for (let i = 0; i < index; i++) {
+      var l = lines[i].length + 1;
+      if(i != index-1){
+        ncursor = ncursor + l;
+      }
+      else{
+        ncursor += Math.min(current, l-1);
+      }
+    }
+
+    this.cursor = ncursor;
+    this.render();
+  }
+
+  scrollDown(i = 0) {
+    if(this.isSuggesting){
+      return super.scrollDown(i);
+    }
+
+    if(this.cursor >= this.input.length) return;
+
+    //get line and pos on line
+    var lines = this.input.split("\n");
+    var currentLine = this.getCurrentLine();
+    var index = currentLine[0];
+    var current = currentLine[1];
+    if(index >= lines.length-1) return;
+
+    //calculate new cursor, line below
+    var ncursor = 0;
+    for (let i = 0; i < index+2; i++) {
+      var l = lines[i].length + 1;
+      if(i == index+1){
+        ncursor += Math.min(current, l-1);
+      }
+      else{
+        ncursor += l;
+      }
+    }
+
+    this.cursor = ncursor;
+    this.render();
   }
 }
 

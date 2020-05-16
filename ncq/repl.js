@@ -44,7 +44,11 @@ const ARG_PACKS = process.argv
     return acc;
   }, "")
   .trim();
-var installedPackages = ARG_PACKS.split(" ");
+var installedPackages = [];
+if(ARG_PACKS.trim() != ""){
+  installedPackages = ARG_PACKS.split(" ");
+}
+
 
 //set up the repl logger
 if (!fs.existsSync(LOGDIR)) {
@@ -213,7 +217,7 @@ function main() {
 
   //create input readable
   var pReadable = new PromptReadable(
-    ARG_PACKS.split(" "),
+    installedPackages.splice(),
     NAME,
     "[" + installedPackages.join(" ") + "]",
     []

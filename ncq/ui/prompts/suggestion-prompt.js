@@ -1,9 +1,9 @@
 const { AutoComplete } = require("enquirer");
 const { keypress } = require("enquirer");
-const unique = arr => arr.filter((v, i) => arr.lastIndexOf(v) === i);
-const compact = arr => unique(arr).filter(Boolean);
+const unique = (arr) => arr.filter((v, i) => arr.lastIndexOf(v) === i);
+const compact = (arr) => unique(arr).filter(Boolean);
 const chalk = require("chalk");
-const {to_width, width_of} = require("to-width");
+const { to_width, width_of } = require("to-width");
 
 class SuggestionPrompt extends AutoComplete {
   constructor(options) {
@@ -32,15 +32,15 @@ class SuggestionPrompt extends AutoComplete {
    * Sometimes we get a crash because of the enable function. If we have no selected, skip.
    */
   enable(choice) {
-    if(!this.selected) return;
+    if (!this.selected) return;
     super.enable(choice);
   }
 
   /**
    * Reset that allows empty suggestion list.
    */
-  reset(){
-    if(this.selectable.length === 0){
+  reset() {
+    if (this.selectable.length === 0) {
       return;
     }
     super.reset();
@@ -49,7 +49,7 @@ class SuggestionPrompt extends AutoComplete {
   getHistory(action = "prev") {
     if (!this.store) return this.alert();
     var prev = this.data.past;
-    if(!prev || prev.length < 1){
+    if (!prev || prev.length < 1) {
       return this.alert();
     }
 
@@ -62,15 +62,13 @@ class SuggestionPrompt extends AutoComplete {
         return this.alert();
       }
       this.hIndex = this.hIndex - 1;
-    }
-    else if(action = "next"){
+    } else if ((action = "next")) {
       this.hIndex = this.hIndex + 1;
     }
 
-    if(this.hIndex > prev.length-1){
+    if (this.hIndex > prev.length - 1) {
       this.input = this.data.present;
-    }
-    else{
+    } else {
       this.input = prev[this.hIndex];
     }
 
@@ -127,7 +125,7 @@ class SuggestionPrompt extends AutoComplete {
     this.render();
   }
 
-  close(){
+  close() {
     //how to hide the prompt:
     // this.clear();
     // this.stdout.write("> ");
@@ -138,6 +136,9 @@ class SuggestionPrompt extends AutoComplete {
    * When we press tab.
    */
   tab() {
+    //if we have no choices, return
+    //for some reason this.choices doesnt match this.options right away
+    if(!this.options.choices || this.options.choices.length < 1) return;
     //toggle on and record start point
     if (!this.isSuggesting) {
       this.isSuggesting = true;
@@ -174,19 +175,33 @@ class SuggestionPrompt extends AutoComplete {
   /**
    * Calculate max width of suggestions.
    */
-  getWidth(choices){
+  getWidth(choices) {
     var max = 0;
-    choices.forEach(element => {
+    choices.forEach((element) => {
       var width = width_of(element.message);
       max = Math.max(max, width);
     });
     this.maxwitdh = max;
   }
 
+  scrollUp(i = 0) {
+    //scroll up suggestions, when suggesting
+    if (this.isSuggesting) {
+      super.scrollUp(i);
+    }
+  }
+
+  scrollDown(i = 0) {
+    //scroll up suggestions, when suggesting
+    if (this.isSuggesting) {
+      super.scrollDown(i);
+    }
+  }
+
   /**
    * Inserts the selected choice, replacing the search substring.
    */
-  insert(str) {
+  insertString(str) {
     //add pre
     var input = this.input.slice(0, this.suggestionStart);
     //add str
@@ -205,15 +220,15 @@ class SuggestionPrompt extends AutoComplete {
     this.cursor = cursor;
   }
 
-/**
- * Overwrite choice rendering to add background colour.
- */
+  /**
+   * Overwrite choice rendering to add background colour.
+   */
   async renderChoice(choice, i) {
     await this.onChoice(choice, i);
 
     let focused = this.index === i;
     let pointer = await this.pointer(choice, i);
-    let check = await this.indicator(choice, i) + (choice.pad || '');
+    let check = (await this.indicator(choice, i)) + (choice.pad || "");
     let hint = await this.resolve(choice.hint, this.state, choice, i);
 
     if (hint && !utils.hasColor(hint)) {
@@ -222,9 +237,12 @@ class SuggestionPrompt extends AutoComplete {
 
     let ind = this.indent(choice);
     let msg = await this.choiceMessage(choice, i);
-    let line = () => [this.margin[3], ind + pointer + check, msg, this.margin[1], hint].filter(Boolean).join(' ');
+    let line = () =>
+      [this.margin[3], ind + pointer + check, msg, this.margin[1], hint]
+        .filter(Boolean)
+        .join(" ");
 
-    if (choice.role === 'heading') {
+    if (choice.role === "heading") {
       return line();
     }
 
@@ -235,32 +253,28 @@ class SuggestionPrompt extends AutoComplete {
       return line();
     }
 
-
     //set width of message
-    msg = to_width(msg, this.maxwitdh+2, {align: 'left'})
+    msg = to_width(msg, this.maxwitdh + 2, { align: "left" });
     //if we're displaying more than allowed add arrows
-    if(this.filtered.length > this.limit){
-      if(i == 0){
+    if (this.filtered.length > this.limit) {
+      if (i == 0) {
         msg = msg + "▲";
-      }
-      else if(i==this.limit-1){
-        msg = msg + "▼"
+      } else if (i == this.limit - 1) {
+        msg = msg + "▼";
       }
     }
-    msg = to_width(msg, this.maxwitdh+4, {align: 'left'})
-    msg = to_width(msg, this.maxwitdh+5, {align: 'right'})
+    msg = to_width(msg, this.maxwitdh + 4, { align: "left" });
+    msg = to_width(msg, this.maxwitdh + 5, { align: "right" });
 
     //set colours
     if (focused) {
       msg = chalk.bgRgb(100, 100, 100)(msg);
-    }
-    else{
+    } else {
       msg = chalk.bgRgb(130, 130, 130)(msg);
       msg = chalk.black(msg);
     }
 
     msg = this.addIndent(msg);
-
 
     return line();
   }
@@ -270,9 +284,11 @@ class SuggestionPrompt extends AutoComplete {
    * This is a function so we can extend it for multiline
    * in code-prompt
    */
-  addIndent(msg){
+  addIndent(msg) {
     //indent to where we pressed tab
-    var indent = width_of(this.state.prompt + this.input.substring(0, this.suggestionStart));
+    var indent = width_of(
+      this.state.prompt + this.input.substring(0, this.suggestionStart)
+    );
     msg = to_width("", indent) + msg;
     return msg;
   }
@@ -332,7 +348,7 @@ class SuggestionPrompt extends AutoComplete {
       let choice = this.focused;
       if (choice) {
         //enter just inserts this choice
-        this.insert(this.selected.name);
+        this.insertString(this.selected.name);
         this.closeSuggestions(true);
         return;
       }
