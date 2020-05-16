@@ -53,7 +53,7 @@ REPL:
 |----------------------|----------------------------------------------------|
 |`samples("<package>")`| Get snippets for package.                          |
 |`install("<package>")`| Install given package within REPL.                 |
-|`unintsall("<package>")`| Uninstall given package                          |
+|`uninstall("<package>")`| Uninstall given package                          |
 |<kbd>`</kbd>          | Cycle snippets in REPL (after using samples())     |
 |<kbd>tab</kbd>        | Open and close autocompletes.                      |
 |<kbd>return</kbd>     | (Autocomplete Open) Enter selected autocomplete.   |
