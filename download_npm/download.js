@@ -171,7 +171,7 @@ async function main(){
         //do nothing
     }
     console.log(`Total of ${names.length} npm packages found, processing ${MAX}.`);
-    for (let count=1102200; count <MAX; count+=BATCH_SIZE) {
+    for (let count=0; count <MAX; count+=BATCH_SIZE) {
         console.log("BATCH: " + count);
         await batch(count, Math.min(count+BATCH_SIZE, MAX));
     }
