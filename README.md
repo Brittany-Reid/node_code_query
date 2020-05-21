@@ -10,7 +10,6 @@ The general goal is to improve the productivity of nodejs developers by providin
 
 [Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.
 
-
 ## Installation
 
 1. Download and install Node.js and NPM (https://nodejs.org/en/)
@@ -64,9 +63,14 @@ REPL:
 |<kbd>up/down</kbd>                                                   | Scroll autocompletes                               |
 |<kbd>shift</kbd> + <kbd>up</kbd> / <kbd>shift</kbd> + <kbd>down</kbd>| Navigate multiline prompt.                         |
 
-## Usage example
+## Usage Examples
 
-A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
+<p align="center">
+<img src="https://media.giphy.com/media/YpYDeyS8ZZWz3E2l1J/giphy.gif">
+</p>
+
+Node Code Query can be used to start node.js REPLs and find code snippets for given strings. The above example demonstrates the creation of a REPL and how code snippets can be found and cycled through.
+
 
 ## Testing
 
