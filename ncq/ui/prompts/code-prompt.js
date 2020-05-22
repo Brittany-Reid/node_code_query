@@ -1,5 +1,6 @@
 const SuggestionPrompt = require("./suggestion-prompt");
 const placeholder = require("enquirer/lib/placeholder");
+const utils = require('enquirer/lib/utils');
 const { to_width, width_of } = require("to-width");
 
 /**
@@ -72,14 +73,38 @@ class CodePrompt extends SuggestionPrompt {
     return msg;
   }
 
+  /**
+   * Intercept placeholder to make sure cursor can invert newline chars.
+   */
+  placeholder(prompt, options){
+    this.cursorHide();
+    let { input = '', initial = '', pos, showCursor = true, color } = options;
+    let style = color || prompt.styles.placeholder;
+    let inverse = utils.inverse(prompt.styles.primary);
+    let blinker = str => inverse(prompt.styles.black(str));
+    let output = input;
+
+    if (pos !== input.length && showCursor === true) {
+      var c = blinker(input[pos]);
+      if(input[pos] == "\n"){
+        c = blinker(" ")+"\n";
+      }
+      output = input.slice(0, pos) + c + input.slice(pos + 1);
+      let cursor = '';
+      return output + cursor;
+    }
+
+    return placeholder(this, { input, initial, pos: this.cursor });
+  }
+
   async format(input = this.value) {
-    if (!this.isSuggesting) {
+    // if (!this.isSuggesting) {
       let initial = await this.resolve(this.initial, this.state);
       if (!this.state.submitted) {
-        return placeholder(this, { input, initial, pos: this.cursor });
+        return this.placeholder(this, { input, initial, pos: this.cursor });
       }
       return this.styles.submitted(input || initial);
-    }
+    // }
     return super.format(input);
   }
   
@@ -94,14 +119,25 @@ class CodePrompt extends SuggestionPrompt {
           return this.cycle();
         }
       }
-      let prev = this.state.prevKeypress;
-      this.state.prevKeypress = key;
-      if (this.options.multiline === true && key.name === "return") {
-        if (!prev || prev.name !== "return") {
-          return this.append("\n", key);
-        }
+
+      //newline
+
+      //standard shift + return
+      if(key.shift && key.name == "return"){
+        return this.append("\n", key);
       }
-      return super.keypress(input, key);
+      //for windows, allow alt
+      if(key.sequence == "\u001b\r"){
+        return this.append("\n", key);
+      }
+
+      //ctrl+down and ctrl+up
+      if(key.ctrl && key.name == "up"){
+        return this.lineUp();
+      }
+      if(key.ctrl && key.name == "down"){
+        return this.lineDown();
+      }
     }
     return super.keypress(input, key);
   }
@@ -129,10 +165,7 @@ class CodePrompt extends SuggestionPrompt {
     return [index, current];
   }
 
-  scrollUp(i = 0) {
-    if(this.isSuggesting){
-      return super.scrollUp(i);
-    }
+  lineUp() {
     if(this.cursor < 1) return;
 
     //get line and pos on line
@@ -158,10 +191,7 @@ class CodePrompt extends SuggestionPrompt {
     this.render();
   }
 
-  scrollDown(i = 0) {
-    if(this.isSuggesting){
-      return super.scrollDown(i);
-    }
+  lineDown() {
 
     if(this.cursor >= this.input.length) return;
 

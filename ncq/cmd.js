@@ -18,20 +18,20 @@ class Cmd {
   /**
    * Main run function. Starts up the cmd.
    */
-  run() {
-    this.cmdLoop();
+  async run() {
+    await this.cmdLoop();
   }
 
   async acceptInput() {
     return await this.input.run();
   }
 
-  cmdLoop() {
-    this.acceptInput()
-      .then((response) => {
+  async cmdLoop() {
+    await this.acceptInput()
+      .then(async (response) => {
         var stop = this.oncmd(response);
         if(stop!=true){
-          this.cmdLoop()
+          await this.cmdLoop()
         };
       })
       .catch((e) => {
@@ -119,7 +119,6 @@ class Cmd {
   }
 
   do_exit(arg) {
-    process.exit(0);
     return true;
   }
 
@@ -171,7 +170,7 @@ class Cmd {
         this.print(this.ruler.repeat(header.length));
       }
       this.columnize(cmds, maxcol - 1);
-      this.print();
+      this.print("");
     }
   }
 

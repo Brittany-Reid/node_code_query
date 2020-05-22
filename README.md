@@ -10,6 +10,11 @@ The general goal is to improve the productivity of nodejs developers by providin
 
 [Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.
 
+## Table of Contents
+ * [Installation](#installation)
+ * [Usage](#Usage)
+ * [Testing](#Testing)
+
 ## Installation
 
 1. Download and install Node.js and NPM (https://nodejs.org/en/)
@@ -20,48 +25,42 @@ The general goal is to improve the productivity of nodejs developers by providin
 ### Dataset
 Node_code_query requires an offline dataset of NPM readme files. This dataset is too large to upload to Github (600MB compressed, 2.6GB uncompressed). Please download the file from https://doi.org/10.5281/zenodo.3836540, unzip and put the containing JSON file into the data directory.
 
-#### OS X & Linux:
+## Usage
+You can start the program by using the `npm start` command within the repository directory. 
 
 ```sh
-sudo apt-get install npm
-sudo npm install -g npm@latest
-sudo npm cache clean -f
-sudo npm install -g n
-sudo n stable
-pip3 install lxml
-pip3 install jupyterlab
-```
-
-## Instructions:
-
-```sh
-npm install
 npm start
 ```
 
-Outside REPL:
+### Commands
+
+```js
+packages("<task>")
+```
+Enter a task to find package recommendations (limited to the tasks in task.txt for now!)
+
+```js
+samples("<package>")
+```
+Enter a package to find code snippets. Code snippets will be inserted into your prompt, and cyclable using ` (backtick).
+
 
 | **comand**       | **description**                                   |
 |------------------|---------------------------------------------------|
 |<kbd>tab</kbd>    | Open and close autocompletes.                     |
 |<kbd>return</kbd>| Enter selected autocomplete.                      |
 |<kbd>up/down</kbd>| Scroll autocompletes                              |
-| `repl <package>`| Start REPL with entered package/s.                  |
-
-REPL:
-
-| **comand**           | **description**                                    |
-|----------------------|----------------------------------------------------|
+| `repl <package>`| Start REPL with entered package/s.                 |
+|`packages("task")`| Get package recommendation.   |
 |`samples("<package>")`| Get snippets for package.                          |
 |`install("<package>")`| Install given package within REPL.                 |
 |`uninstall("<package>")`| Uninstall given package                          |
 |<kbd>`</kbd>          | Cycle snippets in REPL (after using samples())     |
-|<kbd>tab</kbd>        | Open and close autocompletes.                      |
 |<kbd>return</kbd>     | (Autocomplete Open) Enter selected autocomplete.   |
-|<kbd>return</kbd>     | (Autocomplete Closed) Newline                      |
-|<kbd>return</kbd> <kbd>return</kbd>                                  | Submit input.                                      |
-|<kbd>up/down</kbd>                                                   | Scroll autocompletes                               |
-|<kbd>shift</kbd> + <kbd>up</kbd> / <kbd>shift</kbd> + <kbd>down</kbd>| Navigate multiline prompt.                         |
+|<kbd>return</kbd>     | (Autocomplete Closed) Submit                      |
+|<kbd>alt</kbd> + <kbd>return</kbd>                                  | New line                                     |
+|<kbd>shift</kbd> + <kbd>return</kbd> (non windows)                                 | New line   
+|<kbd>ctrl</kbd> + <kbd>up</kbd> / <kbd>ctrl</kbd> + <kbd>down</kbd>| Navigate multiline prompt.                         |
 
 ## Usage Examples
 

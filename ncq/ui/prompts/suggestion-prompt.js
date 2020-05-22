@@ -39,11 +39,11 @@ class SuggestionPrompt extends AutoComplete {
   /**
    * Reset that allows empty suggestion list.
    */
-  reset() {
+  reset(prompt, choices) {
     if (this.selectable.length === 0) {
       return;
     }
-    super.reset();
+    return super.reset(prompt, choices);
   }
 
   getHistory(action = "prev") {
@@ -84,7 +84,7 @@ class SuggestionPrompt extends AutoComplete {
       this.getHistory("prev");
       return;
     }
-    super.up();
+    return super.up();
   }
 
   /**
@@ -95,7 +95,7 @@ class SuggestionPrompt extends AutoComplete {
       this.getHistory("next");
       return;
     }
-    super.down();
+    return super.down();
   }
 
   /**
@@ -111,18 +111,6 @@ class SuggestionPrompt extends AutoComplete {
     };
     this.store.set("values", this.data);
     this.hIndex = this.data.past.length - 1;
-  }
-
-  /**
-   * Close suggestions. Done = true if we have finished by placing the suggestion (this resets the suggestion start position).
-   */
-  closeSuggestions(done = false) {
-    this.isSuggesting = false;
-    this.index = -1;
-    if (done) {
-      this.suggestionStart = -1;
-    }
-    this.render();
   }
 
   close() {
@@ -145,8 +133,22 @@ class SuggestionPrompt extends AutoComplete {
       this.suggestionStart = this.cursor;
       this.complete(); //call complete, trigger suggestions
     } else {
-      this.closeSuggestions(false);
+      this.isSuggesting = false;
+      this.index = -1;
+      this.render();
     }
+  }
+
+    /**
+   * Calculate max width of suggestions.
+   */
+  getWidth(choices) {
+    var max = 0;
+    choices.forEach((element) => {
+      var width = width_of(element.message);
+      max = Math.max(max, width);
+    });
+    this.maxwitdh = max;
   }
 
   suggest(input = this.input, choices = this.state._choices) {
@@ -173,32 +175,6 @@ class SuggestionPrompt extends AutoComplete {
   }
 
   /**
-   * Calculate max width of suggestions.
-   */
-  getWidth(choices) {
-    var max = 0;
-    choices.forEach((element) => {
-      var width = width_of(element.message);
-      max = Math.max(max, width);
-    });
-    this.maxwitdh = max;
-  }
-
-  scrollUp(i = 0) {
-    //scroll up suggestions, when suggesting
-    if (this.isSuggesting) {
-      super.scrollUp(i);
-    }
-  }
-
-  scrollDown(i = 0) {
-    //scroll up suggestions, when suggesting
-    if (this.isSuggesting) {
-      super.scrollDown(i);
-    }
-  }
-
-  /**
    * Inserts the selected choice, replacing the search substring.
    */
   insertString(str) {
@@ -218,6 +194,13 @@ class SuggestionPrompt extends AutoComplete {
 
     //set cursor
     this.cursor = cursor;
+  }
+
+  //fix this bug https://github.com/enquirer/enquirer/issues/285
+  async dispatch(s, key) {
+    if(s){
+      super.dispatch(s, key);
+    }
   }
 
   /**
@@ -329,6 +312,7 @@ class SuggestionPrompt extends AutoComplete {
    */
   async submitPrompt() {
     this.state.validating = false;
+    //this.state.submitted = true;
     await this.render();
     await this.close();
 
@@ -349,7 +333,10 @@ class SuggestionPrompt extends AutoComplete {
       if (choice) {
         //enter just inserts this choice
         this.insertString(this.selected.name);
-        this.closeSuggestions(true);
+        this.isSuggesting = false;
+        this.index = -1;
+        this.suggestionStart = -1;
+        this.render();
         return;
       }
     }

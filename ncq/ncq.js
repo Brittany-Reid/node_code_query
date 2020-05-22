@@ -1,49 +1,26 @@
-const Cmd = require("./cmd");
 const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 const fse = require("fs-extra");
 const cprocess = require("child_process");
+const winston = require("winston");
 const SuggestionPrompt = require("./ui/prompts/suggestion-prompt");
 const PromptHandler = require("./ui/prompt-handler");
-const winston = require("winston");
+const Cmd = require("./cmd");
+const DataHandler = require("./data-handler");
+const utils = require("./utils");
+
+const OPTIONS = utils.options(process.argv);
+const BASE = utils.getBaseDirectory();
+const SNIPPETDIR = path.join(BASE, "data/snippets");
+const LOGDIR = path.join(BASE, "logs/main");
+var data = new DataHandler();
+var packages = [];
+var counter = 0;
 
 /*
 Our main program. From here we can start a repl with specified packages.
 */
-
-var BASE = __dirname;
-//fall back if we run from node_code_query/ncq
-if (
-  path.dirname(BASE) != "node_code_query" &&
-  path.dirname(BASE) != "node_code_query/"
-) {
-  BASE = path.join(BASE, "../");
-}
-var LOGDIR = path.join(BASE, "logs/main");
-var SNIPPETDIR = path.join(BASE, "data/snippets");
-var packages = [];
-var counter = 0;
-
-/**
- * Loads the list of packages.
- */
-function loadPackages() {
-  packages = [];
-
-  var files = fs.readdirSync(SNIPPETDIR);
-
-  files.forEach((file) => {
-    var fPath = path.join(SNIPPETDIR, file);
-    var ext = path.extname(fPath);
-    if (ext === ".desc") {
-      packages.push(path.basename(file, ext));
-    }
-  });
-
-  return packages;
-}
-
 class ncqCmd extends Cmd {
   constructor(input) {
     super(input);
@@ -75,7 +52,7 @@ class ncqCmd extends Cmd {
    */
   do_list_packages(inp) {
     if (!packages || packages.length == 0) {
-      loadPackages();
+      data.loadPackages(SNIPPETDIR);
     }
     packages.forEach((element) => {
       console.log(element);
@@ -106,7 +83,6 @@ class ncqCmd extends Cmd {
         }
       }
     }
-
     //make temp
     counter++;
     var tmpDir = path.join(BASE, "tmp" + counter);
@@ -114,7 +90,6 @@ class ncqCmd extends Cmd {
       rimraf.sync(tmpDir);
     }
     fs.mkdirSync(tmpDir);
-
     //copy repl
     fs.copyFileSync(
       path.join(BASE, "ncq/repl.js"),
@@ -130,15 +105,21 @@ class ncqCmd extends Cmd {
       path.join(BASE, "package-lock.json"),
       path.join(tmpDir, "package-lock.json")
     );
-
+    //copy repl
+    fs.copyFileSync(
+      path.join(BASE, "ncq/data-handler.js"),
+      path.join(tmpDir, "data-handler.js")
+    );
     //change directory
     process.chdir(tmpDir);
     // install packages within that directory
-    cprocess.execSync("npm install " + required.join(" ") + " --save", {
-      stdio: [process.stdin, process.stdout, process.stdout],
-    });
+    cprocess.execSync(
+      "npm install " + required.join(" ") + " --save --production --no-optional",
+      {
+        stdio: [process.stdin, process.stdout, process.stdout],
+      }
+    );
     this.resetStdin();
-
     //do repl
     var args = ["repl.js"];
     args.push(required);
@@ -146,7 +127,6 @@ class ncqCmd extends Cmd {
     cprocess.execSync("node repl.js " + required.join(" "), {
       stdio: "inherit",
     });
-
     //return to our directory
     process.chdir(BASE);
     //delete the temporary folder
@@ -154,44 +134,65 @@ class ncqCmd extends Cmd {
   }
 }
 
-//set up logger for main process
-if (!fs.existsSync(LOGDIR)) {
-  //make dir if it doesnt exist
-  fse.mkdirSync(LOGDIR, { recursive: true });
-}
-const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.simple(),
-  defaultMeta: { service: "user-service" },
-  transports: [
+async function setupLogger() {
+  var logger = winston.createLogger();
+
+  //create default silent logger
+  logger.add(
+    new winston.transports.Console({
+      name: "console.info",
+      format: winston.format.simple(),
+      silent: true,
+    })
+  );
+
+  //if --log is set as arg
+  if (OPTIONS.log == true) {
+    if (fs.existsSync(LOGDIR)) {
+      //make dir if it doesnt exist
+      fse.mkdirSync(LOGDIR, { recursive: true });
+    }
+
+    
     //debug for debugging
-    new winston.transports.File({
-      filename: path.join(
-        LOGDIR,
-        "/debug" + Math.floor(Date.now() / 1000) + ".log"
-      ),
-      level: "debug",
-    }),
+    logger.add(
+      new winston.transports.File({
+        filename: path.join(
+          LOGDIR,
+          "/debug" + Math.floor(Date.now() / 1000) + ".log"
+        ),
+        level: "debug",
+      })
+    );
+
     //info for results
-    new winston.transports.File({
-      filename: path.join(
-        LOGDIR,
-        "/run" + Math.floor(Date.now() / 1000) + ".log"
-      ),
-      level: "info",
-    }),
-  ],
-});
+    logger.add(
+      new winston.transports.File({
+        filename: path.join(
+          LOGDIR,
+          "/run" + Math.floor(Date.now() / 1000) + ".log"
+        ),
+        level: "info",
+      })
+    );
+  }
 
-logger.log("debug", "Base directory: " + BASE);
-logger.log("debug", "Logger initialized at: " + LOGDIR);
+  logger.log("debug", "Base directory: " + BASE);
+  logger.log("debug", "Logger initialized at: " + LOGDIR);
+}
 
-loadPackages();
+async function main() {
+  await setupLogger();
+  packages = await data.loadPackges(SNIPPETDIR);
 
-var myPrompt = new PromptHandler(SuggestionPrompt, {
-  choices: packages.slice(),
-});
+  var myPrompt = new PromptHandler(SuggestionPrompt, {
+    choices: packages.slice(),
+  });
 
-new ncqCmd(myPrompt).run();
+  new ncqCmd(myPrompt).run();
+}
 
-exports.loadPackages = loadPackages;
+//run if called as main, not if required
+if (require.main == module) {
+  main();
+}
