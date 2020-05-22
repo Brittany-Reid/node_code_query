@@ -1,5 +1,6 @@
 const repl = require("repl");
 const PromptReadable = require("./ui/prompt-readable");
+const DataHandler = require("./data-handler");
 const path = require("path");
 const natural = require("natural");
 const en = require("stopwords").english;
@@ -45,10 +46,10 @@ const ARG_PACKS = process.argv
   }, "")
   .trim();
 var installedPackages = [];
-if(ARG_PACKS.trim() != ""){
+if (ARG_PACKS.trim() != "") {
   installedPackages = ARG_PACKS.split(" ");
 }
-
+var taskMap;
 
 //set up the repl logger
 if (!fs.existsSync(LOGDIR)) {
@@ -125,6 +126,26 @@ function loadSnippets() {
  */
 const state = {
   /**
+   * Get packages given a task.
+   */
+  packages(string){
+    var task = string.trim();
+    console.log("");
+    console.log("task: " + task);
+    if(taskMap.has(task)){
+      var list = taskMap.get(task);
+      console.log("packages: ");
+      list.forEach(element => {
+        console.log(" - " + element.slice(0, element.length-5));
+      });
+      console.log("");
+    }
+    else{
+      console.log("Can find no packages for task: " + task);
+    }
+  },
+
+  /**
    * Install passed package.
    * TODO: Handle fail.
    */
@@ -132,11 +153,16 @@ const state = {
     //get packages
     var packages = string.split(" ");
     //commandline install
-    cprocess.execSync("npm install " + packages.join(" ") + " --save", {
-      stdio: "inherit",
-    });
+    cprocess.execSync(
+      "npm install " +
+        packages.join(" ") +
+        " --save --production --no-optional",
+      {
+        stdio: "inherit",
+      }
+    );
     installedPackages = installedPackages.concat(packages);
-    if(myRepl){
+    if (myRepl) {
       myRepl.inputStream.setMessage("[" + installedPackages.join(" ") + "]");
     }
   },
@@ -148,17 +174,22 @@ const state = {
     //get packages
     var packages = string.split(" ");
     //commandline uninstall
-    cprocess.execSync("npm uninstall " + packages.join(" ") + " --save", {
-      stdio: "inherit",
-    });
+    cprocess.execSync(
+      "npm uninstall " + packages.join(" ") + " --save --production",
+      {
+        stdio: "inherit",
+      }
+    );
     for (let i = 0; i < packages.length; i++) {
-      if(installedPackages.includes(packages[i])){
+      if (installedPackages.includes(packages[i])) {
         var index = installedPackages.indexOf(packages[i]);
         installedPackages.splice(index);
       }
     }
-    if(myRepl){
-      myRepl.inputStream.setMessage("[" + installedPackages.join(" ").trim() + "]");
+    if (myRepl) {
+      myRepl.inputStream.setMessage(
+        "[" + installedPackages.join(" ").trim() + "]"
+      );
     }
   },
 
@@ -192,16 +223,12 @@ const state = {
    * Print help.
    */
   help() {
-    console.log("<tab>                    shows functions");
-    console.log(
-      `package(str)             shows description of a given package`
-    );
-    console.log(
-      `samples(str)             lists samples catalogued for that package`
-    );
-    console.log(
-      `tasks(<str>)             lists tasks related to keywords (may involve multiple packages)`
-    );
+    console.log("========================================");
+    console.log("samples(str)             lists samples catalogued for that package");
+    console.log("packages(str)            lists packages for a given task");
+    console.log("install(str)             install given package");
+    console.log("uninstall(str)           uninstall given package");
+    console.log("");
   },
 };
 
@@ -209,18 +236,22 @@ function defineReplFunctions() {
   Object.assign(myRepl.context, state);
 }
 
-function main() {
+async function main() {
   logger.log("debug", "Base directory: " + BASE);
   logger.log("debug", "Logger initialized at: " + LOGDIR);
+
+  var data = new DataHandler();
+  await data.loadTasks(path.join(BASE, "data/tasks.txt"));
+  taskMap = data.getTasks();
+  var tasks = Array.from(taskMap.keys());
 
   loadSnippets();
 
   //create input readable
   var pReadable = new PromptReadable(
-    installedPackages.splice(),
+    tasks.slice(0, 200),
     NAME,
-    "[" + installedPackages.join(" ") + "]",
-    []
+    "[" + installedPackages.join(" ") + "]"
   );
 
   //set options
