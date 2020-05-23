@@ -19,17 +19,18 @@ class PromptHandler {
   constructor(promptClass, options = {}) {
     this.promptClass = promptClass;
     this.input = function () {};
-    this.terminalWidth = process.stdout.columns || defaultColumns;
-    process.stdout.on("resize", () => {
-        this.terminalWidth = process.stdout.columns || defaultColumns;
-    });
     this.handleOptions(options);
   }
 
   async run() {
     this.prompt = new this.promptClass(this.options);
+    //for testing, we can run a function on prompt run to insert input through keypress
     this.prompt.once("run", async () => {
       this.input();
+    });
+    //handle cancelling the prompt using ctrl+c
+    this.prompt.on('cancel', () => {
+      process.exit();
     });
     return await this.prompt.run();
   }

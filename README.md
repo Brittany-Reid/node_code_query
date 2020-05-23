@@ -35,9 +35,26 @@ npm start
 ### Commands
 
 ```js
+repl("<packages>")
+```
+Start a node.js REPL with the given packages.
+
+**Once the REPL is started you can use these commands:**
+
+```js
 packages("<task>")
 ```
 Enter a task to find package recommendations (limited to the tasks in task.txt for now!)
+
+```js
+install("<package>")
+```
+Runs `npm install` for a given package.
+
+```js
+uninstall("<package>")
+```
+Runs `npm uninstall` for a given package.
 
 ```js
 samples("<package>")
@@ -50,11 +67,6 @@ Enter a package to find code snippets. Code snippets will be inserted into your 
 |<kbd>tab</kbd>    | Open and close autocompletes.                     |
 |<kbd>return</kbd>| Enter selected autocomplete.                      |
 |<kbd>up/down</kbd>| Scroll autocompletes                              |
-| `repl <package>`| Start REPL with entered package/s.                 |
-|`packages("task")`| Get package recommendation.   |
-|`samples("<package>")`| Get snippets for package.                          |
-|`install("<package>")`| Install given package within REPL.                 |
-|`uninstall("<package>")`| Uninstall given package                          |
 |<kbd>`</kbd>          | Cycle snippets in REPL (after using samples())     |
 |<kbd>return</kbd>     | (Autocomplete Open) Enter selected autocomplete.   |
 |<kbd>return</kbd>     | (Autocomplete Closed) Submit                      |
