@@ -347,6 +347,11 @@ class SuggestionPrompt extends AutoComplete {
     }
     return this.submitPrompt();
   }
+
+  format(){
+    if (this.state.cancelled) return this.value;
+    return super.format();
+  }
 }
 
 module.exports = SuggestionPrompt;
