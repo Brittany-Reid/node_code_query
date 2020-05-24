@@ -249,7 +249,7 @@ async function main() {
 
   //create input readable
   var pReadable = new PromptReadable(
-    tasks.slice(0, 200),
+    tasks.slice(0, 1000).sort(),
     NAME,
     "[" + installedPackages.join(" ") + "]"
   );
