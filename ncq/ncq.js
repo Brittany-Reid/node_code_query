@@ -17,6 +17,7 @@ const LOGDIR = path.join(BASE, "logs/main");
 var data = new DataHandler();
 var packages = [];
 var counter = 0;
+var logger;
 
 /*
 Our main program. From here we can start a repl with specified packages.
@@ -135,7 +136,7 @@ class ncqCmd extends Cmd {
 }
 
 async function setupLogger() {
-  var logger = winston.createLogger();
+  logger = winston.createLogger();
 
   //create default silent logger
   logger.add(
@@ -196,3 +197,5 @@ async function main() {
 if (require.main == module) {
   main();
 }
+
+exports.logger = logger;

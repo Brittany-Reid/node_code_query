@@ -26,6 +26,41 @@ class SuggestionPrompt extends AutoComplete {
     //formatting
     this.maxwitdh = 0;
     this.filtered = [];
+    this.options.actions =  {ctrl:{left:'lineStart', right:'lineEnd'}};
+  }
+
+  async keypress(input, key = {}) {
+    //ignore both esc and ctrl+[
+    //this is default repl behaviour
+    if(key.name === "escape"){
+      return;
+    }
+    return super.keypress(input, key);
+  }
+
+  /**
+   * On Ctrl+left
+   */
+  lineStart(){
+    if(this.cursor <= 0) return;
+    var current = this.cursor;
+    var i = current-1;
+    while(i >= 0){
+      var ch = this.input[i];
+      if(ch == "\n"){
+        break;
+      }
+      i--;
+    }
+    this.cursor = i+1;
+    return this.render();
+  }
+
+  
+  /**
+   * On Ctrl+right
+   */
+  lineEnd(){
   }
 
   /**

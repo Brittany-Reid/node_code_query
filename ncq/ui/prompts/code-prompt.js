@@ -110,6 +110,7 @@ class CodePrompt extends SuggestionPrompt {
   
 
   async keypress(input, key = {}) {
+
     //no choices being displayed
     if (!this.isSuggesting) {
       //if we have snippets
@@ -120,13 +121,7 @@ class CodePrompt extends SuggestionPrompt {
         }
       }
 
-      //newline
-
-      //standard shift + return
-      if(key.shift && key.name == "return"){
-        return this.append("\n", key);
-      }
-      //for windows, allow alt
+      //newline, alt enter
       if(key.sequence == "\u001b\r"){
         return this.append("\n", key);
       }
