@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^4.0.0",
+    "ansi-colors": "^4.1.1",
     "data-store": "^4.0.3",
     "enquirer": "^2.3.5",
     "fs-extra": "^9.0.0",

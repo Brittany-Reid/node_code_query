@@ -41,10 +41,7 @@ class CodePrompt extends SuggestionPrompt {
     
   }
 
-  /**
-   * Extend add indent to calculate for multiline.
-   */
-  addIndent(msg) {
+  getIndent() {
     var before = "";
     var lines = this.input.split("\n");
     //not multiline
@@ -69,8 +66,7 @@ class CodePrompt extends SuggestionPrompt {
     if (before.length < 2) return msg;
 
     var indent = width_of(before);
-    msg = to_width(" ", indent) + msg;
-    return msg;
+    return indent;
   }
 
   /**
@@ -98,12 +94,12 @@ class CodePrompt extends SuggestionPrompt {
   }
 
   async format(input = this.value) {
+    input = super.format(input);
     // if (!this.isSuggesting) {
       let initial = await this.resolve(this.initial, this.state);
-      if (!this.state.submitted) {
+      if (!this.state.submitted || !this.state.cancelled) {
         return this.placeholder(this, { input, initial, pos: this.cursor });
       }
-      return this.styles.submitted(input || initial);
     // }
     return super.format(input);
   }

@@ -2,9 +2,9 @@ const { AutoComplete } = require("enquirer");
 const { keypress } = require("enquirer");
 const unique = (arr) => arr.filter((v, i) => arr.lastIndexOf(v) === i);
 const compact = (arr) => unique(arr).filter(Boolean);
-const chalk = require("chalk");
 const { to_width, width_of } = require("to-width");
 const actions = require("enquirer/lib/combos");
+const colors = require('ansi-colors');
 
 /**
  * Extend Enquirer AutoComplete.
@@ -308,7 +308,10 @@ class SuggestionPrompt extends AutoComplete {
     }
 
     //set width of message
-    msg = to_width(msg, this.maxwitdh + 2, { align: "left" });
+    var indent = this.getIndent();
+    var width = Math.min(this.maxwitdh, this.state.width-(indent+11));
+    if(width < 2) return "";
+    msg = to_width(msg, width + 2, { align: "left" });
     //if we're displaying more than allowed add arrows
     if (this.filtered.length > this.limit) {
       if (i == 0) {
@@ -317,34 +320,26 @@ class SuggestionPrompt extends AutoComplete {
         msg = msg + "▼";
       }
     }
-    msg = to_width(msg, this.maxwitdh + 4, { align: "left" });
-    msg = to_width(msg, this.maxwitdh + 5, { align: "right" });
+    msg = to_width(msg, width + 4, { align: "left" });
+    msg = to_width(msg, width + 5, { align: "right" });
 
-    //set colours
-    if (focused) {
-      msg = chalk.bgRgb(100, 100, 100)(msg);
-    } else {
-      msg = chalk.bgRgb(130, 130, 130)(msg);
-      msg = chalk.black(msg);
+    if(focused){
+      msg = colors.bold(colors.bgBlackBright(msg));
+    }
+    else{
+      msg = colors.bgWhite(colors.black(msg));
     }
 
-    msg = this.addIndent(msg);
+    msg = to_width("", indent) + msg;
 
     return line();
   }
 
-  /**
-   * Adds an indent to a given choice.
-   * This is a function so we can extend it for multiline
-   * in code-prompt
-   */
-  addIndent(msg) {
-    //indent to where we pressed tab
+  getIndent(){
     var indent = width_of(
       this.state.prompt + this.input.substring(0, this.suggestionStart)
     );
-    msg = to_width("", indent) + msg;
-    return msg;
+    return indent;
   }
 
   /**
@@ -419,9 +414,36 @@ class SuggestionPrompt extends AutoComplete {
     return this.submitPrompt();
   }
 
+  /**
+   * On cancel, fromat input to be greyed out.
+   */
   format() {
-    if (this.state.cancelled) return this.value;
+    if (this.state.cancelled) return colors.grey(this.value);
     return super.format();
+  }
+
+  async prefix(){
+    var element = await super.prefix();
+    if(this.state.cancelled){
+      element = colors.grey(colors.unstyle(element));
+    }
+    return element;
+  }
+
+  async message(){
+    var element = await super.message();
+    if(this.state.cancelled){
+      element = colors.grey(colors.unstyle(element));
+    }
+    return element;
+  }
+
+  async separator(){
+    var element = await super.separator();
+    if(this.state.cancelled){
+      element = colors.grey(colors.unstyle(element));
+    }
+    return element;
   }
 }
 
