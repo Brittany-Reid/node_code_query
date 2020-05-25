@@ -149,7 +149,7 @@ const state = {
    * Install passed package.
    * TODO: Handle fail.
    */
-  install(string) {
+  install(string, output = "inherit") {
     //get packages
     var packages = string.split(" ");
     //commandline install
@@ -158,7 +158,7 @@ const state = {
         packages.join(" ") +
         " --save --production --no-optional",
       {
-        stdio: "inherit",
+        stdio: output,
       }
     );
     installedPackages = installedPackages.concat(packages);
@@ -170,14 +170,14 @@ const state = {
   /**
    * Uninstall passed package.
    */
-  uninstall(string) {
+  uninstall(string, output = "inherit") {
     //get packages
     var packages = string.split(" ");
     //commandline uninstall
     cprocess.execSync(
       "npm uninstall " + packages.join(" ") + " --save --production",
       {
-        stdio: "inherit",
+        stdio: output,
       }
     );
     for (let i = 0; i < packages.length; i++) {

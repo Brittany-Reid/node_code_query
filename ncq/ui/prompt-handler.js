@@ -1,9 +1,6 @@
 const Store = require("data-store");
-const actions = require("enquirer/lib/combos");
-const custom = { tab: "tab" };
 const { to_width, width_of } = require("to-width");
 const chalk = require("chalk");
-actions.keys = { ...actions.keys, ...custom };
 
 /**
  * Handles constructing a new prompt.

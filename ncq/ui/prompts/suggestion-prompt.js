@@ -4,6 +4,7 @@ const unique = (arr) => arr.filter((v, i) => arr.lastIndexOf(v) === i);
 const compact = (arr) => unique(arr).filter(Boolean);
 const chalk = require("chalk");
 const { to_width, width_of } = require("to-width");
+const actions = require("enquirer/lib/combos");
 
 /**
  * Extend Enquirer AutoComplete.
@@ -14,7 +15,6 @@ const { to_width, width_of } = require("to-width");
  * - Should have same behaviour as REPL.
  */
 class SuggestionPrompt extends AutoComplete {
-
   /**
    * Constructor. Sets up AutoComplete options, then our options.
    */
@@ -37,7 +37,11 @@ class SuggestionPrompt extends AutoComplete {
     //formatting
     this.maxwitdh = 0;
     this.filtered = [];
-    this.options.actions =  {ctrl:{left:'ctrlLeft', right:'ctrlRight'}};
+    actions.keys = { ...actions.keys, ...{ tab: "tab" } };
+    actions.ctrl = {
+      ...actions.ctrl,
+      ...{ left: "ctrlLeft", right: "ctrlRight" },
+    };
   }
 
   /**
@@ -46,57 +50,57 @@ class SuggestionPrompt extends AutoComplete {
   async keypress(input, key = {}) {
     //ignore both esc and ctrl+[ keys
     //this is default repl behaviour
-    if(key.name === "escape"){
-      return;
-    }
-    //don't print box on ctrl+c
-    if(key.raw === '\u0003'){
+    if (key.name === "escape") {
       return;
     }
     //otherwise,
     return super.keypress(input, key);
   }
 
-    /** Extend dispatch to fix this bug https://github.com/enquirer/enquirer/issues/285.
-     *  Dispatch is called by super.keypress(), to add characters to the input.
-     */
-    async dispatch(s, key) {
-      if(s){
-        super.dispatch(s, key);
-      }
+  /** Extend dispatch to fix this bug https://github.com/enquirer/enquirer/issues/285.
+   *  Dispatch is called by super.keypress(), to add characters to the input.
+   */
+  async dispatch(s, key) {
+    //don't print box on ctrl+c
+    if (key.raw === "\u0003") {
+      return;
     }
+    if (s) {
+      super.dispatch(s, key);
+    }
+  }
 
   /**
    * On Ctrl+left, move to the start of the current line.
    */
-  ctrlLeft(){
+  ctrlLeft() {
     return this.lineStart();
   }
 
   /**
    * On Ctrl+right, move to line end.
    */
-  ctrlRight(){
+  ctrlRight() {
     return this.lineEnd();
   }
 
-  lineStart(){
-    if(this.cursor <= 0) return;
+  lineStart() {
+    if (this.cursor <= 0) return;
     var current = this.cursor;
-    var i = current-1;
-    while(i >= 0){
+    var i = current - 1;
+    while (i >= 0) {
       var ch = this.input[i];
-      if(ch == "\n"){
+      if (ch == "\n") {
         break;
       }
       i--;
     }
-    this.cursor = i+1;
+    this.cursor = i + 1;
     return this.render();
   }
 
-  lineEnd(){
-  }
+  // lineEnd(){
+  // }
 
   /**
    * Sometimes we get a crash because of the enable function. If we have no selected, skip.
@@ -196,7 +200,7 @@ class SuggestionPrompt extends AutoComplete {
   tab() {
     //if we have no choices, return
     //for some reason this.choices doesnt match this.options right away
-    if(!this.options.choices || this.options.choices.length < 1) return;
+    if (!this.options.choices || this.options.choices.length < 1) return;
     //toggle on and record start point
     if (!this.isSuggesting) {
       this.isSuggesting = true;
@@ -209,7 +213,7 @@ class SuggestionPrompt extends AutoComplete {
     }
   }
 
-    /**
+  /**
    * Calculate max width of suggestions.
    */
   getWidth(choices) {
@@ -411,7 +415,7 @@ class SuggestionPrompt extends AutoComplete {
     return this.submitPrompt();
   }
 
-  format(){
+  format() {
     if (this.state.cancelled) return this.value;
     return super.format();
   }
