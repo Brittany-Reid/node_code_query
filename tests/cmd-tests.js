@@ -1,8 +1,7 @@
 require("mocha");
 var assert = require("assert");
-const Cmd = require("../ncq/cmd");
+const Cmd = require("../ncq/base-cmd");
 const PromptHandler = require("../ncq/ui/prompt-handler");
-const cprocess = require("child_process");
 const sinon = require("sinon");
 const { Input } = require("enquirer");
 
@@ -25,6 +24,10 @@ async function send(string, prompt) {
 describe("Cmd", function () {
   var output = [];
 
+  /**
+   * This runs once, before tests.
+   * We hide output and store it in an array so we can check what gets printed.
+   */
   before(() => {
     // stub console log to push to an array
     sinon.stub(console, "log").callsFake(function (string) {
@@ -32,6 +35,10 @@ describe("Cmd", function () {
     });
   });
 
+  /**
+   * This runs before each tests.
+   * The clear the output array.
+   */
   this.beforeEach(() => {
     output = [];
   });
@@ -301,7 +308,7 @@ describe("Cmd", function () {
   });
 
   /**
-   * Restore all functions.
+   * After all tests, restore functions.
    */
   after(() => {
     console.log.restore();

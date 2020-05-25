@@ -1,12 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const rimraf = require("rimraf");
 const fse = require("fs-extra");
-const cprocess = require("child_process");
 const winston = require("winston");
 const SuggestionPrompt = require("./ui/prompts/suggestion-prompt");
 const PromptHandler = require("./ui/prompt-handler");
-const Cmd = require("./cmd");
+const NcqCmd = require("./ncq-cmd");
 const DataHandler = require("./data-handler");
 const utils = require("./utils");
 
@@ -16,125 +14,18 @@ const SNIPPETDIR = path.join(BASE, "data/snippets");
 const LOGDIR = path.join(BASE, "logs/main");
 var data = new DataHandler();
 var packages = [];
-var counter = 0;
 var logger;
 
-/*
-Our main program. From here we can start a repl with specified packages.
-*/
-class ncqCmd extends Cmd {
-  constructor(input) {
-    super(input);
-  }
-
-  /**
-   * The default command, when the command matches no other commands.
-   */
-  default(inp) {
-    if (inp == "x" || inp == "q") {
-      return this.do_exit(inp);
-    }
-    console.log(
-      "Did not understand command: " +
-        inp +
-        "\nWrite help to show the list of commands."
-    );
-  }
-
-  /**
-   * Help for list_packages command.
-   */
-  help_list_packages(inp) {
-    console.log("Lists available packages.");
-  }
-
-  /**
-   * Lists packages in the snippet directory for repl.
-   */
-  do_list_packages(inp) {
-    if (!packages || packages.length == 0) {
-      data.loadPackages(SNIPPETDIR);
-    }
-    packages.forEach((element) => {
-      console.log(element);
-    });
-  }
-
-  /**
-   * Help for repl command.
-   */
-  help_repl(inp) {
-    console.log("Runs a node.js repl.");
-  }
-
-  do_repl(inp) {
-    //if packages
-    var required = [];
-    if (inp.trim() != "") {
-      //print packages
-      console.log(inp);
-      //check packages
-      required = inp.split(" ");
-      for (let i = 0; i < required.length; i++) {
-        if (!packages.includes(required[i])) {
-          console.log(
-            "could not find package " + required[i] + " cannot create repl"
-          );
-          return false;
-        }
-      }
-    }
-    //make temp
-    counter++;
-    var tmpDir = path.join(BASE, "tmp" + counter);
-    if (fs.existsSync(tmpDir)) {
-      rimraf.sync(tmpDir);
-    }
-    fs.mkdirSync(tmpDir);
-    //copy repl
-    fs.copyFileSync(
-      path.join(BASE, "ncq/repl.js"),
-      path.join(tmpDir, "repl.js")
-    );
-    //copy dependant files
-    fse.copySync(path.join(BASE, "ncq/ui"), path.join(tmpDir, "ui"));
-    fs.copyFileSync(
-      path.join(BASE, "package.json"),
-      path.join(tmpDir, "package.json")
-    );
-    fs.copyFileSync(
-      path.join(BASE, "package-lock.json"),
-      path.join(tmpDir, "package-lock.json")
-    );
-    //copy repl
-    fs.copyFileSync(
-      path.join(BASE, "ncq/data-handler.js"),
-      path.join(tmpDir, "data-handler.js")
-    );
-    //change directory
-    process.chdir(tmpDir);
-    // install packages within that directory
-    cprocess.execSync(
-      "npm install " + required.join(" ") + " --save --production --no-optional",
-      {
-        stdio: [process.stdin, process.stdout, process.stdout],
-      }
-    );
-    this.resetStdin();
-    //do repl
-    var args = ["repl.js"];
-    args.push(required);
-    args.push("--save");
-    cprocess.execSync("node repl.js " + required.join(" "), {
-      stdio: "inherit",
-    });
-    //return to our directory
-    process.chdir(BASE);
-    //delete the temporary folder
-    rimraf.sync(tmpDir);
-  }
+/**
+ * Main file. Main function will only run if we run this as main.
+ */
+if (require.main == module) {
+  main();
 }
 
+/**
+ * Setup logger.
+ */
 async function setupLogger() {
   logger = winston.createLogger();
 
@@ -182,6 +73,9 @@ async function setupLogger() {
   logger.log("debug", "Logger initialized at: " + LOGDIR);
 }
 
+/**
+ * Main function.
+ */
 async function main() {
   await setupLogger();
   packages = await data.loadPackges(SNIPPETDIR);
@@ -190,12 +84,9 @@ async function main() {
     choices: packages.slice(),
   });
 
-  new ncqCmd(myPrompt).run();
+  new NcqCmd(myPrompt, packages).run();
 }
 
-//run if called as main, not if required
-if (require.main == module) {
-  main();
-}
-
+//export logger and BASE directory
 exports.logger = logger;
+exports.BASE = BASE;

@@ -1,6 +1,7 @@
 const readline = require("readline");
 
 /**
+ * Base command line interface.
  * Adapted from python Cmd. Extend to add or overwrite functions.
  */
 class Cmd {
@@ -22,10 +23,16 @@ class Cmd {
     await this.cmdLoop();
   }
 
+  /**
+   * Accept input, returns promise of output.
+   */
   async acceptInput() {
     return await this.input.run();
   }
 
+  /**
+   * Recurisve command loop.
+   */
   async cmdLoop() {
     await this.acceptInput()
       .then(async (response) => {
@@ -34,9 +41,6 @@ class Cmd {
           await this.cmdLoop()
         };
       })
-      // .catch((e) => {
-      //   this.print(e);
-      // });
   }
 
   /**
@@ -105,6 +109,9 @@ class Cmd {
     return [cmd, args, line];
   }
 
+  /**
+   * Returns a Set of method names for the class.
+   */
   getnames() {
     let methods = new Set();
     var obj = this;
