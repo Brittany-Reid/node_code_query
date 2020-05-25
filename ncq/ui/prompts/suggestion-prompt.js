@@ -70,21 +70,52 @@ class SuggestionPrompt extends AutoComplete {
     }
   }
 
+    /**
+   * When we press tab.
+   */
+  tab() {
+    //if we have no choices, return
+    //for some reason this.choices doesnt match this.options right away
+    if (!this.options.choices || this.options.choices.length < 1) return;
+    //toggle on and record start point
+    if (!this.isSuggesting) {
+      this.isSuggesting = true;
+      this.suggestionStart = this.cursor;
+      this.complete(); //call complete, trigger suggestions
+    } else {
+      this.isSuggesting = false;
+      this.index = -1;
+      this.render();
+    }
+  }
+
+
+    /**
+   * When we press up. Adds new functionality if not suggesting: get from history.
+   */
+  up() {
+    if (!this.isSuggesting) {
+      this.getHistory("prev");
+      return;
+    }
+    return super.up();
+  }
+
+  /**
+   * When we press down and aren't suggesting, get from history.
+   */
+  down() {
+    if (!this.isSuggesting) {
+      this.getHistory("next");
+      return;
+    }
+    return super.down();
+  }
+
   /**
    * On Ctrl+left, move to the start of the current line.
    */
   ctrlLeft() {
-    return this.lineStart();
-  }
-
-  /**
-   * On Ctrl+right, move to line end.
-   */
-  ctrlRight() {
-    return this.lineEnd();
-  }
-
-  lineStart() {
     if (this.cursor <= 0) return;
     var current = this.cursor;
     var i = current - 1;
@@ -99,8 +130,22 @@ class SuggestionPrompt extends AutoComplete {
     return this.render();
   }
 
-  // lineEnd(){
-  // }
+  /**
+   * On Ctrl+right, move to line end.
+   */
+  ctrlRight() {
+    if (this.cursor >= this.input.length) return;
+    var i = this.cursor;
+    while (i < this.input.length) {
+      var ch = this.input[i];
+      if (ch == "\n") {
+        break;
+      }
+      i++;
+    }
+    this.cursor = i;
+    return this.render();
+  }
 
   /**
    * Sometimes we get a crash because of the enable function. If we have no selected, skip.
@@ -151,28 +196,6 @@ class SuggestionPrompt extends AutoComplete {
   }
 
   /**
-   * When we press up. Adds new functionality if not suggesting: get from history.
-   */
-  up() {
-    if (!this.isSuggesting) {
-      this.getHistory("prev");
-      return;
-    }
-    return super.up();
-  }
-
-  /**
-   * When we press down and aren't suggesting, get from history.
-   */
-  down() {
-    if (!this.isSuggesting) {
-      this.getHistory("next");
-      return;
-    }
-    return super.down();
-  }
-
-  /**
    * Save input in history.
    */
   save() {
@@ -192,25 +215,6 @@ class SuggestionPrompt extends AutoComplete {
     // this.clear();
     // this.stdout.write("> ");
     super.close();
-  }
-
-  /**
-   * When we press tab.
-   */
-  tab() {
-    //if we have no choices, return
-    //for some reason this.choices doesnt match this.options right away
-    if (!this.options.choices || this.options.choices.length < 1) return;
-    //toggle on and record start point
-    if (!this.isSuggesting) {
-      this.isSuggesting = true;
-      this.suggestionStart = this.cursor;
-      this.complete(); //call complete, trigger suggestions
-    } else {
-      this.isSuggesting = false;
-      this.index = -1;
-      this.render();
-    }
   }
 
   /**
