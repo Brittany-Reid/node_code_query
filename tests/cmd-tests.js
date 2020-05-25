@@ -6,13 +6,22 @@ const cprocess = require("child_process");
 const sinon = require("sinon");
 const { Input } = require("enquirer");
 
+/**
+ * Utility function, takes a string to send as input to Enquirer prompt
+ * and simulates keypresses.
+ */
 async function send(string, prompt) {
+  //send each character as a keypress
   for (let i = 0; i < string.length; i++) {
     await prompt.keypress(string[i]);
   }
+  //finish
   await prompt.submit();
 }
 
+/**
+ * Unit tests for the Cmd Class.
+ */
 describe("Cmd", function () {
   var output = [];
 
@@ -173,11 +182,7 @@ describe("Cmd", function () {
 
       myCmd.input.input = async function () {
         if (counter == 0) {
-          await myCmd.input.prompt.keypress("a");
-          await myCmd.input.prompt.keypress("a");
-          await myCmd.input.prompt.keypress("(");
-          await myCmd.input.prompt.keypress(")");
-          myCmd.input.prompt.submit();
+          await send("aa()", myCmd.input.prompt);
         }
         if (counter == 1) {
           myCmd.input.prompt.submit();
@@ -201,9 +206,7 @@ describe("Cmd", function () {
 
       myCmd.input.input = async function () {
         if (counter == 0) {
-          await myCmd.input.prompt.keypress("(");
-          await myCmd.input.prompt.keypress(")");
-          myCmd.input.prompt.submit();
+          await send("()", myCmd.input.prompt);
         }
         if (counter == 1) {
           myCmd.input.prompt.submit();
@@ -259,13 +262,7 @@ describe("Cmd", function () {
       var counter = 0;
       myCmd.input.input = async function () {
         if (counter == 0) {
-          await myCmd.input.prompt.keypress("t");
-          await myCmd.input.prompt.keypress("e");
-          await myCmd.input.prompt.keypress("s");
-          await myCmd.input.prompt.keypress("t");
-          await myCmd.input.prompt.keypress("(");
-          await myCmd.input.prompt.keypress(")");
-          myCmd.input.prompt.submit();
+          await send("test()", myCmd.input.prompt);
         }
         if (counter == 1) {
           await send("exit()", myCmd.input.prompt);

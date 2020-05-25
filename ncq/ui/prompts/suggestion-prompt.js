@@ -5,7 +5,19 @@ const compact = (arr) => unique(arr).filter(Boolean);
 const chalk = require("chalk");
 const { to_width, width_of } = require("to-width");
 
+/**
+ * Extend Enquirer AutoComplete.
+ * - Can enter custom input.
+ * - Can toggle suggestions.
+ * - Suggestions start from when a user presses tab, and follow the user.
+ * - Suggestions are formatted to have background colour.
+ * - Should have same behaviour as REPL.
+ */
 class SuggestionPrompt extends AutoComplete {
+
+  /**
+   * Constructor. Sets up AutoComplete options, then our options.
+   */
   constructor(options) {
     super(options);
 
@@ -22,25 +34,53 @@ class SuggestionPrompt extends AutoComplete {
     //to display suggestions
     this.isSuggesting = false;
     this.hIndex = -1;
-
     //formatting
     this.maxwitdh = 0;
     this.filtered = [];
-    this.options.actions =  {ctrl:{left:'lineStart', right:'lineEnd'}};
+    this.options.actions =  {ctrl:{left:'ctrlLeft', right:'ctrlRight'}};
   }
 
+  /**
+   * Extend keypress to ignore certain keys.
+   */
   async keypress(input, key = {}) {
-    //ignore both esc and ctrl+[
+    //ignore both esc and ctrl+[ keys
     //this is default repl behaviour
     if(key.name === "escape"){
       return;
     }
+    //don't print box on ctrl+c
+    if(key.raw === '\u0003'){
+      return;
+    }
+    //otherwise,
     return super.keypress(input, key);
   }
 
+    /** Extend dispatch to fix this bug https://github.com/enquirer/enquirer/issues/285.
+     *  Dispatch is called by super.keypress(), to add characters to the input.
+     */
+    async dispatch(s, key) {
+      console.log(key);
+      if(s){
+        super.dispatch(s, key);
+      }
+    }
+
   /**
-   * On Ctrl+left
+   * On Ctrl+left, move to the start of the current line.
    */
+  ctrlLeft(){
+    return this.lineStart();
+  }
+
+  /**
+   * On Ctrl+right, move to line end.
+   */
+  ctrlRight(){
+    return this.lineEnd();
+  }
+
   lineStart(){
     if(this.cursor <= 0) return;
     var current = this.cursor;
@@ -56,10 +96,6 @@ class SuggestionPrompt extends AutoComplete {
     return this.render();
   }
 
-  
-  /**
-   * On Ctrl+right
-   */
   lineEnd(){
   }
 
@@ -229,13 +265,6 @@ class SuggestionPrompt extends AutoComplete {
 
     //set cursor
     this.cursor = cursor;
-  }
-
-  //fix this bug https://github.com/enquirer/enquirer/issues/285
-  async dispatch(s, key) {
-    if(s){
-      super.dispatch(s, key);
-    }
   }
 
   /**
