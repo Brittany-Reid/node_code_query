@@ -61,7 +61,6 @@ class SuggestionPrompt extends AutoComplete {
      *  Dispatch is called by super.keypress(), to add characters to the input.
      */
     async dispatch(s, key) {
-      console.log(key);
       if(s){
         super.dispatch(s, key);
       }
