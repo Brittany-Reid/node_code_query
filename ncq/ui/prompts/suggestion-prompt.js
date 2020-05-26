@@ -1,4 +1,4 @@
-const { AutoComplete } = require("enquirer");
+const { AutoComplete, Select } = require("enquirer");
 const { keypress } = require("enquirer");
 const unique = (arr) => arr.filter((v, i) => arr.lastIndexOf(v) === i);
 const compact = (arr) => unique(arr).filter(Boolean);
@@ -43,6 +43,11 @@ class SuggestionPrompt extends AutoComplete {
       ...{ left: "ctrlLeft", right: "ctrlRight" },
     };
   }
+
+  // async toChoice(ele, i, parent) {
+  //   console.log(parent);
+  //   return super.toChoice(ele, i, parent);
+  // }
 
   /**
    * Extend keypress to ignore certain keys.
@@ -158,11 +163,11 @@ class SuggestionPrompt extends AutoComplete {
   /**
    * Reset that allows empty suggestion list.
    */
-  reset(prompt, choices) {
+  reset() {
     if (this.selectable.length === 0) {
       return;
     }
-    return super.reset(prompt, choices);
+    return super.reset();
   }
 
   getHistory(action = "prev") {
@@ -210,13 +215,6 @@ class SuggestionPrompt extends AutoComplete {
     this.hIndex = this.data.past.length - 1;
   }
 
-  close() {
-    //how to hide the prompt:
-    // this.clear();
-    // this.stdout.write("> ");
-    super.close();
-  }
-
   /**
    * Calculate max width of suggestions.
    */
@@ -229,12 +227,18 @@ class SuggestionPrompt extends AutoComplete {
     this.maxwitdh = max;
   }
 
+  filter(input, choices){
+    return choices;
+  }
+
   suggest(input = this.input, choices = this.state._choices) {
     //if we are not suggesting, return no suggestions
     if (!this.isSuggesting) {
       this.filtered = [];
       return this.filtered;
     }
+
+    choices = typeof this.options.choiceFilter == 'function' ?  this.options.choiceFilter.call(this, input, choices) : this.filter(input, choices);
 
     //get string to use as a substring from when we pressed tab and what we have written now
     let str = input.toLowerCase().substring(this.suggestionStart, this.cursor);
@@ -248,7 +252,7 @@ class SuggestionPrompt extends AutoComplete {
     }
 
     this.getWidth(this.filtered);
-
+    
     return this.filtered;
   }
 
@@ -271,13 +275,45 @@ class SuggestionPrompt extends AutoComplete {
     this.input = input;
 
     //set cursor
-    this.cursor = cursor;
+    if(str.endsWith("(\"\")")){
+      this.cursor = cursor-2;
+    }
+    else{
+      this.cursor = cursor;
+    }
+  }
+
+  highlight(input, color){
+    let val = input.toLowerCase().substring(this.suggestionStart, this.cursor);
+    return str => {
+      let s = str.toLowerCase();
+      let i = s.indexOf(val);
+      let colored = color(str.slice(i, i + val.length));
+      return i >= 0 ? str.slice(0, i) + colored + str.slice(i + val.length) : str;
+    };
+  }
+
+  /**
+   * Overwrite render to use our own highlight function.
+   */
+  async render(){
+    if (this.state.status !== 'pending') return await Select.prototype.render.call(this);
+    let style = this.options.highlight
+      ? this.options.highlight.bind(this)
+      : this.styles.placeholder;
+
+    let color = this.highlight(this.input, style);
+    let choices = this.choices;
+    this.choices = choices.map(ch => ({ ...ch, message: color(ch.message) }));
+    await Select.prototype.render.call(this)
+    this.choices = choices;
   }
 
   /**
    * Overwrite choice rendering to add background colour.
    */
   async renderChoice(choice, i) {
+    
     await this.onChoice(choice, i);
 
     let focused = this.index === i;
@@ -310,7 +346,7 @@ class SuggestionPrompt extends AutoComplete {
     //set width of message
     var indent = this.getIndent();
     var width = Math.min(this.maxwitdh, this.state.width-(indent+11));
-    if(width < 2) return "";
+    if(width < 0) return "";
     msg = to_width(msg, width + 2, { align: "left" });
     //if we're displaying more than allowed add arrows
     if (this.filtered.length > this.limit) {
@@ -373,15 +409,35 @@ class SuggestionPrompt extends AutoComplete {
   }
 
   /**
-   * Submits prompt from prompt line, not a choice.
-   * Copied from Enquirer prompt.js
+   * What happens on enter command.
    */
-  async submitPrompt() {
+  async submit() {
+    
+    //if we are suggesting, insert dont submit
+    if (this.isSuggesting) {
+      //do we have a focused choice?
+      let choice = this.focused;
+      if (choice) {
+        //insert
+        this.insertString(this.selected.value);
+        this.isSuggesting = false;
+        this.index = -1;
+        this.suggestionStart = -1;
+        await this.render();
+        return;
+      }
+    }
+
+    //submit input from line
     this.state.validating = false;
-    //this.state.submitted = true;
+    this.state.submitted = true;
+
+    //render final version
     await this.render();
+    //close prompt
     await this.close();
 
+    //get and submit value
     this.value = await this.result(this.value);
     this.emit("submit", this.value);
 
@@ -389,36 +445,15 @@ class SuggestionPrompt extends AutoComplete {
   }
 
   /**
-   * What happens on enter command.
-   */
-  async submit() {
-    //if we are suggesting
-    if (this.isSuggesting) {
-      //and we have a focused choice
-      let choice = this.focused;
-      if (choice) {
-        //enter just inserts this choice
-        this.insertString(this.selected.name);
-        this.isSuggesting = false;
-        this.index = -1;
-        this.suggestionStart = -1;
-        this.render();
-        return;
-      }
-    }
-
-    //otherwise, we submit input from the prompt
-    if (this.store && this.autosave === true) {
-      this.save();
-    }
-    return this.submitPrompt();
-  }
-
-  /**
    * On cancel, fromat input to be greyed out.
+   * On submit, don't print focused suggestion.
    */
   format() {
     if (this.state.cancelled) return colors.grey(this.value);
+    if (this.state.submitted) {
+      let value = this.value = this.input;
+      return value;
+    }
     return super.format();
   }
 

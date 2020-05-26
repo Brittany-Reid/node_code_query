@@ -29,5 +29,19 @@ function getBaseDirectory() {
   return base;
 }
 
+function generateChoices(choices = [], type){
+  var result = [];
+  for (let i = 0; i < choices.length; i++) {
+    const choice = choices[i];
+    const entry = {name : choice, type: type};
+    if(type == "command"){
+      entry["value"] = choice + "(\"\")"
+    }
+    result.push(entry);
+  }
+  return result;
+}
+
 exports.getBaseDirectory = getBaseDirectory;
+exports.generateChoices = generateChoices;
 exports.options = options;

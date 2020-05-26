@@ -45,7 +45,6 @@ async function setupLogger() {
       fse.mkdirSync(LOGDIR, { recursive: true });
     }
 
-    
     //debug for debugging
     logger.add(
       new winston.transports.File({
@@ -80,11 +79,63 @@ async function main() {
   await setupLogger();
   packages = await data.loadPackges(SNIPPETDIR);
 
-  var myPrompt = new PromptHandler(SuggestionPrompt, {
-    choices: packages.slice(),
+  var myPrompt = new PromptHandler(SuggestionPrompt);
+
+  var cmd = new NcqCmd(myPrompt, packages);
+  var commands = Array.from(cmd.getnames());
+  commands = commands.filter(function (value) {
+    if (value.startsWith("do_")) {
+      return true;
+    }
   });
 
-  new NcqCmd(myPrompt, packages).run();
+  commands.forEach((element, index) => {
+    if (element.startsWith("do_")) {
+      element = element.replace("do_", "");
+    }
+
+    commands[index] = element;
+  });
+
+  commands = utils.generateChoices(commands, "command");
+  var packagesChoices = utils.generateChoices(packages, "package");
+
+  var choices = commands.concat(packagesChoices).sort(function (a, b) {
+    var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+    var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+
+    // names must be equal
+    return 0;
+  });
+
+  myPrompt.options.choiceFilter = function(input, choices){
+    //filter by context, what command
+    if(input.substring(0, this.cursor).endsWith("repl(\"")){
+      choices = choices.filter(function(choice){
+        if(choice.type === "package"){
+          return true;
+        }
+      })
+    }
+    //no command
+    else{
+      choices = choices.filter(function(choice){
+        if(choice.type === "command"){
+          return true;
+        }
+      })
+    }
+    return choices;
+  }
+
+  myPrompt.options.choices = choices.slice();
+  cmd.run();
 }
 
 //export logger and BASE directory
