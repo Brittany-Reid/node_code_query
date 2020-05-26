@@ -2,6 +2,7 @@ require("mocha");
 var assert = require("assert");
 const SuggestionPrompt = require("../ncq/ui/prompts/suggestion-prompt");
 const sinon = require("sinon");
+const PromptHandler = require("../ncq/ui/prompt-handler");
 
 const up = { sequence: '\u001b[A', name: 'up', code: '[A' };
 const down = { sequence: '\u001b[B', name: 'down', code: '[B' };
@@ -69,6 +70,25 @@ describe("SuggestionPrompt", function () {
         var out = await prompt.run();
   
         assert.strictEqual(out, "");
+      });
+      it("should insert previous from histroy using up", async function () {
+        //use prompt handler becuse it handles history for us
+        var prompt = new PromptHandler(SuggestionPrompt, {choices : ["a", "b"], show:false});
+        prompt.input = function(){
+            send("test", prompt.prompt);
+        }
+
+        await prompt.run();
+        
+        prompt = new PromptHandler(SuggestionPrompt, {choices : ["a", "b"], show:false});
+        prompt.input = function(){
+          prompt.prompt.keypress(null, up);
+          prompt.prompt.submit();
+        }
+
+        out = await prompt.run();
+  
+        assert.strictEqual(out, "test");
       });
     });
   

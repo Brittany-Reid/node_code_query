@@ -106,13 +106,12 @@ class CodePrompt extends SuggestionPrompt {
   
 
   async keypress(input, key = {}) {
-
     //no choices being displayed
     if (!this.isSuggesting) {
       //if we have snippets
       if(this.snippets && this.snippets.length > 0){
-        //snippet cycle
-        if (key.raw === "`") {
+        //snippet cycle with alt+1
+        if (key.meta && key.name == "1") {
           return this.cycle();
         }
       }

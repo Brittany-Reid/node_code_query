@@ -67,7 +67,7 @@ Enter a package to find code snippets. Code snippets will be inserted into your 
 |<kbd>tab</kbd>    | Open and close autocompletes.                     |
 |<kbd>return</kbd>| Enter selected autocomplete.                      |
 |<kbd>up/down</kbd>| Scroll autocompletes                              |
-|<kbd>`</kbd>          | Cycle snippets in REPL (after using samples())     |
+|<kbd>alt</kbd> + <kbd>1</kbd>          | Cycle snippets in REPL (after using samples())     |
 |<kbd>return</kbd>     | (Autocomplete Open) Enter selected autocomplete.   |
 |<kbd>return</kbd>     | (Autocomplete Closed) Submit                      |
 |<kbd>alt</kbd> + <kbd>return</kbd>                                  | New line                                     |

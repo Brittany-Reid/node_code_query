@@ -4,7 +4,7 @@ const unique = (arr) => arr.filter((v, i) => arr.lastIndexOf(v) === i);
 const compact = (arr) => unique(arr).filter(Boolean);
 const { to_width, width_of } = require("to-width");
 const actions = require("enquirer/lib/combos");
-const colors = require('ansi-colors');
+const colors = require("ansi-colors");
 
 /**
  * Extend Enquirer AutoComplete.
@@ -75,7 +75,7 @@ class SuggestionPrompt extends AutoComplete {
     }
   }
 
-    /**
+  /**
    * When we press tab.
    */
   tab() {
@@ -94,8 +94,7 @@ class SuggestionPrompt extends AutoComplete {
     }
   }
 
-
-    /**
+  /**
    * When we press up. Adds new functionality if not suggesting: get from history.
    */
   up() {
@@ -227,7 +226,7 @@ class SuggestionPrompt extends AutoComplete {
     this.maxwitdh = max;
   }
 
-  filter(input, choices){
+  filter(input, choices) {
     return choices;
   }
 
@@ -238,7 +237,10 @@ class SuggestionPrompt extends AutoComplete {
       return this.filtered;
     }
 
-    choices = typeof this.options.choiceFilter == 'function' ?  this.options.choiceFilter.call(this, input, choices) : this.filter(input, choices);
+    choices =
+      typeof this.options.choiceFilter == "function"
+        ? this.options.choiceFilter.call(this, input, choices)
+        : this.filter(input, choices);
 
     //get string to use as a substring from when we pressed tab and what we have written now
     let str = input.toLowerCase().substring(this.suggestionStart, this.cursor);
@@ -252,7 +254,7 @@ class SuggestionPrompt extends AutoComplete {
     }
 
     this.getWidth(this.filtered);
-    
+
     return this.filtered;
   }
 
@@ -275,37 +277,39 @@ class SuggestionPrompt extends AutoComplete {
     this.input = input;
 
     //set cursor
-    if(str.endsWith("(\"\")")){
-      this.cursor = cursor-2;
-    }
-    else{
+    if (str.endsWith('("")')) {
+      this.cursor = cursor - 2;
+    } else {
       this.cursor = cursor;
     }
   }
 
-  highlight(input, color){
+  highlight(input, color) {
     let val = input.toLowerCase().substring(this.suggestionStart, this.cursor);
-    return str => {
+    return (str) => {
       let s = str.toLowerCase();
       let i = s.indexOf(val);
       let colored = color(str.slice(i, i + val.length));
-      return i >= 0 ? str.slice(0, i) + colored + str.slice(i + val.length) : str;
+      return i >= 0
+        ? str.slice(0, i) + colored + str.slice(i + val.length)
+        : str;
     };
   }
 
   /**
    * Overwrite render to use our own highlight function.
    */
-  async render(){
-    if (this.state.status !== 'pending') return await Select.prototype.render.call(this);
+  async render() {
+    if (this.state.status !== "pending")
+      return await Select.prototype.render.call(this);
     let style = this.options.highlight
       ? this.options.highlight.bind(this)
       : this.styles.placeholder;
 
     let color = this.highlight(this.input, style);
     let choices = this.choices;
-    this.choices = choices.map(ch => ({ ...ch, message: color(ch.message) }));
-    await Select.prototype.render.call(this)
+    this.choices = choices.map((ch) => ({ ...ch, message: color(ch.message) }));
+    await Select.prototype.render.call(this);
     this.choices = choices;
   }
 
@@ -313,7 +317,6 @@ class SuggestionPrompt extends AutoComplete {
    * Overwrite choice rendering to add background colour.
    */
   async renderChoice(choice, i) {
-    
     await this.onChoice(choice, i);
 
     let focused = this.index === i;
@@ -345,8 +348,8 @@ class SuggestionPrompt extends AutoComplete {
 
     //set width of message
     var indent = this.getIndent();
-    var width = Math.min(this.maxwitdh, this.state.width-(indent+11));
-    if(width < 0) return "";
+    var width = Math.min(this.maxwitdh, this.state.width - (indent + 11));
+    if (width < 0) return "";
     msg = to_width(msg, width + 2, { align: "left" });
     //if we're displaying more than allowed add arrows
     if (this.filtered.length > this.limit) {
@@ -359,10 +362,9 @@ class SuggestionPrompt extends AutoComplete {
     msg = to_width(msg, width + 4, { align: "left" });
     msg = to_width(msg, width + 5, { align: "right" });
 
-    if(focused){
+    if (focused) {
       msg = colors.bold(colors.bgBlackBright(msg));
-    }
-    else{
+    } else {
       msg = colors.bgWhite(colors.black(msg));
     }
 
@@ -371,7 +373,7 @@ class SuggestionPrompt extends AutoComplete {
     return line();
   }
 
-  getIndent(){
+  getIndent() {
     var indent = width_of(
       this.state.prompt + this.input.substring(0, this.suggestionStart)
     );
@@ -412,7 +414,6 @@ class SuggestionPrompt extends AutoComplete {
    * What happens on enter command.
    */
   async submit() {
-    
     //if we are suggesting, insert dont submit
     if (this.isSuggesting) {
       //do we have a focused choice?
@@ -426,6 +427,11 @@ class SuggestionPrompt extends AutoComplete {
         await this.render();
         return;
       }
+    }
+
+    //otherwise, we submit input from the prompt
+    if (this.store && this.autosave === true) {
+      this.save();
     }
 
     //submit input from line
@@ -451,31 +457,31 @@ class SuggestionPrompt extends AutoComplete {
   format() {
     if (this.state.cancelled) return colors.grey(this.value);
     if (this.state.submitted) {
-      let value = this.value = this.input;
+      let value = (this.value = this.input);
       return value;
     }
     return super.format();
   }
 
-  async prefix(){
+  async prefix() {
     var element = await super.prefix();
-    if(this.state.cancelled){
+    if (this.state.cancelled) {
       element = colors.grey(colors.unstyle(element));
     }
     return element;
   }
 
-  async message(){
+  async message() {
     var element = await super.message();
-    if(this.state.cancelled){
+    if (this.state.cancelled) {
       element = colors.grey(colors.unstyle(element));
     }
     return element;
   }
 
-  async separator(){
+  async separator() {
     var element = await super.separator();
-    if(this.state.cancelled){
+    if (this.state.cancelled) {
       element = colors.grey(colors.unstyle(element));
     }
     return element;
