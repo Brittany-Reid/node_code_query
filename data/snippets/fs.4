@@ -1,4 +1,4 @@
-To correctly order the operations, move the fs.stat() call into the callback of the fs.rename() operation:
+# To correctly order the operations, move the fs.stat() call into the callback of the fs.rename() operation:
 
 fs.rename('/tmp/hello', '/tmp/world', (err) => {
   if (err) throw err;

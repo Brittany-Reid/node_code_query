@@ -16,8 +16,9 @@ class CodePrompt extends SuggestionPrompt {
     this.cursor = this.input.length;
     //set initial
     if(this.snippets && this.snippets.length > 0){
-      this.input = this.snippets[0];
+      this.input = this.snippets[0].trim();
       this.snippetIndex = 0;
+      this.cursor = this.input.length;
     }
   }
 
@@ -183,7 +184,10 @@ class CodePrompt extends SuggestionPrompt {
 
   lineDown() {
 
-    if(this.cursor >= this.input.length) return;
+    //allow make new line
+    if(this.cursor >= this.input.length){
+      return this.append("\n");
+    }
 
     //get line and pos on line
     var lines = this.input.split("\n");

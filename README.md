@@ -70,9 +70,8 @@ Enter a package to find code snippets. Code snippets will be inserted into your 
 |<kbd>alt</kbd> + <kbd>1</kbd>          | Cycle snippets in REPL (after using samples())     |
 |<kbd>return</kbd>     | (Autocomplete Open) Enter selected autocomplete.   |
 |<kbd>return</kbd>     | (Autocomplete Closed) Submit                      |
-|<kbd>alt</kbd> + <kbd>return</kbd>                                  | New line                                     |
-|<kbd>shift</kbd> + <kbd>return</kbd> (non windows)                                 | New line   
-|<kbd>ctrl</kbd> + <kbd>up</kbd> / <kbd>ctrl</kbd> + <kbd>down</kbd>| Navigate multiline prompt.                         |
+|<kbd>alt</kbd> + <kbd>return</kbd>                                | New line        |
+|<kbd>ctrl</kbd> + <kbd>up</kbd> / <kbd>ctrl</kbd> + <kbd>down</kbd>| Navigate multiline prompt. Creates newline when down on last character.                         |
 
 ## Usage Examples
 

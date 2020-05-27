@@ -3,7 +3,6 @@ const PromptReadable = require("./ui/prompt-readable");
 const DataHandler = require("./data-handler");
 const path = require("path");
 const natural = require("natural");
-const en = require("stopwords").english;
 const fs = require("fs");
 const cprocess = require("child_process");
 const winston = require("winston");
@@ -49,6 +48,7 @@ var installedPackages = [];
 if (ARG_PACKS.trim() != "") {
   installedPackages = ARG_PACKS.split(" ");
 }
+var data;
 var taskMap;
 
 //set up the repl logger
@@ -82,44 +82,6 @@ const logger = winston.createLogger({
 
 var options = {};
 var myRepl;
-
-/* remove stopwords from text */
-function removeStopWords(text) {
-  textClean = "";
-  text.split(" ").forEach((s) => {
-    if (!en.includes(s.trim())) textClean = textClean + " " + s;
-  });
-  return textClean;
-}
-/*
- * Read description of snippets from snippets dir and update variable
- * library_desc and snippets.
- */
-function loadSnippets() {
-  fs.readdir(SNIPPETDIR, (err, files) => {
-    files.forEach((file) => {
-      const filepath = path.join(SNIPPETDIR, file);
-      const text = fs.readFileSync(filepath, "utf8");
-      // update dictionaries with library and snippet descriptions
-      extension = path.extname(file);
-      if (extension == ".desc") {
-        name = path.basename(file, ".desc");
-        library_desc[name] = text;
-        tfidf.addDocument(name);
-        tfidf.addDocument(removeStopWords(text));
-      } else if (extension != ".ignore") {
-        // associate snippets to packages
-        name = path.basename(file).split(".")[0];
-        set = snippets[name];
-        if (set === undefined) {
-          set = new Set();
-          snippets[name] = set;
-        }
-        set.add(text);
-      }
-    });
-  });
-}
 
 /**
  * REPL functions.
@@ -194,15 +156,23 @@ const state = {
   },
 
   samples(string) {
-    set = snippets[string.trim()];
-    if (set == undefined) {
-      console.log("could not find any sample for this package");
-    } else {
-      //convert set to array
-      var array = Array.from(set);
-      //set snippets to be cyclable
-      myRepl.inputStream.setSnippets(array);
+    var snippets = data.getSnippetsFor(string);
+    if(!snippets || snippets.length < 1){
+      console.log("could not find any sample for this task");
     }
+    else{
+      myRepl.inputStream.setSnippets(snippets);
+    }
+    // set = snippets[string.trim()];
+    // if (set == undefined) {
+    //   console.log("could not find any sample for this package");
+    // } else {
+    //   //convert set to array
+    //   var array = Array.from(set);
+    //   //set snippets to be cyclable
+    //   myRepl.inputStream.setSnippets(array);
+    // }
+    return;
   },
 
   /**
@@ -240,12 +210,14 @@ async function main() {
   logger.log("debug", "Base directory: " + BASE);
   logger.log("debug", "Logger initialized at: " + LOGDIR);
 
-  var data = new DataHandler();
+  //set up data handler
+  data = new DataHandler();
+  //load tasks
   await data.loadTasks(path.join(BASE, "data/tasks.txt"));
+  //load snippets
+  await data.loadSnippets(SNIPPETDIR);
   taskMap = data.getTasks();
   var tasks = Array.from(taskMap.keys());
-
-  loadSnippets();
 
   //create input readable
   var pReadable = new PromptReadable(
@@ -272,4 +244,3 @@ if (require.main == module) {
 }
 
 exports.state = state;
-exports.loadSnippets = loadSnippets;
