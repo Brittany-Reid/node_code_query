@@ -1,4 +1,4 @@
-const { AutoComplete, Select } = require("enquirer");
+const { AutoComplete, Select, Prompt } = require("enquirer");
 const { keypress } = require("enquirer");
 const unique = (arr) => arr.filter((v, i) => arr.lastIndexOf(v) === i);
 const compact = (arr) => unique(arr).filter(Boolean);
@@ -434,20 +434,8 @@ class SuggestionPrompt extends AutoComplete {
       this.save();
     }
 
-    //submit input from line
-    this.state.validating = false;
-    this.state.submitted = true;
-
-    //render final version
-    await this.render();
-    //close prompt
-    await this.close();
-
-    //get and submit value
-    this.value = await this.result(this.value);
-    this.emit("submit", this.value);
-
-    return;
+    //use default from input line
+    return Prompt.prototype.submit.call(this);
   }
 
   /**

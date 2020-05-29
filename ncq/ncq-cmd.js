@@ -91,35 +91,21 @@ class NcqCmd extends Cmd {
         }
       }
     }
-    //make temp
+
+    //make temporary folder
     this.counter++;
     var tmpDir = path.join(ncq.BASE, "tmp" + this.counter);
     if (fs.existsSync(tmpDir)) {
       rimraf.sync(tmpDir);
     }
     fs.mkdirSync(tmpDir);
-    //copy repl
-    fs.copyFileSync(
-      path.join(ncq.BASE, "ncq/repl.js"),
-      path.join(tmpDir, "repl.js")
-    );
-    //copy dependant files
-    fse.copySync(path.join(ncq.BASE, "ncq/ui"), path.join(tmpDir, "ui"));
-    fs.copyFileSync(
-      path.join(ncq.BASE, "package.json"),
-      path.join(tmpDir, "package.json")
-    );
-    fs.copyFileSync(
-      path.join(ncq.BASE, "package-lock.json"),
-      path.join(tmpDir, "package-lock.json")
-    );
-    //copy repl
-    fs.copyFileSync(
-      path.join(ncq.BASE, "ncq/data-handler.js"),
-      path.join(tmpDir, "data-handler.js")
-    );
+
     //change directory
     process.chdir(tmpDir);
+
+    fs.writeFileSync("package.json", "{\"license\": \"ISC\", \"description\": \"temporary repl\", \"repository\": \"null\"}");
+    fs.writeFileSync("package-lock.json", "{\"lockfileVersion\": 1}");
+
     // install packages within that directory
     cprocess.execSync(
       "npm install " +
@@ -129,16 +115,21 @@ class NcqCmd extends Cmd {
         stdio: [process.stdin, process.stdout, process.stdout],
       }
     );
+
+    //reset stdin
     this.resetStdin();
+
     //do repl
     var args = ["repl.js"];
     args.push(required);
     args.push("--save");
-    cprocess.execSync("node repl.js " + required.join(" "), {
+    cprocess.execSync("node ../ncq/repl.js " + required.join(" "), {
       stdio: "inherit",
     });
+
     //return to our directory
     process.chdir(ncq.BASE);
+
     //delete the temporary folder
     rimraf.sync(tmpDir);
   }
