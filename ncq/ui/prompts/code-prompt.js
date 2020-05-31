@@ -64,7 +64,7 @@ class CodePrompt extends SuggestionPrompt {
       before = this.input.substring(0, lineStart);
     }
 
-    if (before.length < 2) return msg;
+    // if (before.length < 2) return 0;
 
     var indent = width_of(before);
     return indent;
@@ -78,7 +78,7 @@ class CodePrompt extends SuggestionPrompt {
     let { input = '', initial = '', pos, showCursor = true, color } = options;
     let style = color || prompt.styles.placeholder;
     let inverse = utils.inverse(prompt.styles.primary);
-    let blinker = str => inverse(prompt.styles.black(str));
+    let blinker = str => inverse(str);
     let output = input;
 
     if (pos !== input.length && showCursor === true) {

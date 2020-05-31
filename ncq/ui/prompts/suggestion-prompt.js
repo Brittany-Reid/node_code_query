@@ -5,6 +5,8 @@ const compact = (arr) => unique(arr).filter(Boolean);
 const { to_width, width_of } = require("to-width");
 const actions = require("enquirer/lib/combos");
 const colors = require("ansi-colors");
+const stripAnsi = require("strip-ansi");
+const {ansiRows} = require("../../ui/ansi-rows");
 
 /**
  * Extend Enquirer AutoComplete.
@@ -42,6 +44,9 @@ class SuggestionPrompt extends AutoComplete {
       ...actions.ctrl,
       ...{ left: "ctrlLeft", right: "ctrlRight" },
     };
+
+    //scroll box - which line is at top
+    this.top = 0;
   }
 
   // async toChoice(ele, i, parent) {
@@ -368,7 +373,9 @@ class SuggestionPrompt extends AutoComplete {
       msg = colors.bgWhite(colors.black(msg));
     }
 
-    msg = to_width("", indent) + msg;
+    if(indent >= 2){
+      msg = to_width("", indent) + msg;
+    }
 
     return line();
   }
@@ -473,6 +480,75 @@ class SuggestionPrompt extends AutoComplete {
       element = colors.grey(colors.unstyle(element));
     }
     return element;
+  }
+
+
+  /**
+   * Overwrite write to print rows based on cursor. 
+   */
+  write(str){
+    if (!str) return;
+    if(this.state.submitted || this.state.cancelled){
+      return super.write(str);
+    }
+    if (this.stdout && this.state.show !== false) {
+      var rows = this.height;
+      //get cursor position on printed
+      //console.log(this.state.prompt)
+      var prompt = this.state.prompt;
+      var offset = stripAnsi(prompt).length;
+
+      var cursor = this.cursor + offset;
+
+      var rowed = ansiRows(str, rows, this.width-1, this.top, {trim: false, hard: true});
+
+      var lines = rowed.lines;
+      var toPrint = rowed.output;
+      var endCh = rowed.endCh;
+      var startCh = rowed.startCh;
+
+      if(cursor < startCh){
+        this.top--;
+        var toPrint = lines.slice(this.top, this.top+rows).join("\n");
+      }
+
+      if(cursor > (endCh)){
+        this.top++;
+        var toPrint = lines.slice(this.top, this.top+rows).join("\n");
+      }
+
+      //get lines
+      // var lines = this.getLines(str, this.width-1, {trim: false, hard: true});
+
+      // //check which line cursor is in
+      // var length = 0;
+      // var l;
+      // for(let i=0; i<lines.length; i++){
+      //   var line = stripAnsi(lines[i]);
+      //   length += (line.length);
+      //   if(cursor < length){
+      //     l = i;
+      //     break;
+      //   }
+      //   length++;
+      // }
+
+      // if(l < this.top){
+      //   this.top--;
+      //   toPrint = lines.slice(this.top, this.top+rows).join("\n")
+      // }
+
+
+      // if(l > (this.top+(rows-1))){
+      //   this.top++;
+      //   toPrint = lines.slice(this.top, this.top+rows).join("\n")
+      // }
+      
+      // var toPrint = lines.slice(this.top, this.top+rows).join("\n");
+      this.stdout.write(toPrint);
+
+    }
+    this.state.buffer += toPrint;
   }
 }
 
