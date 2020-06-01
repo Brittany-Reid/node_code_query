@@ -6,7 +6,8 @@ const { to_width, width_of } = require("to-width");
 const actions = require("enquirer/lib/combos");
 const colors = require("ansi-colors");
 const stripAnsi = require("strip-ansi");
-const {ansiRows} = require("../../ui/ansi-rows");
+const { ansiRows } = require("../../ui/ansi-rows");
+const { getConfig } = require("../../config");
 
 /**
  * Extend Enquirer AutoComplete.
@@ -39,25 +40,65 @@ class SuggestionPrompt extends AutoComplete {
     //formatting
     this.maxwitdh = 0;
     this.filtered = [];
-    actions.keys = { ...actions.keys, ...{ tab: "tab" } };
-    actions.ctrl = {
-      ...actions.ctrl,
-      ...{ left: "ctrlLeft", right: "ctrlRight" },
-    };
+    this.keys = getConfig().get("keybindings");
+    // actions.keys = { ...actions.keys, ...{ tab: "tab" } };
+    // actions.ctrl = {
+    //   ...actions.ctrl,
+    //   ...{ left: "ctrlLeft", right: "ctrlRight" },
+    // };
 
     //scroll box - which line is at top
     this.top = 0;
   }
 
-  // async toChoice(ele, i, parent) {
-  //   console.log(parent);
-  //   return super.toChoice(ele, i, parent);
-  // }
+  isKey(key, check) {
+    if(!check) return false;
+    var fields = Object.keys(check);
+    var is = true;
+    for (var i = 0; i < fields.length; i++) {
+      if (check[fields[i]] != key[fields[i]]) {
+        is = false;
+      }
+    }
+
+
+    return is;
+  }
 
   /**
    * Extend keypress to ignore certain keys.
    */
   async keypress(input, key = {}) {
+    //autocomplete
+    var check = this.keys["autocomplete"];
+    if (this.isKey(key, check)) {
+      return this.toggle();
+    }
+
+    //history up
+    var check = this.keys["historyUp"];
+    if (this.isKey(key, check)) {
+      return this.historyUp();
+    }
+
+    //history down
+    var check = this.keys["historyDown"];
+    if (this.isKey(key, check)) {
+      return this.historyDown();
+    }
+
+    //line end
+    var check = this.keys["lineEnd"];
+    if (this.isKey(key, check)) {
+      return this.lineEnd();
+    }
+
+    //line start
+    var check = this.keys["lineStart"];
+    if (this.isKey(key, check)) {
+      return this.lineStart();
+    }
+
     //ignore both esc and ctrl+[ keys
     //this is default repl behaviour
     if (key.name === "escape") {
@@ -83,7 +124,7 @@ class SuggestionPrompt extends AutoComplete {
   /**
    * When we press tab.
    */
-  tab() {
+  toggle() {
     //if we have no choices, return
     //for some reason this.choices doesnt match this.options right away
     if (!this.options.choices || this.options.choices.length < 1) return;
@@ -102,7 +143,7 @@ class SuggestionPrompt extends AutoComplete {
   /**
    * When we press up. Adds new functionality if not suggesting: get from history.
    */
-  up() {
+  historyUp() {
     if (!this.isSuggesting) {
       this.getHistory("prev");
       return;
@@ -113,7 +154,7 @@ class SuggestionPrompt extends AutoComplete {
   /**
    * When we press down and aren't suggesting, get from history.
    */
-  down() {
+  historyDown() {
     if (!this.isSuggesting) {
       this.getHistory("next");
       return;
@@ -124,7 +165,7 @@ class SuggestionPrompt extends AutoComplete {
   /**
    * On Ctrl+left, move to the start of the current line.
    */
-  ctrlLeft() {
+  lineStart() {
     if (this.cursor <= 0) return;
     var current = this.cursor;
     var i = current - 1;
@@ -142,7 +183,7 @@ class SuggestionPrompt extends AutoComplete {
   /**
    * On Ctrl+right, move to line end.
    */
-  ctrlRight() {
+  lineEnd() {
     if (this.cursor >= this.input.length) return;
     var i = this.cursor;
     while (i < this.input.length) {
@@ -373,7 +414,7 @@ class SuggestionPrompt extends AutoComplete {
       msg = colors.bgWhite(colors.black(msg));
     }
 
-    if(indent >= 2){
+    if (indent >= 2) {
       msg = to_width("", indent) + msg;
     }
 
@@ -482,13 +523,12 @@ class SuggestionPrompt extends AutoComplete {
     return element;
   }
 
-
   /**
-   * Overwrite write to print rows based on cursor. 
+   * Overwrite write to print rows based on cursor.
    */
-  write(str){
+  write(str) {
     if (!str) return;
-    if(this.state.submitted || this.state.cancelled){
+    if (this.state.submitted || this.state.cancelled) {
       return super.write(str);
     }
     if (this.stdout && this.state.show !== false) {
@@ -500,51 +540,49 @@ class SuggestionPrompt extends AutoComplete {
 
       var cursor = this.cursor + offset;
 
-      var rowed = ansiRows(str, rows, this.width-1, this.top, {trim: false, hard: true});
+      var rowed = ansiRows(str, rows, this.width - 1, this.top, {
+        trim: false,
+        hard: true,
+      });
 
       var lines = rowed.lines;
       var toPrint = rowed.output;
       var endCh = rowed.endCh;
       var startCh = rowed.startCh;
 
-      
-
-      if(cursor < startCh){
+      if (cursor < startCh) {
         //this.top--;
         this.top = Math.max(this.getLine(lines, cursor), 0);
-        var toPrint = lines.slice(this.top, this.top+rows).join("\n");
-      }
-      else if(cursor > (endCh)){
+        var toPrint = lines.slice(this.top, this.top + rows).join("\n");
+      } else if (cursor > endCh) {
         //this.top++;
-        this.top = Math.min(this.getLine(lines, cursor), (lines.length-rows));
+        this.top = Math.min(this.getLine(lines, cursor), lines.length - rows);
         //console.log(lines.length + ", " + (rows) + ", " + this.getLine(lines, cursor));
-        var toPrint = lines.slice(this.top, this.top+rows).join("\n");
-      }
-      else{
-        if(lines.length <= rows){
+        var toPrint = lines.slice(this.top, this.top + rows).join("\n");
+      } else {
+        if (lines.length <= rows) {
           this.top = 0;
-          var toPrint = lines.slice(this.top, this.top+rows).join("\n");
+          var toPrint = lines.slice(this.top, this.top + rows).join("\n");
         }
       }
-      
-      this.stdout.write(toPrint);
 
+      this.stdout.write(toPrint);
     }
     this.state.buffer += toPrint;
   }
 
-  getLine(lines, cursor){
-      var length = 0;
-      var l = lines.length-1;
-      for(let i=0; i<lines.length; i++){
-        var line = stripAnsi(lines[i]) + "\n";
-        length += (line.length);
-        if(cursor < length){
-          l = i;
-          break;
-        }
+  getLine(lines, cursor) {
+    var length = 0;
+    var l = lines.length - 1;
+    for (let i = 0; i < lines.length; i++) {
+      var line = stripAnsi(lines[i]) + "\n";
+      length += line.length;
+      if (cursor < length) {
+        l = i;
+        break;
       }
-      return l;
+    }
+    return l;
   }
 }
 
