@@ -16,7 +16,7 @@ class CodePrompt extends SuggestionPrompt {
     this.cursor = this.input.length;
     //set initial
     if(this.snippets && this.snippets.length > 0){
-      this.input = this.snippets[0].trim();
+      this.setInput(this.snippets[0].trim());
       this.snippetIndex = 0;
       this.cursor = this.input.length;
     }
@@ -32,14 +32,18 @@ class CodePrompt extends SuggestionPrompt {
       this.snippetIndex = 0;
     }
     //insert
-    this.input = this.snippets[this.snippetIndex].trim();
-
-    //must render before moving cursor
-    this.render();
+    this.setInput(this.snippets[this.snippetIndex].trim());
 
     //move cursor
     this.cursor = this.input.length;
     
+    
+    //must render before moving cursor
+    this.render();
+  }
+
+  setInput(input){
+    this.input = input.replace(/\r\n/g, "\n");
   }
 
   getIndent() {

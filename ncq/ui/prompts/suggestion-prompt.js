@@ -507,48 +507,44 @@ class SuggestionPrompt extends AutoComplete {
       var endCh = rowed.endCh;
       var startCh = rowed.startCh;
 
-      if(cursor < startCh){
-        this.top--;
-        var toPrint = lines.slice(this.top, this.top+rows).join("\n");
-      }
-
-      if(cursor > (endCh)){
-        this.top++;
-        var toPrint = lines.slice(this.top, this.top+rows).join("\n");
-      }
-
-      //get lines
-      // var lines = this.getLines(str, this.width-1, {trim: false, hard: true});
-
-      // //check which line cursor is in
-      // var length = 0;
-      // var l;
-      // for(let i=0; i<lines.length; i++){
-      //   var line = stripAnsi(lines[i]);
-      //   length += (line.length);
-      //   if(cursor < length){
-      //     l = i;
-      //     break;
-      //   }
-      //   length++;
-      // }
-
-      // if(l < this.top){
-      //   this.top--;
-      //   toPrint = lines.slice(this.top, this.top+rows).join("\n")
-      // }
-
-
-      // if(l > (this.top+(rows-1))){
-      //   this.top++;
-      //   toPrint = lines.slice(this.top, this.top+rows).join("\n")
-      // }
       
-      // var toPrint = lines.slice(this.top, this.top+rows).join("\n");
+
+      if(cursor < startCh){
+        //this.top--;
+        this.top = Math.max(this.getLine(lines, cursor), 0);
+        var toPrint = lines.slice(this.top, this.top+rows).join("\n");
+      }
+      else if(cursor > (endCh)){
+        //this.top++;
+        this.top = Math.min(this.getLine(lines, cursor), (lines.length-rows));
+        //console.log(lines.length + ", " + (rows) + ", " + this.getLine(lines, cursor));
+        var toPrint = lines.slice(this.top, this.top+rows).join("\n");
+      }
+      else{
+        if(lines.length <= rows){
+          this.top = 0;
+          var toPrint = lines.slice(this.top, this.top+rows).join("\n");
+        }
+      }
+      
       this.stdout.write(toPrint);
 
     }
     this.state.buffer += toPrint;
+  }
+
+  getLine(lines, cursor){
+      var length = 0;
+      var l = lines.length-1;
+      for(let i=0; i<lines.length; i++){
+        var line = stripAnsi(lines[i]) + "\n";
+        length += (line.length);
+        if(cursor < length){
+          l = i;
+          break;
+        }
+      }
+      return l;
   }
 }
 
