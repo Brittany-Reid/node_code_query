@@ -111,26 +111,34 @@ class CodePrompt extends SuggestionPrompt {
   
 
   async keypress(input, key = {}) {
-    //no choices being displayed
+
+    // no choices being displayed
     if (!this.isSuggesting) {
       //if we have snippets
       if(this.snippets && this.snippets.length > 0){
-        //snippet cycle with alt+1
-        if (key.meta && key.name == "1") {
+        //snippet cycle
+
+        var check = this.keys["cycle"];
+        if (this.isKey(key, check)) {
           return this.cycle();
         }
       }
 
-      //newline, alt enter
-      if(key.sequence == "\u001b\r"){
+
+      //newline
+      var check = this.keys["newLine"];
+      if (this.isKey(key, check)) {
         return this.append("\n", key);
       }
 
-      //ctrl+down and ctrl+up
-      if(key.ctrl && key.name == "up"){
+      //cursor up and cursor down
+      var check = this.keys["cursorUp"];
+      if (this.isKey(key, check)) {
         return this.lineUp();
       }
-      if(key.ctrl && key.name == "down"){
+      
+      var check = this.keys["cursorDown"];
+      if (this.isKey(key, check)) {
         return this.lineDown();
       }
     }

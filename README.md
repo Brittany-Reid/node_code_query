@@ -59,19 +59,22 @@ Runs `npm uninstall` for a given package.
 ```js
 samples("<package>")
 ```
-Enter a package to find code snippets. Code snippets will be inserted into your prompt, and cyclable using ` (backtick).
+Enter a package to find code snippets. Code snippets will be inserted into your prompt, and cyclable using the cycle button (default <kbd>alt</kbd> + <kbd>1</kbd>)
+
+The following functinalities are mapped to these keys by default:
 
 
-| **comand**       | **description**                                   |
-|------------------|---------------------------------------------------|
-|<kbd>tab</kbd>    | Open and close autocompletes.                     |
-|<kbd>return</kbd>| Enter selected autocomplete.                      |
-|<kbd>up/down</kbd>| Scroll autocompletes                              |
-|<kbd>alt</kbd> + <kbd>1</kbd>          | Cycle snippets in REPL (after using samples())     |
-|<kbd>return</kbd>     | (Autocomplete Open) Enter selected autocomplete.   |
-|<kbd>return</kbd>     | (Autocomplete Closed) Submit                      |
-|<kbd>alt</kbd> + <kbd>return</kbd>                                | New line        |
-|<kbd>ctrl</kbd> + <kbd>up</kbd> / <kbd>ctrl</kbd> + <kbd>down</kbd>| Navigate multiline prompt. Creates newline when down on last character.                         |
+| **Command**     |    **Keys**  |
+|-|-|
+| open and close autocompletes | <kbd>tab</kbd> |
+| insert autocomplete | <kbd>enter</kbd> |
+| scroll autocompletes | <kbd>up</kbd> / <kbd>down</kbd> |
+| Cycle snippets | <kbd>alt</kbd> + <kbd>1</kbd> |
+| View command history | <kbd>ctrl</kbd> + <kbd>up</kbd> / <kbd>ctrl</kbd> + <kbd>down</kbd> |
+| Move cursor up and down in REPL | <kbd>up</kbd> / <kbd>down</kbd> |
+| New line in REPL | <kbd>down</kbd> on last line |
+
+Because of different terminal configurations, many of these keybindings can be modified in the config.json file generated on first run.
 
 ## Usage Examples
 
