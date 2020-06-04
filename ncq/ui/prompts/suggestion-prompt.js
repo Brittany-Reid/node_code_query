@@ -1,13 +1,12 @@
 const { AutoComplete, Select, Prompt } = require("enquirer");
-const { keypress } = require("enquirer");
 const unique = (arr) => arr.filter((v, i) => arr.lastIndexOf(v) === i);
 const compact = (arr) => unique(arr).filter(Boolean);
 const { to_width, width_of } = require("to-width");
-const actions = require("enquirer/lib/combos");
 const colors = require("ansi-colors");
 const stripAnsi = require("strip-ansi");
 const { ansiRows } = require("../../ui/ansi-rows");
 const { getConfig } = require("../../config");
+const ansi = require('enquirer/lib/ansi');
 
 /**
  * Extend Enquirer AutoComplete.
@@ -52,7 +51,7 @@ class SuggestionPrompt extends AutoComplete {
   }
 
   isKey(key, check) {
-    if(!check) return false;
+    if (!check) return false;
     var fields = Object.keys(check);
     var is = true;
     for (var i = 0; i < fields.length; i++) {
@@ -60,7 +59,6 @@ class SuggestionPrompt extends AutoComplete {
         is = false;
       }
     }
-
 
     return is;
   }
@@ -533,6 +531,7 @@ class SuggestionPrompt extends AutoComplete {
     }
     if (this.stdout && this.state.show !== false) {
       var rows = this.height;
+      var columns = this.width;
       //get cursor position on printed
       //console.log(this.state.prompt)
       var prompt = this.state.prompt;
@@ -540,7 +539,7 @@ class SuggestionPrompt extends AutoComplete {
 
       var cursor = this.cursor + offset;
 
-      var rowed = ansiRows(str, rows, this.width - 1, this.top, {
+      var rowed = ansiRows(str, rows, columns, 0, {
         trim: false,
         hard: true,
       });
@@ -553,18 +552,50 @@ class SuggestionPrompt extends AutoComplete {
       if (cursor < startCh) {
         //this.top--;
         this.top = Math.max(this.getLine(lines, cursor), 0);
-        var toPrint = lines.slice(this.top, this.top + rows).join("\n");
       } else if (cursor > endCh) {
         //this.top++;
-        this.top = Math.min(this.getLine(lines, cursor), lines.length - rows);
-        //console.log(lines.length + ", " + (rows) + ", " + this.getLine(lines, cursor));
-        var toPrint = lines.slice(this.top, this.top + rows).join("\n");
+        this.top = Math.min(this.getLine(lines, cursor), (lines.length - rows));
+        //console.log(lines.length + ", " + (rows) + ", " + this.getLine(lines, cursor) + ", " + this.top);
       } else {
         if (lines.length <= rows) {
           this.top = 0;
-          var toPrint = lines.slice(this.top, this.top + rows).join("\n");
         }
       }
+
+      var finalLines = lines.slice(this.top, this.top+rows);
+
+      var scrollArray;
+      //do a scrollbar - working on this
+      // if (lines.length > rows) {
+      //   //get percentage of shown
+      //   var shownP = rows / lines.length;
+      //   //calculate as fraction of visible rows, rounded
+      //   var scrollRows = Math.round(rows * shownP);
+      //   if(scrollRows == 0) scrollRows = 1;
+      //   var scrollTop = Math.round(shownP * this.top);
+      //   scrollArray = [];
+      //   for (let i = 0; i < rows; i++) {
+      //     if(i < scrollTop){
+      //       scrollArray.push(colors.bgBlackBright(" ") + " " + colors.bgBlackBright(" "));
+      //     }
+      //     else if(i < (scrollTop + scrollRows)){
+      //       scrollArray.push(colors.bgBlackBright(" ") + colors.inverse(" ") + colors.bgBlackBright(" "));
+      //     }
+      //     else{
+      //       scrollArray.push(colors.bgBlackBright(" ") + " " + colors.bgBlackBright(" "));
+      //     }
+      //   }
+
+      //   scrollArray[0] = colors.bgBlackBright(" ▲ ");
+      //   scrollArray[scrollArray.length-1] = colors.bgBlackBright(" ▼ ");
+      //   finalLines.forEach(function(element, i){
+      //     var line = to_width(element, columns-2, { align: "left" });
+      //     line += scrollArray[i];
+      //     finalLines[i] = line;
+      //   });
+      // }
+
+      toPrint = finalLines.join("\n");
 
       this.stdout.write(toPrint);
     }

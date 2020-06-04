@@ -6,6 +6,7 @@ const utils = require("./utils");
 
 /*
  * This file contains a logger accessible through getLogger that will work program-wide.
+ * Not used in the REPL process yet.
  */
 
 const BASE = utils.getBaseDirectory();

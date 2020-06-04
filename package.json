@@ -29,8 +29,10 @@
     "wrap-ansi": "^7.0.0"
   },
   "devDependencies": {
+    "htmlparser2": "^4.1.0",
     "mocha": "^7.1.2",
     "nyc": "^15.0.1",
-    "sinon": "^9.0.2"
+    "sinon": "^9.0.2",
+    "stream-json": "^1.5.0"
   }
 }

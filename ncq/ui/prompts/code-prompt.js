@@ -37,7 +37,6 @@ class CodePrompt extends SuggestionPrompt {
     //move cursor
     this.cursor = this.input.length;
     
-    
     //must render before moving cursor
     this.render();
   }
@@ -110,7 +109,7 @@ class CodePrompt extends SuggestionPrompt {
   }
   
 
-  async keypress(input, key = {}) {
+  keypress(input, key = {}) {
 
     // no choices being displayed
     if (!this.isSuggesting) {
