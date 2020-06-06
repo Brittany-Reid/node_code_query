@@ -101,7 +101,6 @@ def removeTags(text):
 
     text = clean(text, tags=allowed, strip=True, strip_comments=True)
 
-
     return text
 
 #preprocess markdown for task processing
@@ -141,6 +140,7 @@ def getReadmes(preprocess):
         url = registry + urllib.parse.quote(name, safe='')
         try:
             response = urllib.request.urlopen(url)
+            
         #if we fail, print error and continue
         except urllib.error.URLError as e:
             print("ERROR!") #inform in case we get multiple of these - lost connection?

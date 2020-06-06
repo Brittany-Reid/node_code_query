@@ -1,6 +1,7 @@
 *.pyc
 .DS_Store
 .vscode/settings.json
+.vscode
 
 **/*~
 node_modules
@@ -11,9 +12,11 @@ logs
 readmes
 popular.json
 .nyc_output
+db.json
 
 ncq/history.json
 history.json
+
 *.log
 download_npm/readmes.json
 download_npm/readmes.zip
@@ -21,3 +24,6 @@ download_npm/log.txt
 download_npm/jsonify.js
 config.json
 data/readmes.json
+
+
+
