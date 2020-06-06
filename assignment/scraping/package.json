@@ -1,25 +1,16 @@
 {
-  "name": "",
+  "name": "scraping",
   "version": "1.0.0",
-  "description": "",
+  "description": "> This tutorial is based on the [tutorial](https://blog.bitsrc.io/https-blog-bitsrc-io-how-to-perform-web-scraping-using-node-js-5a96203cb7cb) by Ankit Jain.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/keilabcs/tasks_REPL.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/keilabcs/tasks_REPL/issues"
-  },
-  "homepage": "https://github.com/keilabcs/tasks_REPL#readme",
   "dependencies": {
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3"
-  },
-  "devDependencies": {}
+  }
 }
