@@ -1,5 +1,5 @@
 
-# Node Code Query (NCQ) REPL
+# Node Code Query (NCQ)
 > NCQ is a REPL to discover Node code snippets from Natural Language Descriptions. The general goal is to improve the productivity of nodejs developers by providing better access to snippets/samples of packages and self-contained tasks, and an environment that enables them to quickly reproduce these artifacts.
 
 [![NPM Version][npm-image]][npm-url]
