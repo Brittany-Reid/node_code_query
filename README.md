@@ -39,7 +39,7 @@ NCQ  >  _
 2. Type repl to create a virtual isolated environment where you can play with different examples.
 
 ```sh
-repl
+NCQ  >  repl
 ```
 
 Your prompt will look like this:
