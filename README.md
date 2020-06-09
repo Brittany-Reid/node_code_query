@@ -14,28 +14,95 @@ NCQ can be used to start node.js REPLs and find code snippets for given strings.
 
 [Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.
 
-
-## Table of Contents
- * [Installation](#installation)
- * [Usage](#Usage Examples)
-
-## Installation
+## Setup
 
 1. Download and install Node.js and NPM (https://nodejs.org/en/)
 2. Clone this repository.
 3. Download the dataset and unzip into the data directory (https://doi.org/10.5281/zenodo.3836540) Our system requires an offline dataset of NPM readme files. This dataset is too large to upload to Github (600MB compressed, 2.6GB uncompressed). Please download the file from this link https://zenodo.org/record/3836540/files/readmes.zip?download=1, unzip it and put the containing JSON file into the data directory.
 4. Run `npm install` in the repository directory to install dependencies.
 
-## Usage Examples
+## Example
 
-Start NPM using the `npm start` command within the repository directory. 
+Let us consider the user want to know how to read a file in node.js. Here is how NCQ can help:
+
+1. Start NPM using the `npm start` command within the repository directory. 
 
 ```sh
-npm start
+$> npm start
+```
+Your prompt will look like this:
+
+```sh
+NCQ  >  _
 ```
 
+2. Type repl to create a virtual isolated environment where you can play with different examples.
 
+```sh
+repl
+```
 
+Your prompt will look like this:
+
+```sh
+NCQ [] > _
+```
+
+The square brackets indicate that you created a node repl and you do *not* have any libraries installed.
+
+3. Type help() to see which functions you can use.
+
+```sh
+NCQ [] >  help() 
+help()
+========================================
+samples(str)             lists samples catalogued for that package
+packages(str)            lists packages for a given task
+install(str)             install given package
+uninstall(str)           uninstall given package
+```
+
+4. Type samples("file") and see what happens.
+
+```sh
+NCQ [] >  samples("file")
+samples("file")
+NCQ [] >  // ...
+fs.readFileSync(new URL('file://hostname/p/a/t/h/file'));
+```
+Several snippets are printed on screen. The first one shows that the module/library fs is used for that. So, we need to install that module and then create a variable to access that module. Let's do it.
+
+5. Install module "fs"
+
+```sh
+NCQ [] >  install("fs") 
+install("fs")
++ fs@0.0.1-security
+added 1 package and audited 1 package in 0.675s
+found 0 vulnerabilities
+
+NCQ [fs] > 
+```
+
+Note that "fs" now appears inside brackets!
+
+6. Access module fs from a variable with the same name.
+
+```sh
+NCQ [fs] > fs = require("fs")
+...
+NCQ [fs] > _
+```
+A list with all fs functions are printed on screen (omitted for space).
+
+7. Run the snippet. We replaced the file with a common unix file.
+
+```sh
+NCQ [fs] >  file = fs.readFileSync(new URL('file:///etc/passwd')) 
+file = fs.readFileSync(new URL('file:///etc/passwd'))
+<Buffer 72 6f 6f 74 3a 78 3a 30 3a 30 3a 72 6f 6f 74 3a 2f 72 6f 6f 74 3a 2f 62 69 6e 2f 62 61 73 68 0a 64 61 65 6d 6f 6e 3a 78 3a 31 3a 31 3a 64 61 65 6d 6f ... 3250 more bytes>
+```
+Variable file stores a buffer with byte contents. Try printing that on screen now.
 
 
 ### Commands
