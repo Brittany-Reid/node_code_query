@@ -81,7 +81,7 @@ Because of different terminal configurations, many of these keybindings can be m
 
 Node Code Query can be used to start node.js REPLs and find code snippets for given strings. The above example demonstrates the creation of a REPL and how code snippets can be found and cycled through.
 
-
+<!--
 ## Testing
 
 To run tests, install DevDependencies:
@@ -103,6 +103,8 @@ npm run coverage
 ```
 
 We use mocha, nyc and sinon for testing.
+
+-->
 
 <!--
 _For more examples and usage, please refer to the [Wiki][wiki]._
