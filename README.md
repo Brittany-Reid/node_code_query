@@ -10,6 +10,14 @@ The general goal is to improve the productivity of nodejs developers by providin
 
 [Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.
 
+## Usage Examples
+
+<p align="center">
+<img src="https://media.giphy.com/media/YpYDeyS8ZZWz3E2l1J/giphy.gif">
+</p>
+
+Node Code Query can be used to start node.js REPLs and find code snippets for given strings. The above example demonstrates the creation of a REPL and how code snippets can be found and cycled through.
+
 ## Table of Contents
  * [Installation](#installation)
  * [Usage](#Usage)
@@ -73,13 +81,6 @@ The following functinalities are mapped to these keys by default:
 
 Because of different terminal configurations, many of these keybindings can be modified in the config.json file generated on first run.
 
-## Usage Examples
-
-<p align="center">
-<img src="https://media.giphy.com/media/YpYDeyS8ZZWz3E2l1J/giphy.gif">
-</p>
-
-Node Code Query can be used to start node.js REPLs and find code snippets for given strings. The above example demonstrates the creation of a REPL and how code snippets can be found and cycled through.
 
 <!--
 ## Testing
