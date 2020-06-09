@@ -1,27 +1,23 @@
 
-# Playground REPL
-> Playground REPL to discover Node code snippets from Natural Language Descriptions.
+# Node Code Query (NCQ) REPL
+> NCQ is a REPL to discover Node code snippets from Natural Language Descriptions. The general goal is to improve the productivity of nodejs developers by providing better access to snippets/samples of packages and self-contained tasks, and an environment that enables them to quickly reproduce these artifacts.
 
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Downloads Stats][npm-downloads]][npm-url]
 
-The general goal is to improve the productivity of nodejs developers by providing better access to snippets/samples of packages and self-contained tasks, and an environment that enables them to quickly reproduce these artifacts.
-
-[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.
-
-## Usage Examples
+NCQ can be used to start node.js REPLs and find code snippets for given strings. The above example demonstrates the creation of a REPL and how code snippets can be found and cycled through.
 
 <p align="center">
 <img src="https://media.giphy.com/media/YpYDeyS8ZZWz3E2l1J/giphy.gif">
 </p>
 
-Node Code Query can be used to start node.js REPLs and find code snippets for given strings. The above example demonstrates the creation of a REPL and how code snippets can be found and cycled through.
+[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.
+
 
 ## Table of Contents
  * [Installation](#installation)
- * [Usage](#Usage)
- * [Testing](#Testing)
+ * [Usage](#Usage Examples)
 
 ## Installation
 
@@ -30,12 +26,17 @@ Node Code Query can be used to start node.js REPLs and find code snippets for gi
 3. Download the dataset and unzip into the data directory (https://doi.org/10.5281/zenodo.3836540) Our system requires an offline dataset of NPM readme files. This dataset is too large to upload to Github (600MB compressed, 2.6GB uncompressed). Please download the file from this link https://zenodo.org/record/3836540/files/readmes.zip?download=1, unzip it and put the containing JSON file into the data directory.
 4. Run `npm install` in the repository directory to install dependencies.
 
-## Usage
-You can start the program by using the `npm start` command within the repository directory. 
+## Usage Examples
+
+Start NPM using the `npm start` command within the repository directory. 
 
 ```sh
 npm start
 ```
+
+
+
+
 
 ### Commands
 
