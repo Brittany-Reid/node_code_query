@@ -19,7 +19,7 @@ The general goal is to improve the productivity of nodejs developers by providin
 
 1. Download and install Node.js and NPM (https://nodejs.org/en/)
 2. Clone repository.
-3. Download the dataset (https://zenodo.org/record/3836540/files/readmes.zip?download=1) and unzip into the data directory. Node_code_query requires an offline dataset of NPM readme files. This dataset is too large to upload to Github (600MB compressed, 2.6GB uncompressed). Please download the file from https://doi.org/10.5281/zenodo.3836540, unzip and put the containing JSON file into the data directory.
+3. Download the dataset and unzip into the data directory (https://doi.org/10.5281/zenodo.3836540) Our system requires an offline dataset of NPM readme files. This dataset is too large to upload to Github (600MB compressed, 2.6GB uncompressed). Please download the file from this link https://zenodo.org/record/3836540/files/readmes.zip?download=1, unzip it and put the containing JSON file into the data directory.
 4. Run `npm install` in the repository directory to install dependencies.
 
 ## Usage
