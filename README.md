@@ -48,7 +48,7 @@ Your prompt will look like this:
 NCQ [] > _
 ```
 
-The square brackets indicate that you created a node repl and you do *not* have any libraries installed.
+The square brackets indicate that you created a node repl, i.e., you can run any node.js code from the prompt now. However, you do *not* have any libraries installed!
 
 3. Type help() to see which functions you can use.
 
