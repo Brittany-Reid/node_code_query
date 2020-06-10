@@ -69,7 +69,7 @@ app.post('/api/users', (req, res)=> {
 });
 ```
 
-This operation responds to posts requests on the _"/api/users"_ route. 
+This operation responds to posts requests on the `/api/users` route. 
 The second parameter of the call is a function with two parameters. 
 The parameter req denotes the _HTTP_ request. 
 The data can be read from this object. 
@@ -128,7 +128,7 @@ app.get('/api/users/:id', (req, res) => {
 });
 ```
 
-Type the URL "localhost:8080/api/users/:id?id=1" on your browser. 
+Type the URL `localhost:8080/api/users/:id?id=1` on your browser. 
 It should show a JSON record for the user number 1 "Brittany Reid".
 
 6. Add an update operation. The **U** in CRUD.
@@ -147,9 +147,9 @@ app.put('/api/users/:id', (req, res) => {
 });
 ```
 
-Use the curl command, as in step 3, using the option _"-X PUT"_ to indicate the method is _PUT_ and pass the parameters "id" and "name" on the command line.
+Use the curl command, as in step 3, using the option `-X PUT` to indicate the method is _PUT_ and pass the parameters "id" and "name" on the command line.
 
-6. Add an delete operation. The **D** in CRUD.
+7. Add an delete operation. The **D** in CRUD.
 
 ```js  
 app.delete('/api/users/:id', (req, res) => {
@@ -164,7 +164,7 @@ app.delete('/api/users/:id', (req, res) => {
 });
 ```
 
-Again, to test this feature, use the curl operation with the option _"-X DELETE"_ to delete the corresponding record. 
+Again, to test this feature, use the curl operation with the option `-X DELETE` to delete the corresponding record. 
 More precisely, run the following command in the shell:
 
 ```js
