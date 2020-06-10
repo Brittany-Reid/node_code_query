@@ -12,7 +12,7 @@ NCQ can be used to start node.js REPLs and find code snippets for given strings.
 <img src="https://media.giphy.com/media/YpYDeyS8ZZWz3E2l1J/giphy.gif">
 </p>
 
-[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.
+<!--[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.-->
 
 ## Setup
 
