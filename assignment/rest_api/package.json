@@ -1,0 +1,21 @@
+{
+  "name": "server_side",
+  "version": "1.0.0",
+  "description": "Creating an HTTP server and REST API",
+  "main": "index.js",
+  "scripts": {
+    "start": "json-server --watch db.json --port 3001"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "joi": "^14.3.1",
+    "json": "^9.0.6",
+    "json-server": "^0.16.1",
+    "path": "^0.12.7",
+    "url": "^0.11.0"
+  }
+}
