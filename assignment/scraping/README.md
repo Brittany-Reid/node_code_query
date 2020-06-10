@@ -45,7 +45,7 @@ axios.get(url)
     })
 
 // just return the raw data now
-let processData = html => { return html }
+var processData = html => { return html }
 ```
 
 Add this snippet to file index.js. Then, install dependencies with "$>
@@ -62,7 +62,7 @@ one of them.
 ```js
 const cheerio = require('cheerio');
 // update definition of processData
-let processData = html => {
+var processData = html => {
   data = [];
   const $ = cheerio.load(html);
   $('table.itemlist tr td:nth-child(3)').each((i, elem) => {
@@ -77,5 +77,6 @@ let processData = html => {
 
 Update the definition of function getData on the index.js. Then, run
 the code with "$> node index.js". The output should look like this:
+
 ![2](https://user-images.githubusercontent.com/4914063/83377140-0f522c00-a3ab-11ea-9092-b6b22ddcdff1.jpg)
 
