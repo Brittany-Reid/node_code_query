@@ -93,9 +93,9 @@ NCQ [fs] > fs = require("fs")
 ...
 NCQ [fs] > _
 ```
-A list with all fs functions are printed on screen (omitted for space).
+A list with all fs functions is printed on screen (omitted for space).
 
-7. Run the snippet. We replaced the file with a common unix file.
+7. Run the snippet. We used a common unix file for illustration.
 
 ```sh
 NCQ [fs] >  file = fs.readFileSync(new URL('file:///etc/passwd')) 
