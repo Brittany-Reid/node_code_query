@@ -28,7 +28,7 @@ const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}..`)); // spawn the server
 ```
 The server should be listening at port 8080 now. 
-Open the browser and type "http://localhost:80". 
+Open the browser and type `http://localhost:8080`. 
 It should print "Cannot GET /" indicating that the API is not able to answer to GET requests on the route "/". 
 Let us try to fix this.
 
