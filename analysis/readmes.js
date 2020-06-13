@@ -18,10 +18,13 @@ if (
 const BASE = dir;
 const DATABASE_DIR = path.join(BASE, "data/readmes.json");
 const README_DIR = path.join(BASE, "data/SampleReadmes.json");
-const SNIPPET_DIR = path.join(BASE, "analysis/results/snippets.txt")
+const SNIPPET_DIR = path.join(BASE, "analysis/results/snippets.json")
+const CSV_DIR = path.join(BASE, "analysis/results/snippets.csv")
 const StreamObject = require("stream-json/streamers/StreamObject");
-const FENCE = /^\`\`\`([\w_-]+)?\s*$/;
+const FENCE = /^\`\`\`(\s*)([\w_-]+)?\s*$/;
 const HEADER = /^#+\s+\S+/;
+const HEADERUNDER = /^(\s*-+\s*)$/;
+const INLINE = /^(\s*`.*`\s*)$/;
 
 /**
  * Gets 384 random readme files and saves them into README_DIR.
@@ -75,7 +78,7 @@ const HEADER = /^#+\s+\S+/;
     if(counter2 == sample[i]){
       //the package names are formatted for windows file names, change back
       name = name.replace(/%2A/g, "*");
-      name = name.replace(/%2A/g, "/");
+      name = name.replace(/%2F/g, "/");
       name = name.replace(/%2E/g, ".");
       readmes[name] = readme;
       //increment the next to look for
@@ -148,6 +151,12 @@ function main(){
   for (let i = 0; i < packages.length; i++) {
     var name = packages[i];
     var readme = data[name];
+
+
+    //if i forgot to do this, just to make the names readable again
+    name = name.replace(/%2A/g, "*");
+    name = name.replace(/%2F/g, "/");
+    name = name.replace(/%2E/g, ".");
     
     //get snippets
     var snippets = getSnippets(readme, name);
@@ -188,12 +197,25 @@ function getSnippets(readme, package) {
         start = index;
       } else {
         //finish block
-        //ignore anything explicitly marked as non js
-        if (opening[0] == "```js" || opening[0] == "```") {
-          snippetObject["description"] = getDescription(lines, start);
-          snippetObject["snippet"] = block;
-          snippets.push(snippetObject);
-          snippetObject = {};
+        //ignore sippets marked explicitly as non js, valid js aliases from https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
+        if (opening[2] == "js" || opening == "```" || opening[2] == "javascript" || opening[2] == "node") {
+
+
+          //second exclusion - is this an obvious command line instruction
+          if(block.startsWith("$ ")){
+            //starts with $ sign, representing a terminal. must have a space as js variables can start with $
+          }else if(block.trim().startsWith("npm ")){
+            //looking for npm commands
+          }
+          else if(block.trim().startsWith("install")){
+            //more general install command
+          }
+          else{
+            snippetObject["description"] = getDescription(lines, start);
+            snippetObject["snippet"] = block;
+            snippets.push(snippetObject);
+            snippetObject = {};
+          }
         }
         block = false;
       }
@@ -212,24 +234,107 @@ function getSnippets(readme, package) {
  */
 function getDescription(lines, start){
   var description = "";
+  var previousLine;
+  snippet = false;
+  headerUnder = false; //--------------------
+  wasSnippet = false; //debug
+
+
+  var line;
   for (let i = start-1; i > 0; i--) {
-    var line = lines[i];
+    previousLine = line;
+    line = lines[i];
+
+    //stop at another snippet
+    if(line.trim().match(FENCE)){
+      if(snippet){
+        snippet = false;
+        line = ""; //make line empty so we dont add the fence
+      }
+      //if we have no description, keep going
+      else if(description.trim().length < 1){
+        snippet = true;
+        wasSnippet = true;
+      }
+      else{
+        break;
+      }
+    }
+    
+    //stop at inline snippet on its own line
+    //` npm install `
+    else if(line.match(INLINE)){
+      break;
+    }
+
+
     //stop at header
-    if(line.trim().match(HEADER)){
+    else if(line.trim().match(HEADER)){
       //include header
       description = line + "\n" + description;
       break;
     }
-    //stop at another snippet
-    if(line.trim().match(FENCE)){
+
+    //header with a line underneath
+    else if(line.match(HEADERUNDER)){
       break;
     }
-    description = line + "\n" + description;
+
+    if(!snippet && line){
+      description = line + "\n" + description;
+    }
   }
 
+  if(wasSnippet){
+    //console.log(description)
+  }
   return description;
+}
+
+
+/**
+ * Make a CSV for a spreadsheet
+ */
+function makeCSV(){
+
+  //read and get data
+  var contents = fs.readFileSync(SNIPPET_DIR, {encoding: "utf-8"});
+  var data = JSON.parse(contents);
+
+  //initialize to write
+  var toWrite = "package,snippet,description\n";
+
+
+  //get packages
+  var packages = Object.keys(data);
+  for(var i=0; i<packages.length; i++){
+    //get snippets for each
+    var packageArray = data[packages[i]];
+    var package = packageArray["package"];
+    var snippets = packageArray["snippets"];
+    if(snippets){
+      for(var j=0; j<snippets.length; j++){
+        var snippet = snippets[j];
+        var code = JSON.stringify(snippet["snippet"]).replace(/\t/g, "\\t");
+        var description = JSON.stringify(snippet["description"]).replace(/\t/g, "\\t");
+
+
+        var line = package + "\t" + code + "\t" + description;
+
+        toWrite += line + "\n";
+      }
+    }
+  }
+
+  fs.writeFileSync(CSV_DIR, toWrite, {encoding: "utf-8"})
+
 }
 
 //comment out unless u need to generate a new set of readmes
 //getRandomReadmes();
+
+//gets snippets
 main();
+
+//when we want to make a spreadsheet
+makeCSV();
