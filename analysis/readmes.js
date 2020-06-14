@@ -302,7 +302,7 @@ function makeCSV(){
   var data = JSON.parse(contents);
 
   //initialize to write
-  var toWrite = "package,snippet,description\n";
+  var toWrite = "package\tsnippet\tdescription\n";
 
 
   //get packages
