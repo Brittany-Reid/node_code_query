@@ -1,6 +1,6 @@
 require("mocha");
 var assert = require("assert");
-const BasePrompt = require("../ncq/ui/prompts/base-prompt");
+const BasePrompt = require("../ncq/ui/prompts/suggestion-prompt");
 const sinon = require("sinon");
 const PromptHandler = require("../ncq/ui/prompt-handler");
 const { getDefault } = require("../ncq/config");
