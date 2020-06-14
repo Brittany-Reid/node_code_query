@@ -22,7 +22,7 @@ We used the axios library, but there are several other options (e.g., curl, fetc
 Note that we used JS promises to handle the effects of the call. 
 For an introduction to promises, check the link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises.
 
-The purpose of function processData is to process the data.
+The purpose of function `processData` is to process the data.
 At this point, it does nothing. The execution of this code should print the html on output.
 
 ```js
@@ -43,7 +43,7 @@ var processData = html => { return html }
 ```
 
 Add this snippet to file index.js.
-Then, install dependencies with _"$> node install"_. Finally, run the code with _"$> node index.js"_.
+Then, install dependencies with `$> node install`. Finally, run the code with `$> node index.js`.
 
 2 - Parse the HTML DOM to extract the data.
 
@@ -66,8 +66,8 @@ var processData = html => {
 }
 ```
 
-Update the definition of function getData on the index.js.
-Then, run the code with _"$> node index.js"_.
+Update the definition of function `getData` on the index.js.
+Then, run the code with `$> node index.js`.
 The output should look like this:
 
 ![2](https://user-images.githubusercontent.com/4914063/83377140-0f522c00-a3ab-11ea-9092-b6b22ddcdff1.jpg)
