@@ -1,6 +1,6 @@
 require("mocha");
 var assert = require("assert");
-const BasePrompt = require("../ncq/ui/prompts/suggestion-prompt");
+const BasePrompt = require("../ncq/ui/prompts/base-prompt");
 const sinon = require("sinon");
 const PromptHandler = require("../ncq/ui/prompt-handler");
 const { getDefault } = require("../ncq/config");
@@ -19,13 +19,13 @@ const tab = {
  * Utility function, takes a string to send as input to Enquirer prompt
  * and simulates keypresses.
  */
-async function send(string, prompt) {
+async function send(string, prompt, send = true) {
   //send each character as a keypress
   for (let i = 0; i < string.length; i++) {
     await prompt.keypress(string[i]);
   }
   //finish
-  await prompt.submit();
+  if (send) await prompt.submit();
 }
 
 /**
@@ -122,7 +122,7 @@ describe("BasePrompt", function () {
 
       assert.strictEqual(out, "abcd");
     });
-    it("should fix undefined", async function () {
+    it("should fix undefined on ctrl right", async function () {
       var prompt = new BasePrompt({ choices: ["a", "b"], show: false });
 
       var ctrlright = {
@@ -191,6 +191,234 @@ describe("BasePrompt", function () {
       var out = await prompt.run();
 
       assert.strictEqual(out, "aaa");
+    });
+    it("should go to line start", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false
+      });
+
+      prompt.once("run", async () => {
+        prompt.keys["lineStart"] = getDefault().keybindings.lineStart;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.lineStart);
+        await send("hi, ", prompt, true);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "hi, this is line one");
+    });
+    it("should go to line start on non first line", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false,
+        multiline: true
+      });
+
+      prompt.once("run", async () => {
+        prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
+        prompt.keys["lineStart"] = getDefault().keybindings.lineStart;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        await send("this is line two", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.lineStart);
+        await send("hi, ", prompt, true);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "this is line one\nhi, this is line two");
+    });
+    it("should handle line start when at start", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false
+      });
+
+      prompt.once("run", async () => {
+        prompt.keys["lineStart"] = getDefault().keybindings.lineStart;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.lineStart);
+        await prompt.keypress(null, getDefault().keybindings.lineStart);
+        await send("hi, ", prompt, true);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "hi, this is line one");
+    });
+    it("should go to line end", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false
+      });
+
+      prompt.once("run", async () => {
+        prompt.keys["lineStart"] = getDefault().keybindings.lineStart;
+        prompt.keys["lineEnd"] = getDefault().keybindings.lineEnd;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.lineStart);
+        await send("hi, ", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.lineEnd);
+        await send(". Bye!", prompt, true);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "hi, this is line one. Bye!");
+    });
+    it("should go to line end that isnt end of input", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false,
+        multiline: true
+      });
+
+      prompt.once("run", async () => {
+        prompt.keys["cursorUp"] = getDefault().keybindings.cursorUp;
+        prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
+        prompt.keys["lineStart"] = getDefault().keybindings.lineStart;
+        prompt.keys["lineEnd"] = getDefault().keybindings.lineEnd;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        await send("this is line two", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorUp);
+        await prompt.keypress(null, getDefault().keybindings.lineStart);
+        await send("hi, ", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.lineEnd);
+        await send(";", prompt, true);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "hi, this is line one;\nthis is line two");
+    });
+    it("should do newline", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false,
+        multiline: true,
+      });
+
+      prompt.once("run", async () => {
+        prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        await send("this is line two", prompt);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "this is line one\nthis is line two");
+    });
+    it("should respect multiline false", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({ choices: ["a", "b"], show: false });
+
+      prompt.once("run", async () => {
+        prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        await send("this is line two", prompt);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "this is line onethis is line two");
+    });
+    it("should do line up", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false,
+        multiline: true,
+      });
+
+      prompt.once("run", async () => {
+        prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
+        prompt.keys["cursorUp"] = getDefault().keybindings.cursorUp;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        await send("this is line two", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorUp);
+        await send(";", prompt, true);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "this is line one;\nthis is line two");
+    });
+    it("should do line up then line down", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false,
+        multiline: true,
+      });
+
+      prompt.once("run", async () => {
+        prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
+        prompt.keys["cursorUp"] = getDefault().keybindings.cursorUp;
+        await send("this is line one", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        await send("this is line two", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorUp);
+        await send(";", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        await send(";", prompt, true);
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "this is line one;\nthis is line two;");
+    });
+  });
+  describe("rendering tests", function () {
+    it("visible lines should be subset if too long", async function () {
+      //sometimes ctrl c prints a box
+      var prompt = new BasePrompt({
+        choices: ["a", "b"],
+        show: false,
+        multiline: true,
+      });
+
+      var allLines;
+      var renderedLines;
+      prompt.once("run", async () => {
+        prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
+        prompt.keys["cursorUp"] = getDefault().keybindings.cursorUp;
+        var height = prompt.height;
+        await send("first line", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        for(var i=0; i<height; i++){
+          await send("1", prompt, false);
+          await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        }
+
+        //go back to top
+        for(var i=0; i<height+1; i++){
+          await prompt.keypress(null, getDefault().keybindings.cursorUp);
+        }
+
+        allLines = prompt.lineBuffer;
+        renderedLines = prompt.renderedLines;
+        await prompt.submit();
+      });
+
+      var out = await prompt.run();
+
+      //some lines are not rendered
+      assert(allLines.length > renderedLines.length);
+
+      //when we move back to top, the rendered lines move with us
+      assert.strictEqual(allLines[0], renderedLines[0]);
     });
   });
 

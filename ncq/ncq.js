@@ -48,42 +48,7 @@ async function main() {
     commands[index] = element;
   });
 
-  commands = utils.generateChoices(commands, "command");
-  var packagesChoices = utils.generateChoices(packages, "package");
-
-  var choices = commands.concat(packagesChoices).sort(function (a, b) {
-    var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-    var nameB = b.name.toUpperCase(); // ignore upper and lowercase
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-
-    // names must be equal
-    return 0;
-  });
-
-  myPrompt.options.choiceFilter = function(input, choices){
-    //filter by context, what command
-    if(input.substring(0, this.cursor).endsWith("repl(\"")){
-      choices = choices.filter(function(choice){
-        if(choice.type === "package"){
-          return true;
-        }
-      })
-    }
-    //no command
-    else{
-      choices = choices.filter(function(choice){
-        if(choice.type === "command"){
-          return true;
-        }
-      })
-    }
-    return choices;
-  }
+  var choices = commands;
 
   myPrompt.options.choices = choices.slice();
   cmd.run();

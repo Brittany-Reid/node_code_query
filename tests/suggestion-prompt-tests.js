@@ -14,13 +14,15 @@ const left = { sequence: "\u001b[D", name: "left", code: "[D" };
  * Utility function, takes a string to send as input to Enquirer prompt
  * and simulates keypresses.
  */
-async function send(string, prompt) {
+async function send(string, prompt, send=true) {
   //send each character as a keypress
   for (let i = 0; i < string.length; i++) {
     await prompt.keypress(string[i]);
   }
   //finish
-  await prompt.submit();
+  if(send){
+    await prompt.submit();
+  }
 }
 
 /**
@@ -49,29 +51,6 @@ describe("SuggestionPrompt", function () {
   });
 
   describe("unit tests", function () {
-    it("should allow custom non choice", async function () {
-      var prompt = new SuggestionPrompt({ choices: ["a", "b"], show: false });
-
-      prompt.once("run", async () => {
-        prompt.keypress("c");
-        prompt.submit();
-      });
-
-      var out = await prompt.run();
-
-      assert.strictEqual(out, "c");
-    });
-    it("should allow empty", async function () {
-      var prompt = new SuggestionPrompt({ choices: ["a", "b"], show: false });
-
-      prompt.once("run", async () => {
-        prompt.submit();
-      });
-
-      var out = await prompt.run();
-
-      assert.strictEqual(out, "");
-    });
     it("should insert previous from histroy using ctrl+up", async function () {
       var ctrlup = {
         name: up.name,
@@ -106,6 +85,88 @@ describe("SuggestionPrompt", function () {
       out = await prompt.run();
 
       assert.strictEqual(out, "test");
+    });
+    it("should be able to go up and down through history", async function () {
+      var ctrlup = {
+        name: up.name,
+        ctrl: true,
+        meta: false,
+        option: false,
+        shift: false,
+      };
+
+      //use prompt handler becuse it handles history for us
+      var prompt = new PromptHandler(SuggestionPrompt, {
+        choices: ["a", "b"],
+        show: false,
+      });
+      prompt.input = function () {
+        send("test1", prompt.prompt);
+      };
+
+      await prompt.run();
+
+      //use prompt handler becuse it handles history for us
+      var prompt = new PromptHandler(SuggestionPrompt, {
+        choices: ["a", "b"],
+        show: false,
+      });
+      prompt.input = function () {
+        send("test2", prompt.prompt);
+      };
+
+      await prompt.run();
+
+      prompt = new PromptHandler(SuggestionPrompt, {
+        choices: ["a", "b"],
+        show: false,
+      });
+      prompt.input = function () {
+        //overwrite custom binding
+        prompt.prompt.keys["historyUp"] = getDefault().keybindings.historyUp;
+        prompt.prompt.keys["historyDown"] = getDefault().keybindings.historyDown;
+        prompt.prompt.keypress(null, ctrlup);
+        prompt.prompt.keypress(null, ctrlup);
+        prompt.prompt.keypress(null, getDefault().keybindings.historyDown);
+        prompt.prompt.submit();
+      };
+
+      out = await prompt.run();
+
+      assert.strictEqual(out, "test2");
+    });
+    it("should toggle autocomplete and insert", async function () {
+      var prompt = new SuggestionPrompt({ choices: ["a", "b"], show: false });
+
+      prompt.once("run", async () => {
+        //default toggle
+        prompt.keys["autocomplete"] = getDefault().keybindings.autocomplete;
+        await prompt.keypress(null, getDefault().keybindings.autocomplete);
+        await prompt.submit();
+        await prompt.submit();
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "a");
+    });
+    it("should do autocomplete on newline", async function () {
+      var prompt = new SuggestionPrompt({ choices: ["a", "b"], show: false, multiline: true });
+
+      prompt.once("run", async () => {
+        //default toggle
+        prompt.keys["autocomplete"] = getDefault().keybindings.autocomplete;
+        prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
+        await send("abcd", prompt, false);
+        await prompt.keypress(null, getDefault().keybindings.cursorDown);
+        await prompt.keypress(null, getDefault().keybindings.autocomplete);
+        await prompt.submit();
+        await prompt.submit();
+      });
+
+      var out = await prompt.run();
+
+      assert.strictEqual(out, "abcd\na");
     });
   });
 
