@@ -5,6 +5,7 @@ const stripAnsi = require("strip-ansi");
 const wrapAnsi = require("wrap-ansi");
 const colors = require("ansi-colors");
 const { getConfig } = require("../../config");
+const { width } = require("enquirer/lib/utils");
 
 /**
  * Extended Enquirer AutoComplete.
@@ -403,8 +404,8 @@ class BasePrompt extends AutoComplete {
         if(line == undefined){
           line = "";
         }
-        line = to_width(line, columns-1, { align: "left" });
-        line += scrollArray[i];
+        line = to_width(line, columns, { align: "left" });
+        line += " " + scrollArray[i];
         this.renderedLines[i] = line;
       }
     }
@@ -412,10 +413,13 @@ class BasePrompt extends AutoComplete {
     //if we have a footer
     if (footer) {
       //get footer line
-      var lastLine = wrapAnsi(footer, columns, {
-        trim: false,
-        hard: true,
-      }).split("\n")[0];
+      var lastLine = footer;
+      if(width_of(footer) > this.width){
+        lastLine = wrapAnsi(footer, this.width, {
+          trim: false,
+          hard: true,
+        }).split("\n")[0];
+      }
 
       //add a single space between if available
       if(this.renderedLines.length < rows){
