@@ -7,24 +7,21 @@ const CodePrompt = require("./prompts/code-prompt");
  * This is how we send input to the REPL.
  */
 class PromptReadable extends stream.Readable {
-  constructor(suggestions = [], prefix="NCQ", message ="", snippets = [], options) {
+  constructor(pOptions = {}, options) {
     super(options);
-    this.suggestions = suggestions;
-    this.prefix = prefix;
-    this.message = message;
-    this.snippets = snippets;
+    this.pOptions = pOptions;
   }
 
   setMessage(message = ""){
-    this.message = message;
+    this.pOptions.message = message;
   }
 
   setSnippets(snippets = []){
-    this.snippets = snippets;
+    this.pOptions.snippets = snippets;
   }
 
   setSuggestions(suggestions = []){
-    this.suggestions = suggestions;
+    this.pOptions.choices = suggestions;
   }
 
   /**
@@ -32,14 +29,7 @@ class PromptReadable extends stream.Readable {
    * Overwrite this to use a custom prompt.
    */
   async prompt() {
-    this.p = new PromptHandler(CodePrompt, {
-      prefix : this.prefix,
-      message : this.message,
-      snippets : this.snippets,
-      multiline : true,
-      choices : this.suggestions,
-      initial : "",
-    });
+    this.p = new PromptHandler(CodePrompt, this.pOptions);
     //reset snippets for next prompt
     this.snippets = [];
     //this.p = new Prompt(this.suggestions, this.prefix, this.message);

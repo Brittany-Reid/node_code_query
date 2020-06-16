@@ -8,6 +8,7 @@ const NcqCmd = require("./ncq-cmd");
 const DataHandler = require("./data-handler");
 const utils = require("./utils");
 const {getLogger} = require("./logger");
+const {footer} = require("./ui/footer");
 
 const OPTIONS = utils.options(process.argv);
 const BASE = utils.getBaseDirectory();
@@ -30,7 +31,7 @@ async function main() {
   logger = getLogger();
   packages = await data.loadPackges(SNIPPETDIR);
 
-  var myPrompt = new PromptHandler(SuggestionPrompt);
+  var myPrompt = new PromptHandler(SuggestionPrompt, {footer: footer});
 
   var cmd = new NcqCmd(myPrompt, packages);
   var commands = Array.from(cmd.getnames());

@@ -7,6 +7,7 @@ const fs = require("fs");
 const cprocess = require("child_process");
 const winston = require("winston");
 const fse = require("fs-extra");
+const {footer} = require("./ui/footer");
 
 var BASE = __dirname;
 parts = BASE.split("/");
@@ -220,11 +221,14 @@ async function main() {
   var tasks = Array.from(taskMap.keys());
 
   //create input readable
-  var pReadable = new PromptReadable(
-    tasks.slice(0, 1000).sort(),
-    NAME,
-    "[" + installedPackages.join(" ") + "]"
-  );
+  var pReadable = new PromptReadable({
+    choices: tasks.slice(0, 1000).sort(),
+    prefix: NAME,
+    message: "[" + installedPackages.join(" ") + "]",
+    footer: footer,
+    multiline: true,
+    scroll: true
+  });
 
   //set options
   options = {

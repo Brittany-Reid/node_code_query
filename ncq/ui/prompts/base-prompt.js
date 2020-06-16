@@ -38,6 +38,9 @@ class BasePrompt extends AutoComplete {
     this.filtered = [];
     this.lineBuffer = [];
     this.topLine = 0;
+
+    this.scroll = this.options.scroll;
+    this.scrollPos = 0;
   }
 
   /** Extend dispatch to fix this bug https://github.com/enquirer/enquirer/issues/285.
@@ -51,6 +54,16 @@ class BasePrompt extends AutoComplete {
     if (s) {
       super.dispatch(s, key);
     }
+  }
+
+  scrollDown(i){
+    if(!this.isSuggesting) return;
+    return super.scrollDown(i);
+  }
+
+  scrollUp(i){
+    if(!this.isSuggesting) return;
+    return super.scrollUp(i);
   }
 
   /**
@@ -180,7 +193,7 @@ class BasePrompt extends AutoComplete {
     var lines = this.input.split("\n");
 
     //on first line, cant go up
-    if(this.cursor <= lines[0].length) return;
+    if (this.cursor <= lines[0].length) return;
 
     //get coords
     var coords = this.getCoords(lines, this.cursor);
@@ -190,7 +203,7 @@ class BasePrompt extends AutoComplete {
     //go to end of previous line
     this.cursor -= x + 1;
     //go to pos x
-    this.cursor -= Math.max(0, lines[y-1].length-x);
+    this.cursor -= Math.max(0, lines[y - 1].length - x);
 
     await this.render();
   }
@@ -204,7 +217,8 @@ class BasePrompt extends AutoComplete {
     var lines = this.input.split("\n");
 
     //on last line, cant go down
-    if(this.cursor >= (this.input.length-lines[lines.length-1].length)) return;
+    if (this.cursor >= this.input.length - lines[lines.length - 1].length)
+      return;
 
     //get coords
     var coords = this.getCoords(lines, this.cursor);
@@ -306,6 +320,38 @@ class BasePrompt extends AutoComplete {
     return [l, x];
   }
 
+  scrollBar(lines, visible, top, rows){
+    var scrollArray = [];
+
+    //get shown percentage
+    var shown = rows / lines.length;
+    //apply to number of rows
+    var bar = Math.round(rows*shown);
+    //make sure bar is at least visible
+    if(bar == 0) bar = 1;
+    //get rows from top
+    var scrollTop = Math.round(top*shown);
+
+    for (let i = 0; i < rows; i++) {
+      if(i >= scrollTop && i < (scrollTop + bar)){
+        scrollArray.push(colors.inverse(" "));
+      }
+      else{
+        if(i == 0){
+          scrollArray.push("▲");
+        }
+        else if(i == (rows-1)){
+          scrollArray.push("▼");
+        }
+        else{
+          scrollArray.push(" ");
+        }
+      }
+    }
+
+    return scrollArray;
+  }
+
   /**
    * Render lines that fit on the terminal.
    */
@@ -317,7 +363,15 @@ class BasePrompt extends AutoComplete {
       return [header, prompt, body, footer].filter(Boolean).join("\n");
     }
     var rows = this.height;
-    var columns = this.width - 1;
+    //leave space for footer
+    if (footer) {
+      rows = rows - 1;
+    }
+    var columns = this.width;
+    //space for scroll bar
+    if(this.scroll){
+      columns -= 2;
+    }
     var cursor = this.cursor + width_of(this.state.prompt);
 
     //get lines
@@ -330,19 +384,60 @@ class BasePrompt extends AutoComplete {
     var l = this.getCoords(this.lineBuffer, cursor)[0];
 
     if (l < this.topLine) {
-      this.topLine = Math.max(l, 0);
+      this.topLine = Math.max(Math.min(l, this.lineBuffer.length - rows), 0);
     } else if (l > this.topLine + rows - 1) {
       this.topLine = Math.min(l, this.lineBuffer.length - rows);
     } else if (this.lineBuffer.length <= rows) {
       this.topLine = 0;
     }
 
-    var finalLines = this.lineBuffer;
+    this.renderedLines = this.lineBuffer.slice(
+      this.topLine,
+      this.topLine + rows
+    );
+
+    if(this.scroll && this.lineBuffer.length > rows){
+      var scrollArray = this.scrollBar(this.lineBuffer, this.renderedLines, this.topLine, rows);
+      for(var i=0; i<rows; i++){
+        var line = this.renderedLines[i];
+        if(line == undefined){
+          line = "";
+        }
+        line = to_width(line, columns-1, { align: "left" });
+        line += scrollArray[i];
+        this.renderedLines[i] = line;
+      }
+    }
+
+    //if we have a footer
+    if (footer) {
+      //get footer line
+      var lastLine = wrapAnsi(footer, columns, {
+        trim: false,
+        hard: true,
+      }).split("\n")[0];
+
+      //add a single space between if available
+      if(this.renderedLines.length < rows){
+        this.renderedLines.push("");
+
+        //if not suggesting, add space for suggestions so footer doesnt jump around
+        if(!this.isSuggesting){
+          var space = rows - this.renderedLines.length;
+          space = Math.min(this.limit, space);
+          for(var i=0; i<space; i++){
+            this.renderedLines.push("");
+          }
+        }
+      }
+
+      //add to renderedlines
+      this.renderedLines.push(lastLine);
+    }
+
     this.line = l;
 
-    var final = finalLines.slice(this.topLine, this.topLine + rows).join("\n");
-
-    this.renderedLines = finalLines.slice(this.topLine, this.topLine + rows);
+    var final = this.renderedLines.join("\n");
 
     return final;
   }
@@ -505,6 +600,6 @@ class BasePrompt extends AutoComplete {
   }
 }
 
-//new BasePrompt().run();
+// new BasePrompt({footer: function(){return "aaaa";}, multiline:true, choices: ["a"]}).run();
 
 module.exports = BasePrompt;
