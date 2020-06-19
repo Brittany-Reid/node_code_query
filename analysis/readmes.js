@@ -1,7 +1,9 @@
 const fs = require("fs");
 const path = require("path");
-const htmlparser = require("htmlparser2");
-
+// const htmlparser = require("htmlparser2");
+const { markdownToTxt } = require('markdown-to-txt'); //has an advisory for outdated dependency, i can copy the code if i need this in the actual tool
+const Entities = require('html-entities').AllHtmlEntities;
+const stripHtml = require("string-strip-html");
 
 /*
  * Analyse snippets extracted from a random sample of packages.
@@ -345,6 +347,8 @@ function getDescription(lines, start, block, package){
   //   console.log(block)
   //   //console.log(lines);
   // }
+
+  description = format(description);
   return description;
 }
 
@@ -387,11 +391,31 @@ function makeCSV(){
 
 }
 
+/**
+ * Format markdown to plain text using marked.
+ */
+function format(string){
+  
+  var text = markdownToTxt(string, {escapeHtml: false});
+
+  const entities = new Entities();
+
+  text = entities.decode(text);
+
+  //empty links <a href=""></a> remain
+  text = stripHtml(text);
+
+  return text;
+
+}
+
 //comment out unless u need to generate a new set of readmes
 //getRandomReadmes();
 
 //gets snippets
 main();
+
+
 
 //when we want to make a spreadsheet
 //makeCSV();
