@@ -22,6 +22,10 @@ const SNIPPET_DIR = path.join(BASE, "analysis/results/snippets.json")
 const CSV_DIR = path.join(BASE, "analysis/results/snippets.csv")
 const StreamObject = require("stream-json/streamers/StreamObject");
 const FENCE = /^\`\`\`(\s*)([\w_-]+)?\s*$/;
+const OBJECT_ARRAY_OPEN = /({|\[)/;
+const STRING = /"([^"\\]*(\\.[^"\\]*)*)"|\'([^\'\\]*(\\.[^\'\\]*)*)\'/;
+//const OBJECT = /(^{)|(^\w+\s?:\s?{)/;
+const OBJECT =  new RegExp("(^"+OBJECT_ARRAY_OPEN.source+")|(^\\w+\\s?:\\s?"+OBJECT_ARRAY_OPEN.source+")|(^("+STRING.source+")\\s?:\\s?"+OBJECT_ARRAY_OPEN.source+")");
 const HEADER = /^#+\s+\S+/;
 const HEADERUNDER = /^(\s*-+\s*)$/;
 const INLINE = /^(\s*`.*`\s*)$/;
@@ -138,6 +142,57 @@ const INLINE = /^(\s*`.*`\s*)$/;
   return array;
 }
 
+/**
+ * Check if snippet is valid.
+ */
+function validSnippet(snippet){
+
+  //trim and convert to lowercase
+  var normalized = snippet.trim().toLowerCase();
+  var lines = normalized.split("\n");
+  var valid = false;
+
+  //remove comments
+  normalized = "";
+  var comment = false;
+  for(var i=0; i<lines.length; i++){
+    var line = lines[i].trim();
+
+    if(line.startsWith("//")){
+    }
+    else if(!comment){
+      normalized += lines[i];
+    }
+  }
+
+  
+  if(normalized.startsWith("$ ")){
+    //starts with $ sign, representing a terminal. must have a space as js variables can start with $
+    valid = false;
+  }else if(normalized.startsWith("npm ")){
+    //looking for npm commands
+    valid = false;
+  }
+  else if(normalized.startsWith("bower install")){
+    //looking for bower install
+    valid = false;
+  }
+  else if(normalized.startsWith("install")){
+    //more general install command
+    valid = false;
+  }
+  else if(normalized.match(OBJECT)){
+    //console.log(snippet);
+    valid = false;
+  }
+  else{
+    valid = true;
+  }
+
+  return valid;
+
+}
+
 
 /**
  * Process for snippets.
@@ -161,7 +216,7 @@ function main(){
     //get snippets
     var snippets = getSnippets(readme, name);
     
-    // console.log(snippets);
+    //console.log(snippets);
     
     
     allSnippets.push(snippets);
@@ -200,18 +255,10 @@ function getSnippets(readme, package) {
         //ignore sippets marked explicitly as non js, valid js aliases from https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
         if (opening[2] == "js" || opening == "```" || opening[2] == "javascript" || opening[2] == "node") {
 
+          var pass = validSnippet(block);
 
-          //second exclusion - is this an obvious command line instruction
-          if(block.startsWith("$ ")){
-            //starts with $ sign, representing a terminal. must have a space as js variables can start with $
-          }else if(block.trim().startsWith("npm ")){
-            //looking for npm commands
-          }
-          else if(block.trim().startsWith("install")){
-            //more general install command
-          }
-          else{
-            snippetObject["description"] = getDescription(lines, start);
+          if(pass){
+            snippetObject["description"] = getDescription(lines, start, block, package);
             snippetObject["snippet"] = block;
             snippets.push(snippetObject);
             snippetObject = {};
@@ -232,21 +279,23 @@ function getSnippets(readme, package) {
 /**
  * Look upwards from start point for a description of the code snippet.
  */
-function getDescription(lines, start){
+function getDescription(lines, start, block, package){
   var description = "";
   var previousLine;
   snippet = false;
   headerUnder = false; //--------------------
   wasSnippet = false; //debug
-
-
+  
   var line;
-  for (let i = start-1; i > 0; i--) {
+  for (let i = start-1; i >= 0; i--) {
+
+    var inline = false;
     previousLine = line;
     line = lines[i];
 
     //stop at another snippet
     if(line.trim().match(FENCE)){
+      
       if(snippet){
         snippet = false;
         line = ""; //make line empty so we dont add the fence
@@ -261,33 +310,41 @@ function getDescription(lines, start){
       }
     }
     
-    //stop at inline snippet on its own line
+    //ignore inline on its own line in description
     //` npm install `
     else if(line.match(INLINE)){
-      break;
+      
+      inline = true;
     }
 
 
     //stop at header
     else if(line.trim().match(HEADER)){
+      
       //include header
-      description = line + "\n" + description;
-      break;
+      if(description.trim().length > 0){
+        description = line + "\n" + description;
+        break;
+      }
     }
 
     //header with a line underneath
     else if(line.match(HEADERUNDER)){
+      
       break;
     }
 
-    if(!snippet && line){
+    if(!snippet && line && !inline){
+    
       description = line + "\n" + description;
     }
   }
 
-  if(wasSnippet){
-    //console.log(description)
-  }
+  // if(k){
+  //   console.log("desc\n" + description);
+  //   console.log(block)
+  //   //console.log(lines);
+  // }
   return description;
 }
 
@@ -337,4 +394,4 @@ function makeCSV(){
 main();
 
 //when we want to make a spreadsheet
-makeCSV();
+//makeCSV();

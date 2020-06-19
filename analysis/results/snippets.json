@@ -107,12 +107,7 @@
  },
  {
   "package": "@cw-types/bluebird",
-  "snippets": [
-   {
-    "description": " \n> First, run `npm install --save @cw-types/bluebird`\n>Then, you must add `node_modules/@cw-types` to your `tsconifg.json` file, like so:\n",
-    "snippet": "    \"typeRoots\": [\n      \"node_modules/@cw-types\",\n      \"node_modules/@types\"\n    ]\n"
-   }
-  ]
+  "snippets": []
  },
  {
   "package": "@daas/model",
@@ -176,7 +171,7 @@
   "package": "@flykode/simplejs-format",
   "snippets": [
    {
-    "description": "A simple JS Format Package for Study purposes\n#Example\n",
+    "description": "# simplejsformat\nA simple JS Format Package for Study purposes\n#Example\n",
     "snippet": "'use strict';\n\nconst sjsformat = require('@flykode/simplejs-format');\n\nlet currency001 = new sjsformat.FkNumbers();\n\nconsole.log(currency001.currencyFormat(1000));\n"
    }
   ]
@@ -216,14 +211,6 @@
    {
     "description": "### Configuration\nAdd to your root js component:\n",
     "snippet": "import 'semantic-ui-less/definitions/globals/reset.less';\nimport 'semantic-ui-less/definitions/globals/site.less';\n"
-   },
-   {
-    "description": "#### For webpack v.1\n",
-    "snippet": "module: {\n  loaders: [\n\n    // less-loader\n    {\n      test: /\\.less$/,\n      loader: ExtractTextPlugin.extract('style', 'css?!postcss!semantic-ui-less-module'),\n      include: [/[\\/\\\\]node_modules[\\/\\\\]semantic-ui-less[\\/\\\\]/]\n    },\n\n    // loader for static assets\n    {\n      test: /\\.(png|jpg|jpeg|gif|svg)$/,\n      loader: 'url?limit=10240&absolute&name=images/[path][name]-[hash:7].[ext]',\n      include: [/[\\/\\\\]node_modules[\\/\\\\]semantic-ui-less[\\/\\\\]/]\n    },\n    {\n      test: /\\.(woff|woff2|ttf|svg|eot)$/,\n      loader: 'url?limit=10240&name=fonts/[name]-[hash:7].[ext]',\n      include: [/[\\/\\\\]node_modules[\\/\\\\]semantic-ui-less[\\/\\\\]/]\n    }\n  ]\n},\n\n// you can also add specific options:\nsemanticUiLessModuleLoader: {\n  siteFolder: path.join(__dirname, 'src/site'),\n},  \n  \n"
-   },
-   {
-    "description": "#### For webpack v.2\n",
-    "snippet": "\nmodule: {\n      rules: [\n\n        // for .less files:\n        {\n          test: /\\.less$/,\n          use: ExtractTextPlugin.extract({\n            fallback: 'style-loader',\n            use: [\n              { loader: 'css-loader' },\n              { loader: 'less-loader' }\n            ]\n          }),\n          exclude: [/[\\/\\\\]node_modules[\\/\\\\]semantic-ui-less[\\/\\\\]/]\n        },\n\n        // for semantic-ui-less files:\n        {\n          test: /\\.less$/,\n          use: ExtractTextPlugin.extract({\n            fallback: 'style-loader',\n            use: [\n              { loader: 'css-loader' },\n              {\n                loader: 'semantic-ui-less-module-loader',\n                // you can also add specific options:\n                options: { siteFolder: path.join(__dirname, 'src/site') }\n              }\n            ]\n          }),\n          include: [/[\\/\\\\]node_modules[\\/\\\\]semantic-ui-less[\\/\\\\]/]\n        },\n\n        // loader for static assets\n        {\n          test: /\\.(png|jpg|jpeg|gif|svg)$/,\n          use: {\n            loader: 'url-loader',\n            options: {\n              limit: 10240,\n              absolute: true,\n              name: 'images/[path][name]-[hash:7].[ext]'\n            }\n          },\n          include: [path.join(__dirname, 'src'), /[\\/\\\\]node_modules[\\/\\\\]semantic-ui-less[\\/\\\\]/]\n        }, {\n          test: /\\.(woff|woff2|ttf|svg|eot)$/,\n          use: {\n            loader: 'url-loader',\n            options: {\n              limit: 10240,\n              name: 'fonts/[name]-[hash:7].[ext]'\n            }\n          },\n          include: [path.join(__dirname, 'src'), /[\\/\\\\]node_modules[\\/\\\\]semantic-ui-less[\\/\\\\]/]\n        }\n      ]\n    }\n"
    }
   ]
  },
@@ -239,11 +226,11 @@
   "package": "@ironfly/lru-diskcache",
   "snippets": [
    {
-    "description": "### Usage\r\n\r\n",
+    "description": "# lru-diskcache\r\n\r\nModified from GitbookIO lru-diskcache to fix npm audit issues. Test coverage is low on this, recommend using the original lru-diskcache.\r\n\r\n[![Build Status](https://travis-ci.org/GitbookIO/lru-diskcache.svg?branch=master)](https://travis-ci.org/GitbookIO/lru-diskcache)\r\n\r\nA disk cache object that deletes the least-recently-used items. Based on [lru-cache](https://github.com/isaacs/node-lru-cache).\r\n\r\n### Usage\r\n\r\n",
     "snippet": "var LRU = require(\"lru-diskcache\")\r\n\r\nvar cache = LRU('./cache', {\r\n    max: 50\r\n});\r\n\r\ncache.init()\r\n\r\ncache.set(\"myfile.md\", \"A string content\")\r\ncache.get(\"file\").then(function() { ... }) // Buffer(\"A string content\")\r\n\r\n// with a buffer or stream\r\ncache.set(\"image.png\", new Buffer([ ... ]))\r\ncache.set(\"index.html\", request.get(\"https://www.google.fr\"))\r\n\r\ncache.reset()    // empty the cache\r\n"
    },
    {
-    "description": "### API\r\n\r\n",
+    "description": "\r\nIf you put more stuff in it, then items will fall out.\r\n\r\nIf you try to put an oversized thing in it, then it'll fall out right away.\r\n\r\n### API\r\n\r\n",
     "snippet": "// Initialize the cache\r\ncache.init()\r\n\r\n// Get content as a buffer (return a promise)\r\ncache.get(key)\r\n\r\n// Get content as a string\r\ncache.get(key, { encoding: 'utf8' })\r\n\r\n// Get content as a stream (return a promise)\r\ncache.getStream(key)\r\n\r\n// Check if a key is in the cache, without updating the recent-ness or deleting it for being stale.\r\ncache.has(key)\r\n\r\n// Delete a key from the cache\r\ncache.del(key)\r\n\r\n// Return total length of objects in cache taking into account\r\ncache.size()\r\n\r\n// Manually iterates over the entire cache proactively pruning old entries\r\ncache.prune()\r\n"
    }
   ]
@@ -282,7 +269,7 @@
   "package": "@lion/option",
   "snippets": [
    {
-    "description": "### Installation\n",
+    "description": "## How to use\n### Installation\n",
     "snippet": "import '@lion/option/lion-option.js';\n"
    }
   ]
@@ -303,7 +290,7 @@
   "package": "@meifacil/react-native-pdf-view",
   "snippets": [
    {
-    "description": "### Example\r\n\r\n",
+    "description": "\r\n\r\n### Example\r\n\r\n",
     "snippet": "'use strict';\r\n\r\nimport React,{\r\n    Component\r\n} from 'react';\r\n\r\nimport {\r\n    StyleSheet,\r\n    View\r\n} from 'react-native';\r\n\r\nimport PDFView from 'react-native-pdf-view';\r\n\r\nexport default class PDF extends Component {\r\n    constructor(props) {\r\n        super(props);\r\n    }\r\n\r\n    render(){\r\n      <PDFView ref={(pdf)=>{this.pdfView = pdf;}}\r\n                         src={\"sdcard/pdffile.pdf\"}\r\n                         onLoadComplete = {(pageCount)=>{\r\n                            this.pdfView.setNativeProps({\r\n                                zoom: 1.5\r\n                            });\r\n                         }}\r\n                         style={styles.pdf}/>\r\n    }\r\n}\r\nvar styles = StyleSheet.create({\r\n    pdf: {\r\n        flex:1\r\n    }\r\n});\r\n"
    }
   ]
@@ -312,7 +299,7 @@
   "package": "@meniga/config",
   "snippets": [
    {
-    "description": "\r\nExample:\r\n\r\n",
+    "description": "### globalConfig\r\n> *globalConfig* is a wrapper for Config.get, and can be used like this:\r\n\r\n\r\nExample:\r\n\r\n",
     "snippet": "import { globalConfig } from '@meniga/config'\r\n\r\nconst _configItemsPerPage = globalConfig('transactions.itemsPerPage', 50)\r\n"
    },
    {
@@ -354,11 +341,11 @@
   "package": "@ngard/tiny-chunk",
   "snippets": [
    {
-    "description": "## Syntax\n",
+    "description": "# tiny-chunk\n[![source](https://badgen.net/npm/v/@ngard/tiny-chunk)](https://www.npmjs.com/package/@ngard/tiny-chunk)\n[![bundle size](https://badgen.net/bundlephobia/minzip/@ngard/tiny-chunk)](https://bundlephobia.com/result?p=@ngard/tiny-chunk)\n[![build status](https://badgen.net/travis/NickGard/tiny-chunk)](https://travis-ci.org/NickGard/tiny-chunk)\n[![license](https://badgen.net/badge/license/MIT/blue)](https://badgen.net/badge/license/MIT/blue)\nA minimal-weight utility similar to `lodash.chunk`. For when every byte counts!\nThe only difference is that `tiny-chunk` has a minimum chunk size of `1` instead of `0`.\n<hr/>\nlodash.chunk [![bundle size](https://badgen.net/bundlephobia/minzip/lodash.chunk)](https://bundlephobia.com/result?p=lodash.chunk)\n<br/>\ntiny-chunk [![bundle size](https://badgen.net/bundlephobia/minzip/@ngard/tiny-chunk)](https://bundlephobia.com/result?p=@ngard/tiny-chunk)\n<hr/>\n## Syntax\n",
     "snippet": "chunk(/* array [, chunkSize] */)\n"
    },
    {
-    "description": "## Example\n",
+    "description": "## Return\nAn array of elements split into groups the length of `chunkSize`. If the array can't be split evenly, the final chunk will be the remaining elements.\n## Example\n",
     "snippet": "import { chunk } from '@ngard/tiny-chunk';\n\nconst value = chunk([1, 2, 3, 4, 5], 2);\n// value is [[1, 2], [3, 4], [5]]\n"
    }
   ]
@@ -418,7 +405,7 @@
     "snippet": "// Inject to `<head>` and also available as `style`\nimport style from './style.css'\n"
    },
    {
-    "description": "### Extract CSS\n",
+    "description": "It will also automatically use local PostCSS config files.\n### Extract CSS\n",
     "snippet": "postcss({\n  extract: true\n})\n"
    },
    {
@@ -451,7 +438,7 @@
   "package": "@regexp-extra/flags",
   "snippets": [
    {
-    "description": "\r\n",
+    "description": "Get [flags] of [RegExp], like `gi`.\r\n\r\n",
     "snippet": "const flags = require('@regexp-extra/flags');\r\n// -> flags\r\n\r\n\r\nflags(/EATME/g);\r\n// g\r\n\r\nflags(/DRINKME/im);\r\n// im\r\n"
    }
   ]
@@ -716,7 +703,7 @@
   "package": "am-bucker",
   "snippets": [
    {
-    "description": "==========\nBucker is a simple logging module that has everything you need to make your logs sane, readable, and useful.\nUsage\n=====\n",
+    "description": "What is it\n==========\nBucker is a simple logging module that has everything you need to make your logs sane, readable, and useful.\nUsage\n=====\n",
     "snippet": "var logger = require('bucker').createLogger(opts, module);\n\nlogger.info('informational message');\nlogger.debug('debug message');\nlogger.warn('warning');\nlogger.error('error');\nlogger.log('also works for informational messsages');\nlogger.module('something_else').info('and you can override the module name temporarily if you want');\nlogger.tags(['showing', 'off']).info('and we also support tags now');\n"
    },
    {
@@ -726,10 +713,6 @@
    {
     "description": "In addition to the connect middleware, bucker also exports a Hapi plugin. To use it, simply load it into your plugins\n",
     "snippet": "pack.require('bucker', { .. opts .. }, function (err) {\n  if (err) console.error('failed loading bucker plugin');\n});\n"
-   },
-   {
-    "description": "Frontend Usage\n==============\nThanks to Johannes Boyne, there exists a module to relay frontend logs to a receiver on your server for storage and display. You can read more about it [here](https://github.com/johannesboyne/bucker-receiver)\nOptions\n=======\n* app - filename to save application log items to.\n* error - filename to save error log items to. if this is not specified, errors will be combined with the regular app log if one is available.\n* access - filename to save access log items to.\n* console - boolean specifying if we should print to console or not.\n* syslog - a host:port combination to send logs to via syslog (e.g. 'localhost:6500'). port defaults to 514 if not specified. this may also be specified as an object, as in ``` { host: 'localhost', port: 514 } ```\n* logstash - an object describing the host to ship logstash formatted events to, this is documented further below\n* level - minimum level to log, this can be specified as a string (i.e. 'error') or as a number (i.e. 3). items that are below this level will not be logged.\n* name - name to use when namespacing logs. note that this will override the module reference if one is passed.\n* handleExceptions - a boolean to indicate whether or not we should add an uncaughtException handler. the handler will log the event as an exception, then process.exit(1).\n* hapi - when using bucker for logging as a hapi plugin we add a handler to the server's 'log' event and log the data with an appropriate log level based on the tags provided. You can prevent this behavior by adding the property 'handleLog', set as false to the hapi object ``` hapi: { handleLog: false } ```\nThe above list describes the most basic usage of each option. Below, I've written out an example config object that shows all available options.\nIn addition to the 'app' option, individual configurations may be set for each log level supporting the same options as the 'app' and 'error' items. If no level options are specified, the defaults (those passed to the 'app' and/or 'error' options) will be used.\n",
-    "snippet": "{ file: {\n    filename: '/path/to/file',\n    format: ':level :time :data',\n    timestamp: 'HH:mm:ss',\n    accessFormat: ':time :level :method :status :url'\n  },\n  console: {\n    color: false\n  },\n  syslog: {\n    host: 'localhost',\n    port: 514,\n    facility: 18\n  },\n  logstash: {\n    redis: true, // send as redis pubsub messages\n    // udp: true, // or send directly over UDP, *NOTE* you can only use one or the other, never both\n    host: '127.0.0.1', // defaults to localhost\n    port: 12345, // defaults to 6379 for redis, 9999 for udp\n    key: 'bucker_logs', // defaults to 'bucker', this is only used for the redis transport\n    channel: true, // use redis pubsub\n    list: false, // use a redis list *NOTE* if channel is false, list usage is forced\n    source_host: 'bacon.com' // this sets the @source_host field in logstash\n  }\n}\n"
    }
   ]
  },
@@ -857,7 +840,7 @@
   "package": "backbone.rel",
   "snippets": [
    {
-    "description": "## Example\n",
+    "description": "## Accesing nested relationships, the \"monadic\" `rel` getter.\nYou can pass as many arguments as you want to the `rel` getter in order to get nested relationships.\nAny failure on the getter chain will be properly propagated, avoiding `TypeError: Cannot call method 'foo' of null`.\n## Example\n",
     "snippet": "// models/project.js\nModels.Project.hasMany = function () {\n  return {\n    users: {collection: Collections.users, id: 'project_id'}\n  , tasks: {collection: Collection.tasks, filter: function (task) {\n      return task.rel('project') ? task.rel('project').id === this.id : null;\n    }}\n  };\n};\n\n// models/user.js\nModels.User.hasMany = function () {\n  return {\n    tasks: {collection: Collections.tasks, id: 'user_id'}\n  };\n};\n\nModels.User.belongsTo = function () {\n  return {\n    project: Collection.projects\n  };\n};\n\n// models/task.js\nModels.Task.belongsTo = function () {\n  return {\n    user: Collections.users\n  , project: function (task) {\n      return task.rel('user.project');\n    }\n  };\n};\n\nvar project = new Project({id: 1})\n  , user = new User({id: 1, project_id: 1})\n  , task1 = new Task({id: 1, user_id: 1})\n  , task2 = new Task({id: 2, user_id: 1});\n\nassert.equal(user.rel('tasks').length, 2);\nassert.equal(user.rel('project'), project);\nassert.equal(task1.rel('user'), user);\nassert.equal(task1.rel('project'), project);\n"
    }
   ]
@@ -886,12 +869,8 @@
   "package": "bitcoin-merkle-tree",
   "snippets": [
    {
-    "description": "",
+    "description": "# bitcoin-merkle-tree\n[![npm version](https://img.shields.io/npm/v/bitcoin-merkle-tree.svg)](https://www.npmjs.com/package/bitcoin-merkle-tree)\n[![Build Status](https://travis-ci.org/mappum/bitcoin-merkle-tree.svg?branch=master)](https://travis-ci.org/mappum/bitcoin-merkle-tree)\n[![Dependency Status](https://david-dm.org/mappum/bitcoin-merkle-tree.svg)](https://david-dm.org/mappum/bitcoin-merkle-tree)\n**Verify Bitcoin Merkle trees**\nBitcoin [BIP37](https://github.com/bitcoin/bips/blob/master/bip-0037.mediawiki) adds support for `merkleblock` messages, which allow clients to download blocks that only include transactions relevant to them. The transactions are selected via a Bloom Filter.\nThis module verifies the Merkle proofs in a `merkleblock` message, and lists the included transactions which match the filter.\n## Usage\n",
     "snippet": "var merkleTree = require('bitcoin-merkle-tree')\n\n// build partial merkle tree object (block #681135 in testnet)\nvar partialMT = merkleTree.build({\n  hashes: [\n    new Buffer('52a893ef120d5e24aa38604ead9ada6628eea417df6d6096ef0dd7b73a89c0e9', 'hex'),\n    new Buffer('a76a1e1bffbbb254bd897e379298549eb8ff4aa57a4bb4c06637b36d76833207', 'hex'),\n    new Buffer('056b4e64697677788744a8ad23cc407cbc1c357ff889d9975edd431fb779466f', 'hex'),\n    new Buffer('3c51bfb4f9cdd2b8e3a5c47cb1b3bdbc8879a1c1b238d4123dcb572a00b2b80e', 'hex'),\n    new Buffer('d6d1f9ca0a4017050379a82ecccb050cf4218f2180087e9592110972a71e375c', 'hex')\n  ],\n  include: [\n    new Buffer('3c51bfb4f9cdd2b8e3a5c47cb1b3bdbc8879a1c1b238d4123dcb572a00b2b80e', 'hex'),\n    new Buffer('d6d1f9ca0a4017050379a82ecccb050cf4218f2180087e9592110972a71e375c', 'hex')\n  ],\n  merkleRoot: new Buffer('b9b4500294c18487dc32a929b587475fbf9652beb7d73010ea37ee0483e52e58', 'hex')\n})\n// { flags: [ 235, 1 ],\n//   hashes:\n//    [ <Buffer 19 d6 5e 9e 20 d4 55 db ae 6d 11 39 66 54 7a 1d 41 91 e3 cf eb 3c 4c 2a b9 0e d2 79 5f 39 c4 cc>,\n//      <Buffer 05 6b 4e 64 69 76 77 78 87 44 a8 ad 23 cc 40 7c bc 1c 35 7f f8 89 d9 97 5e dd 43 1f b7 79 46 6f>,\n//      <Buffer 3c 51 bf b4 f9 cd d2 b8 e3 a5 c4 7c b1 b3 bd bc 88 79 a1 c1 b2 38 d4 12 3d cb 57 2a 00 b2 b8 0e>,\n//      <Buffer d6 d1 f9 ca 0a 40 17 05 03 79 a8 2e cc cb 05 0c f4 21 8f 21 80 08 7e 95 92 11 09 72 a7 1e 37 5c> ],\n//   numTransactions: 5,\n//   merkleRoot: <Buffer b9 b4 50 02 94 c1 84 87 dc 32 a9 29 b5 87 47 5f bf 96 52 be b7 d7 30 10 ea 37 ee 04 83 e5 2e 58> }\n\n// extract included hashes from object\nvar hashes = merkleTree.extract(partialMT)\nconsole.log('Matched transactions: ', hashes.map(function(b) { return b.toString('hex') }))\n"
-   },
-   {
-    "description": "##### `var partialMerkleTree = merkleTree.build(block)`\nConstruct proof object for transactions. Proof object:\n",
-    "snippet": "{\n  flags: number[],\n  hashes: Buffer[],\n  numTransactions: number,\n  merkleRoot: Buffer\n}\n"
    }
   ]
  },
@@ -937,7 +916,7 @@
   "package": "bmaplib.lushu",
   "snippets": [
    {
-    "description": "### ES Next\n",
+    "description": "## Usage\n### ES Next\n",
     "snippet": "import LuShu from 'bmaplib.lushu'\n\n// You should use this lib after BaiduMap loaded. For Example:\n\nloadBaiduMap.then(() => {\n  new LuShu()\n})\n"
    }
   ]
@@ -950,12 +929,8 @@
   "package": "brl-daily-quotation",
   "snippets": [
    {
-    "description": "This package is responsible for listing the daily quotation of foreign currencies against the Brazillian Real (BRL), all based on SOAP services provided by Banco do Brasil for free, which you can see here: [SOAL Service Banco do Brasil](https://www3.bcb.gov.br/sgspub/JSP/sgsgeral/FachadaWSSGS.wsdl)\nYou can use destructor to get the requisition function and an object in the desired currency to get the daily quote.\n",
+    "description": "# About this package:\nThis package is responsible for listing the daily quotation of foreign currencies against the Brazillian Real (BRL), all based on SOAP services provided by Banco do Brasil for free, which you can see here: [SOAL Service Banco do Brasil](https://www3.bcb.gov.br/sgspub/JSP/sgsgeral/FachadaWSSGS.wsdl)\nYou can use destructor to get the requisition function and an object in the desired currency to get the daily quote.\n",
     "snippet": "const { CurrencyCode, getLastQuote } = require('./')\n\ngetLastQuote(CurrencyCode.EURO_BUY).then(console.log)\n"
-   },
-   {
-    "description": "With this code, you will obtain an object like this:\n",
-    "snippet": "{ \n  id: '21620',\n  isSpecial: 'false',\n  source: 'PTAX',\n  fullName: 'Exchange rate - Free - Euro (bid)',\n  shortName: 'Euro (bid)',\n  fullNamePTbr: 'Taxa de câmbio - Livre - Euro (compra)',\n  shortNamePTbr: 'Euro (compra)',\n  periodicity: 'Diária',\n  periodicityInitials: 'D',\n  isLocked: 'false',\n  isPublic: 'true',\n  lastValue: '4.3522000',\n  defaultUnitPTbr: 'R$/u.m.c.',\n  defaultUnit: 'R$/c.m.u.',\n  dateCurrency: 2019-06-14T03: 00: 00.000Z\n}\n"
    }
   ]
  },
@@ -979,20 +954,12 @@
     "snippet": "  import draggable from 'vuedraggable'\n  ...\n  export default {\n        components: {\n            draggable,\n        },\n  ...\n"
    },
    {
-    "description": "### With Vuex:\n",
-    "snippet": "computed: {\n    myList: {\n        get() {\n            return this.$store.state.myList\n        },\n        set(value) {\n            this.$store.commit('updateList', value)\n        }\n    }\n}\n"
-   },
-   {
     "description": "#### move\nType: `Function`<br>\nRequired: `false`<br>\nDefault: `null`<br>\nIf not null this function will be called in a similar way as [Sortable onMove callback](https://github.com/RubaXa/Sortable#move-event-object).\nReturning false will cancel the drag operation.\n",
     "snippet": "function onMoveCallback(evt, originalEvent){\n   ...\n    // return false; — for cancel\n}\n"
    },
    {
     "description": "javascript:\n",
     "snippet": "checkMove: function(evt){\n    return (evt.draggedContext.element.name!=='apple');\n}\n"
-   },
-   {
-    "description": "## Installation\n- Available through:\n",
-    "snippet": " Bower install vue.draggable\n"
    }
   ]
  },
@@ -1000,63 +967,63 @@
   "package": "cacache",
   "snippets": [
    {
-    "description": "### Example\n",
+    "description": "## Table of Contents\n* [Example](#example)\n* [Features](#features)\n* [Contributing](#contributing)\n* [API](#api)\n  * [Using localized APIs](#localized-api)\n  * Reading\n    * [`ls`](#ls)\n    * [`ls.stream`](#ls-stream)\n    * [`get`](#get-data)\n    * [`get.stream`](#get-stream)\n    * [`get.info`](#get-info)\n    * [`get.hasContent`](#get-hasContent)\n  * Writing\n    * [`put`](#put-data)\n    * [`put.stream`](#put-stream)\n    * [`rm.all`](#rm-all)\n    * [`rm.entry`](#rm-entry)\n    * [`rm.content`](#rm-content)\n  * Utilities\n    * [`clearMemoized`](#clear-memoized)\n    * [`tmp.mkdir`](#tmp-mkdir)\n    * [`tmp.withTmp`](#with-tmp)\n  * Integrity\n    * [Subresource Integrity](#integrity)\n    * [`verify`](#verify)\n    * [`verify.lastRun`](#verify-last-run)\n### Example\n",
     "snippet": "const cacache = require('cacache')\nconst fs = require('fs')\n\nconst tarball = '/path/to/mytar.tgz'\nconst cachePath = '/tmp/my-toy-cache'\nconst key = 'my-unique-key-1234'\n\n// Cache it! Use `cachePath` as the root of the content cache\ncacache.put(cachePath, key, '10293801983029384').then(integrity => {\n  console.log(`Saved content to ${cachePath}.`)\n})\n\nconst destination = '/tmp/mytar.tgz'\n\n// Copy the contents out of the cache and into their destination!\n// But this time, use stream instead!\ncacache.get.stream(\n  cachePath, key\n).pipe(\n  fs.createWriteStream(destination)\n).on('finish', () => {\n  console.log('done extracting!')\n})\n\n// The same thing, but skip the key index.\ncacache.get.byDigest(cachePath, integrityHash).then(data => {\n  fs.writeFile(destination, data, err => {\n    console.log('tarball data fetched based on its sha512sum and written out!')\n  })\n})\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"ls\"></a> `> cacache.ls(cache) -> Promise<Object>`\nLists info for all entries currently in the cache as a single large object. Each\nentry in the object will be keyed by the unique index key, with corresponding\n[`get.info`](#get-info) objects as the values.\n##### Example\n",
     "snippet": "cacache.ls(cachePath).then(console.log)\n// Output\n{\n  'my-thing': {\n    key: 'my-thing',\n    integrity: 'sha512-BaSe64/EnCoDED+HAsh=='\n    path: '.testcache/content/deadbeef', // joined with `cachePath`\n    time: 12345698490,\n    size: 4023948,\n    metadata: {\n      name: 'blah',\n      version: '1.2.3',\n      description: 'this was once a package but now it is my-thing'\n    }\n  },\n  'other-thing': {\n    key: 'other-thing',\n    integrity: 'sha1-ANothER+hasH=',\n    path: '.testcache/content/bada55',\n    time: 11992309289,\n    size: 111112\n  }\n}\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"ls-stream\"></a> `> cacache.ls.stream(cache) -> Readable`\nLists info for all entries currently in the cache as a single large object.\nThis works just like [`ls`](#ls), except [`get.info`](#get-info) entries are\nreturned as `'data'` events on the returned stream.\n##### Example\n",
     "snippet": "cacache.ls.stream(cachePath).on('data', console.log)\n// Output\n{\n  key: 'my-thing',\n  integrity: 'sha512-BaSe64HaSh',\n  path: '.testcache/content/deadbeef', // joined with `cachePath`\n  time: 12345698490,\n  size: 13423,\n  metadata: {\n    name: 'blah',\n    version: '1.2.3',\n    description: 'this was once a package but now it is my-thing'\n  }\n}\n\n{\n  key: 'other-thing',\n  integrity: 'whirlpool-WoWSoMuchSupport',\n  path: '.testcache/content/bada55',\n  time: 11992309289,\n  size: 498023984029\n}\n\n{\n  ...\n}\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "##### Note\nThis function loads the entire cache entry into memory before returning it. If\nyou're dealing with Very Large data, consider using [`get.stream`](#get-stream)\ninstead.\n##### Example\n",
     "snippet": "// Look up by key\ncache.get(cachePath, 'my-thing').then(console.log)\n// Output:\n{\n  metadata: {\n    thingName: 'my'\n  },\n  integrity: 'sha512-BaSe64HaSh',\n  data: Buffer#<deadbeef>,\n  size: 9320\n}\n\n// Look up by digest\ncache.get.byDigest(cachePath, 'sha512-BaSe64HaSh').then(console.log)\n// Output:\nBuffer#<deadbeef>\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"get-stream\"></a> `> cacache.get.stream(cache, key, [opts]) -> Readable`\nReturns a [Readable Stream](https://nodejs.org/api/stream.html#stream_readable_streams) of the cached data identified by `key`.\nIf there is no content identified by `key`, or if the locally-stored data does\nnot pass the validity checksum, an error will be emitted.\n`metadata` and `integrity` events will be emitted before the stream closes, if\nyou need to collect that extra data about the cached entry.\nA sub-function, `get.stream.byDigest` may be used for identical behavior,\nexcept lookup will happen by integrity hash, bypassing the index entirely. This\nversion does not emit the `metadata` and `integrity` events at all.\nSee: [options](#get-options)\n##### Example\n",
     "snippet": "// Look up by key\ncache.get.stream(\n  cachePath, 'my-thing'\n).on('metadata', metadata => {\n  console.log('metadata:', metadata)\n}).on('integrity', integrity => {\n  console.log('integrity:', integrity)\n}).pipe(\n  fs.createWriteStream('./x.tgz')\n)\n// Outputs:\nmetadata: { ... }\nintegrity: 'sha512-SoMeDIGest+64=='\n\n// Look up by digest\ncache.get.stream.byDigest(\n  cachePath, 'sha512-SoMeDIGest+64=='\n).pipe(\n  fs.createWriteStream('./x.tgz')\n)\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "##### Fields\n* `key` - Key the entry was looked up under. Matches the `key` argument.\n* `integrity` - [Subresource Integrity hash](#integrity) for the content this entry refers to.\n* `path` - Filesystem path where content is stored, joined with `cache` argument.\n* `time` - Timestamp the entry was first added on.\n* `metadata` - User-assigned metadata associated with the entry/content.\n##### Example\n",
     "snippet": "cacache.get.info(cachePath, 'my-thing').then(console.log)\n\n// Output\n{\n  key: 'my-thing',\n  integrity: 'sha256-MUSTVERIFY+ALL/THINGS=='\n  path: '.testcache/content/deadbeef',\n  time: 12345698490,\n  size: 849234,\n  metadata: {\n    name: 'blah',\n    version: '1.2.3',\n    description: 'this was once a package but now it is my-thing'\n  }\n}\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"get-hasContent\"></a> `> cacache.get.hasContent(cache, integrity) -> Promise`\nLooks up a [Subresource Integrity hash](#integrity) in the cache. If content\nexists for this `integrity`, it will return an object, with the specific single integrity hash\nthat was found in `sri` key, and the size of the found content as `size`. If no content exists for this integrity, it will return `false`.\n##### Example\n",
     "snippet": "cacache.get.hasContent(cachePath, 'sha256-MUSTVERIFY+ALL/THINGS==').then(console.log)\n\n// Output\n{\n  sri: {\n    source: 'sha256-MUSTVERIFY+ALL/THINGS==',\n    algorithm: 'sha256',\n    digest: 'MUSTVERIFY+ALL/THINGS==',\n    options: []\n  },\n  size: 9001\n}\n\ncacache.get.hasContent(cachePath, 'sha521-NOT+IN/CACHE==').then(console.log)\n\n// Output\nfalse\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"put-data\"></a> `> cacache.put(cache, key, data, [opts]) -> Promise`\nInserts data passed to it into the cache. The returned Promise resolves with a\ndigest (generated according to [`opts.algorithms`](#optsalgorithms)) after the\ncache entry has been successfully written.\nSee: [options](#put-options)\n##### Example\n",
     "snippet": "fetch(\n  'https://registry.npmjs.org/cacache/-/cacache-1.0.0.tgz'\n).then(data => {\n  return cacache.put(cachePath, 'registry.npmjs.org|cacache@1.0.0', data)\n}).then(integrity => {\n  console.log('integrity hash is', integrity)\n})\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"put-stream\"></a> `> cacache.put.stream(cache, key, [opts]) -> Writable`\nReturns a [Writable\nStream](https://nodejs.org/api/stream.html#stream_writable_streams) that inserts\ndata written to it into the cache. Emits an `integrity` event with the digest of\nwritten contents when it succeeds.\nSee: [options](#put-options)\n##### Example\n",
     "snippet": "request.get(\n  'https://registry.npmjs.org/cacache/-/cacache-1.0.0.tgz'\n).pipe(\n  cacache.put.stream(\n    cachePath, 'registry.npmjs.org|cacache@1.0.0'\n  ).on('integrity', d => console.log(`integrity digest is ${d}`))\n)\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"rm-all\"></a> `> cacache.rm.all(cache) -> Promise`\nClears the entire cache. Mainly by blowing away the cache directory itself.\n##### Example\n",
     "snippet": "cacache.rm.all(cachePath).then(() => {\n  console.log('THE APOCALYPSE IS UPON US 😱')\n})\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"rm-entry\"></a> `> cacache.rm.entry(cache, key) -> Promise`\nAlias: `cacache.rm`\nRemoves the index entry for `key`. Content will still be accessible if\nrequested directly by content address ([`get.stream.byDigest`](#get-stream)).\nTo remove the content itself (which might still be used by other entries), use\n[`rm.content`](#rm-content). Or, to safely vacuum any unused content, use\n[`verify`](#verify).\n##### Example\n",
     "snippet": "cacache.rm.entry(cachePath, 'my-thing').then(() => {\n  console.log('I did not like it anyway')\n})\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"rm-content\"></a> `> cacache.rm.content(cache, integrity) -> Promise`\nRemoves the content identified by `integrity`. Any index entries referring to it\nwill not be usable again until the content is re-added to the cache with an\nidentical digest.\n##### Example\n",
     "snippet": "cacache.rm.content(cachePath, 'sha512-SoMeDIGest/IN+BaSE64==').then(() => {\n  console.log('data for my-thing is gone!')\n})\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"tmp-mkdir\"></a> `> tmp.mkdir(cache, opts) -> Promise<Path>`\nReturns a unique temporary directory inside the cache's `tmp` dir. This\ndirectory will use the same safe user assignment that all the other stuff use.\nOnce the directory is made, it's the user's responsibility that all files\nwithin are given the appropriate `gid`/`uid` ownership settings to match\nthe rest of the cache. If not, you can ask cacache to do it for you by\ncalling [`tmp.fix()`](#tmp-fix), which will fix all tmp directory\npermissions.\nIf you want automatic cleanup of this directory, use\n[`tmp.withTmp()`](#with-tpm)\nSee: [options](#tmp-options)\n##### Example\n",
     "snippet": "cacache.tmp.mkdir(cache).then(dir => {\n  fs.writeFile(path.join(dir, 'blablabla'), Buffer#<1234>, ...)\n})\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"tmp-fix\"></a> `> tmp.fix(cache) -> Promise`\nSets the `uid` and `gid` properties on all files and folders within the tmp\nfolder to match the rest of the cache.\nUse this after manually writing files into [`tmp.mkdir`](#tmp-mkdir) or\n[`tmp.withTmp`](#with-tmp).\n##### Example\n",
     "snippet": "cacache.tmp.mkdir(cache).then(dir => {\n  writeFile(path.join(dir, 'file'), someData).then(() => {\n    // make sure we didn't just put a root-owned file in the cache\n    cacache.tmp.fix().then(() => {\n      // all uids and gids match now\n    })\n  })\n})\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"with-tmp\"></a> `> tmp.withTmp(cache, opts, cb) -> Promise`\nCreates a temporary directory with [`tmp.mkdir()`](#tmp-mkdir) and calls `cb`\nwith it. The created temporary directory will be removed when the return value\nof `cb()` resolves, the tmp directory will be automatically deleted once that \npromise completes.\nThe same caveats apply when it comes to managing permissions for the tmp dir's\ncontents.\nSee: [options](#tmp-options)\n##### Example\n",
     "snippet": "cacache.tmp.withTmp(cache, dir => {\n  return fs.writeFileAsync(path.join(dir, 'blablabla'), Buffer#<1234>, ...)\n}).then(() => {\n  // `dir` no longer exists\n})\n"
    },
    {
@@ -1068,7 +1035,7 @@
     "snippet": "cacache.verify(cachePath).then(stats => {\n  // deadbeef collected, because of invalid checksum.\n  console.log('cache is much nicer now! stats:', stats)\n})\n"
    },
    {
-    "description": "##### Example\n",
+    "description": "#### <a name=\"verify-last-run\"></a> `> cacache.verify.lastRun(cache) -> Promise`\nReturns a `Date` representing the last time `cacache.verify` was run on `cache`.\n##### Example\n",
     "snippet": "cacache.verify(cachePath).then(() => {\n  cacache.verify.lastRun(cachePath).then(lastTime => {\n    console.log('cacache.verify was last called on' + lastTime)\n  })\n})\n"
    }
   ]
@@ -1095,10 +1062,6 @@
    {
     "description": "##Uso\n",
     "snippet": "var chileexpress = require('chileexpress');\n\nchileexpress(['600110073533']).then(r=>{\n\tconsole.log(r);\n}).catch(e => {\n\tconsole.log(e);\n})\n"
-   },
-   {
-    "description": "**Función principal:** Recibe un arreglo de códigos de seguimiento y retorna una promesa con un arreglo con la información para cada código de seguimiento\n**Params**\n- Códigos de seguimiento `Array<String>`\n**Returns**: \n- Resultados `Promise<Array<result>>`\n**Ejemplo de result:**\n",
-    "snippet": "  {\n    \"info\": {\n      \"orden_de_transporte \": \"600110073533\",\n      \"producto \": \"Encomienda\",\n      \"servicio \": \"Dia Habil Siguiente\",\n      \"estado \": \"Pieza en ruta al  DESTINATARIO\"\n    },\n    \"entrega\": {\n      \"rut_receptor\": \"14111532-4\",\n      \"fecha_entrega\": \"30/07/2015\",\n      \"hora_entrega\": \"11:24\",\n      \"nombre_receptor\": \"ALEXIS ADASME\"\n    },\n    \"hitos\": [\n      {\n        \"fecha\": \"30/07/2015\",\n        \"hora\": \"11:24\",\n        \"actividad\": \"Pieza en ruta al  DESTINATARIO\"\n      },\n      {\n        \"fecha\": \"29/07/2015\",\n        \"hora\": \"08:42\",\n        \"actividad\": \"Pieza en tránsito al destino ANTOFAGASTA BAQUEDANO\"\n      },\n      {\n        \"fecha\": \"28/07/2015\",\n        \"hora\": \"18:33\",\n        \"actividad\": \"Pieza en tránsito al destino CENTRO DE DISTRIBUCIÓN SANTIAGO\"\n      },\n      {\n        \"fecha\": \"28/07/2015\",\n        \"hora\": \"17:35\",\n        \"actividad\": \"Pieza recibida en Chilexpress\"\n      }\n    ]\n  }\n\n"
    }
   ]
  },
@@ -1159,7 +1122,7 @@
   "package": "cordova-plugin-notch-fix",
   "snippets": [
    {
-    "description": "### has()\r\n\r\n",
+    "description": "## Methods \r\n\r\n### has()\r\n\r\n",
     "snippet": "/** \r\n* @name has\r\n* @returns Promise<boolean>\r\n*/\r\ncutout.has();\r\n"
    }
   ]
@@ -1176,32 +1139,12 @@
     "snippet": "const treeA = new CrossTree();\ntreeA.subpath([\"alice\", \"firstName\"]).setValue(\"Alice\");\ntreeA.subpath([\"alice\", \"lastName\"]).setValue(\"Bloggs\");\nlet aliceData = treeA.toData();\n"
    },
    {
-    "description": "`aliceData` ->\n",
-    "snippet": "{\n  _: {\n    alice: {\n      _: {\n        firstName: { v: \"Alice\", t: 1572130604728 },\n        lastName: { v: \"Bloggs\", t: 1572130604728 }\n      }\n    }\n  }\n}\n"
-   },
-   {
     "description": "- Merge data with another replica:\n",
     "snippet": "const treeB = new CrossTree({ _: { bob: { _: { firstName: { v: \"Bob\", t: 1571241715839 } } } } });\ntreeB.mergeData(aliceData); // receive Alice's data\ntreeB.subpath([\"alice\", \"firstName\"]).getValue(); // -> Alice\nlet bobData = treeB.toData();\n"
    },
    {
-    "description": "`bobData` ->\n",
-    "snippet": "{\n  _: {\n    bob: {\n      _: {\n        firstName: { v: \"Bob\", t: 1571241715839 }\n      }\n    },\n    alice: {\n      _: {\n        firstName: { v: \"Alice\", t: 1572130604728 },\n        lastName: { v: \"Bloggs\", t: 1572130604728 }\n      }\n    }\n  }\n}\n"
-   },
-   {
     "description": "- Send changes by observing tree:\n",
     "snippet": "\ntreeA.observeTree( (event) => {\n    const { change, before, after } = event;\n    sendToBob( change );\n    // change.data - new entry data\n    // change.path - path of changed entry\n});\n"
-   },
-   {
-    "description": "## Use Cases\n- File Structure\n",
-    "snippet": "{ v: \"My Repo\"\n  _: {\n   \"README.md\": { v: \"blob:1234\", t: 1571200000000  },\n   \"package.json\": { v: \"blob:9876\", t: 1572300000000 },\n   \"src\": {\n      v:\"dir\", t: 1573400000000,\n      _:{\n          \"index.ts\": { v: \"text:hello\", t: 1574500000000 }\n      }\n   }\n}}\n"
-   },
-   {
-    "description": "- Records\n",
-    "snippet": "{ _:{\n  \"6fa459ea\": {\n    _:{\n      \"name\": { v: \"Alice\", t: 1571200000000 },\n      \"type\": { v: \"admin\", t: 1571200000000 },\n    }\n  },\n  \"ee8a3ca4\": {\n    _:{\n      \"name\": { v: \"Bob\", t: 1574500000000 },\n      \"type\": { v: \"guest\", t: 1574500000000 },\n    }\n  },\n}}\n"
-   },
-   {
-    "description": "- Spreadsheet\n",
-    "snippet": "{ v: \"Sheet 1\"\n  _: {\n   \"A1\": { v: \"Column 1\", t: 1571200000000 },\n   \"A2\": { v: \"613423\", t: 1572300000000 },\n   \"A3\": { v: \"875243\", t: 1572300000000 },\n}}\n"
    }
   ]
  },
@@ -1209,7 +1152,7 @@
   "package": "css-classes",
   "snippets": [
    {
-    "description": "## Usage\n",
+    "description": "# css-classes\nList CSS classes in text(s).\n## Usage\n",
     "snippet": "const cssClasses = require(\"css-classes\");\n"
    },
    {
@@ -1226,7 +1169,7 @@
   "package": "csv-iterator",
   "snippets": [
    {
-    "description": "[![Build Status](https://travis-ci.org/mirkokiefer/csv-iterator.png?branch=master)](https://travis-ci.org/mirkokiefer/csv-iterator)\n[![NPM](https://nodei.co/npm/csv-iterator.png)](https://nodei.co/npm/csv-iterator/)\nA ligthweight async csv-iterator for Node.js.\nExample that creates an iterator from a file to iterate over rows 10 to 20:\n",
+    "description": "#csv-iterator\n[![Build Status](https://travis-ci.org/mirkokiefer/csv-iterator.png?branch=master)](https://travis-ci.org/mirkokiefer/csv-iterator)\n[![NPM](https://nodei.co/npm/csv-iterator.png)](https://nodei.co/npm/csv-iterator/)\nA ligthweight async csv-iterator for Node.js.\nExample that creates an iterator from a file to iterate over rows 10 to 20:\n",
     "snippet": "var createCSVIterator = require('csv-iterator')\n\nvar iterator = createCSVIterator({path: 'input.csv', from: 10, to: 20})\n"
    }
   ]
@@ -1244,7 +1187,7 @@
   "package": "custom-jszip",
   "snippets": [
    {
-    "description": "=====\n[![Selenium Test Status](https://saucelabs.com/browser-matrix/jszip.svg)](https://saucelabs.com/u/jszip)\nA library for creating, reading and editing .zip files with JavaScript, with a\nlovely and simple API.\nSee https://stuk.github.io/jszip for all the documentation.\n",
+    "description": "JSZip [![Build Status](https://api.travis-ci.org/Stuk/jszip.svg?branch=master)](http://travis-ci.org/Stuk/jszip) [![Code Climate](https://codeclimate.com/github/Stuk/jszip/badges/gpa.svg)](https://codeclimate.com/github/Stuk/jszip)\n=====\n[![Selenium Test Status](https://saucelabs.com/browser-matrix/jszip.svg)](https://saucelabs.com/u/jszip)\nA library for creating, reading and editing .zip files with JavaScript, with a\nlovely and simple API.\nSee https://stuk.github.io/jszip for all the documentation.\n",
     "snippet": "var zip = new JSZip();\n\nzip.file(\"Hello.txt\", \"Hello World\\n\");\n\nvar img = zip.folder(\"images\");\nimg.file(\"smile.gif\", imgData, {base64: true});\n\nzip.generateAsync({type:\"blob\"}).then(function(content) {\n    // see FileSaver.js\n    saveAs(content, \"example.zip\");\n});\n\n/*\nResults in a zip containing\nHello.txt\nimages/\n    smile.gif\n*/\n"
    }
   ]
@@ -1253,24 +1196,8 @@
   "package": "cvss",
   "snippets": [
    {
-    "description": "## Usage\n",
+    "description": "## Install\n## Usage\n",
     "snippet": "var cvss = require('cvss');\n\nvar score = cvss.getScore('CVSS:3.0/AV:P/AC:H/PR:N/UI:R/S:C/C:L/I:H/A:L');\n\nconsole.log(score) // => 6.2\n\nvar rating = cvss.getRating(score);\n\nconsole.log(rating) // => Medium\n"
-   },
-   {
-    "description": "### #getBase [String or Object input], [Object options (optional)]\nReturns an object with the base score and its rating. Equivalent to\n",
-    "snippet": "{\n    score: getBaseScore(input),\n    rating: getRating(getBaseScore(input))\n}\n"
-   },
-   {
-    "description": "### #getEnvironmental [String or Object input], [Object options (optional)]\nReturns an object with the environmental score and its rating. Equivalent to\n",
-    "snippet": "{\n    score: getEnvironmentalScore(input),\n    rating: getRating(getEnvironmentalScore(input))\n}\n"
-   },
-   {
-    "description": "### #getTemporal [String or Object input], [Object options (optional)]\nReturns an object with the environmental score and its rating. Equivalent to\n",
-    "snippet": "{\n    score: getTemporalScore(input),\n    rating: getRating(getTemporalScore(input))\n}\n"
-   },
-   {
-    "description": "### #getAll [String or Object input], [Object options (optional)]\nReturns object with the score and rating for all three scores:\n",
-    "snippet": "{\n    base: getBase(input),\n    temporal: getTemporal(input),\n    environmental: getEnvironmental(input)\n}\n"
    }
   ]
  },
@@ -1278,7 +1205,7 @@
   "package": "days-calendar",
   "snippets": [
    {
-    "description": "#### Base\n",
+    "description": "## Usage\nImport module from days-calendar, then register it to Vue:\n#### Base\n",
     "snippet": "import DaysCalendar from 'days-calendar';\n\nnew Vue({\n  el: '#your-dom-element',\n   components: {\n      Calendar: DaysCalendar\n   }\n})\n"
    },
    {
@@ -1299,7 +1226,7 @@
   "package": "democracyos-toggle",
   "snippets": [
    {
-    "description": "## Example\n    \n",
+    "description": "## Installation\n    $ component install segmentio/toggle\n## Example\n    \n",
     "snippet": "var Toggle = require('toggle');\n\nvar toggle = new Toggle();\ndocument.body.appendChild(toggle.el);\n\ntoggle.value(); // false\n\ntoggle.value(true);\ntoggle.value(); // true\n\ntoggle.toggle();\ntoggle.value(); // false\n"
    }
   ]
@@ -1387,7 +1314,7 @@
   "package": "execsyncs",
   "snippets": [
    {
-    "description": "===============\n[![Build Status](https://travis-ci.org/yosuke-furukawa/execsyncs.svg?branch=master)](https://travis-ci.org/yosuke-furukawa/execsyncs)\nexecSync for node v0.10 and v0.11.\nIf your node version is v0.11, execsyncs uses core library (child_process.execSync).\nHowever, if your node version is v0.10, execsyncs uses own native module (execsync.cc).\nHow to use\n================\n",
+    "description": "execsyncs\n===============\n[![Build Status](https://travis-ci.org/yosuke-furukawa/execsyncs.svg?branch=master)](https://travis-ci.org/yosuke-furukawa/execsyncs)\nexecSync for node v0.10 and v0.11.\nIf your node version is v0.11, execsyncs uses core library (child_process.execSync).\nHowever, if your node version is v0.10, execsyncs uses own native module (execsync.cc).\nHow to use\n================\n",
     "snippet": "var execsyncs = require(\"execsyncs\");\nvar ls = \"\" + execsyncs(\"ls\");\nconsole.log(ls);\n"
    }
   ]
@@ -1449,11 +1376,11 @@
   "package": "fis-parser-jade",
   "snippets": [
    {
-    "description": "### 启用插件\r\n\r\n",
+    "description": "### 安装插件\r\n\r\n    $ npm install -g fis-parser-jade\r\n    $ vi path/to/project/fis-conf.js\r\n\r\n### 启用插件\r\n\r\n",
     "snippet": "//file : path/to/project/fis-conf.js\r\n\r\n//使用fis-parser-jade插件编译jade文件\r\nfis.config.set('modules.parser.jade', 'jade');\r\n//jade文件经过编译后输出为html文件\r\nfis.config.set('roadmap.ext.jade', 'html');\r\n"
    },
    {
-    "description": "### 添加自定义filter与jade编译设置\r\n\r\n",
+    "description": "\r\n### 添加自定义filter与jade编译设置\r\n\r\n",
     "snippet": "var jadeConf = {\r\n\tfilters : {\r\n\t\tjadesrc : require('jade-highlighter')\r\n\t},\r\n  pretty  : true\r\n};\r\n\r\nfis.config.set('settings.parser.jade', jadeConf);\r\n"
    }
   ]
@@ -1479,11 +1406,7 @@
   "package": "gatsby-source-duodealer",
   "snippets": [
    {
-    "description": "## How to use\nEnsure you have an access token for the [Duo Dealer Storefront API][duodealer-storefront-api]. The token should have the following permissions:\n- Read products, variants, and collections\n- Read product tags\n- Read content like articles, blogs, and comments\nThen in your `gatsby-config.js` add the following config to enable this plugin:\n",
-    "snippet": "plugins: [\n  /*\n   * Gatsby's data processing layer begins with “source”\n   * plugins. Here the site sources its data from Duo Dealer.\n   */\n  {\n    resolve: \"gatsby-source-duodealer\",\n    options: {\n      // The domain name of your Duo Dealer shop. This is required.\n      // Example: 'gatsby-source-duodealer-test-shop' if your Duo Dealer address is\n      // 'gatsby-source-duodealer-test-shop.myduodealer.com'.\n      shopName: \"gatsby-source-duodealer-test-shop\",\n\n      // An API access token to your Duo Dealer shop. This is required.\n      // You can generate an access token in the \"Manage private apps\" section\n      // of your shop's Apps settings. In the Storefront API section, be sure\n      // to select \"Allow this app to access your storefront data using the\n      // Storefront API\".\n      // See: https://help.duodealer.com/api/custom-storefronts/storefront-api/getting-started#authentication\n      accessToken: \"example-wou7evoh0eexuf6chooz2jai2qui9pae4tieph1sei4deiboj\",\n\n      // Set verbose to true to display a verbose output on `npm run develop`\n      // or `npm run build`. This prints which nodes are being fetched and how\n      // much time was required to fetch and process the data.\n      // Defaults to true.\n      verbose: true,\n    },\n  },\n]\n"
-   },
-   {
-    "description": "## Site's `gatsby-node.js` example\n",
+    "description": "To learn more about image processing, check the documentation of\n[gatsby-plugin-sharp][gatsby-plugin-sharp].\n## Site's `gatsby-node.js` example\n",
     "snippet": "const path = require(\"path\")\n\nexports.createPages = async ({ graphql, boundActionCreators }) => {\n  const { createPage } = boundActionCreators\n\n  const pages = await graphql(`\n    {\n      allDuoDealerProduct {\n        edges {\n          node {\n            id\n            handle\n          }\n        }\n      }\n    }\n  `)\n\n  pages.data.allDuoDealerProduct.edges.forEach(edge => {\n    createPage({\n      path: `/${edge.node.handle}`,\n      component: path.resolve(\"./src/templates/product.js\"),\n      context: {\n        id: edge.node.id,\n      },\n    })\n  })\n}\n"
    }
   ]
@@ -1492,7 +1415,7 @@
   "package": "gcloud-monitor",
   "snippets": [
    {
-    "description": "#### Create a Gauge Metric\n",
+    "description": "### Gauge\n#### Create a Gauge Metric\n",
     "snippet": "const monitor = require('gcloud-monitor')({\n  project: '<google-cloud-project-name>',\n  resource: {\n    // optional, defaults to {type: 'global'}\n    // more info: https://cloud.google.com/monitoring/api/ref_v3/rest/v3/MonitoredResource\n  },\n  auth: {\n    // optional, if using on GCE\n    // more info: https://github.com/google/google-api-nodejs-client#authorizing-and-authenticating\n  },\n  // optional: default report throttle time\n  timeout: 1000\n})\n\n/**\n * create a gauge\n * more info: https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.metricDescriptors#MetricDescriptor\n * @param  {String} metricType\n * @param  {Object} [opts] metric params\n * @param  {Object} [opts.throttle] // report throttle time\n * @param  {Object} [opts.description]\n * @param  {Object} [opts.displayName]\n * @param  {Object} [opts.labels] label descriptors\n * @param  {Object} [opts.metricDomain] default: 'custom.googleapis.com'\n * @param  {Object} [opts.unit]\n * @param  {Object} [opts.valueType] default: 'INT64'\n * @return {Promise<Gauge,Error>} resolves gauge instance\n */\nmonitor.createGauge('connections', {\n  displayName: 'Connections',\n  description: 'Active socket connection count',\n  labels: [{\n    key: 'foo',\n    description: 'foo label description',\n    valueType: 'INT64'\n  }],\n  unit: 'connections',\n  valueType: 'INT64'\n}).then((gauge) => {\n  // use gauge...\n})\n"
    },
    {
@@ -1504,7 +1427,7 @@
     "snippet": "/**\n * delete the cumulative metric\n * @return {Promise}\n */\ngauge.delete().then(function (data) {\n  console.log('Response data', data)\n})\n"
    },
    {
-    "description": "#### Create a Cumulative Metric\n",
+    "description": "### Cumulative\n#### Create a Cumulative Metric\n",
     "snippet": "const monitor = require('gcloud-monitor')({\n  project: '<google-cloud-project-name>',\n  auth: {/*auth-json*/} // optional, if using on GCE\n})\n\n/**\n * create a cumulative metric\n * more info: https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.metricDescriptors#MetricDescriptor\n * @param  {String} metricType\n * @param  {Object} [opts] metric params\n * @param  {Object} [opts.description]\n * @param  {Object} [opts.displayName]\n * @param  {Object} [opts.labels] label descriptors\n * @param  {Object} [opts.metricDomain] default: 'custom.googleapis.com'\n * @param  {Object} [opts.unit]\n * @param  {Object} [opts.valueType] default: INT64\n * @return {Promise<Model,Error>} resolves Cumulative instance\n */\nmonitor.createCumulative('requestsPerSecond', {\n  displayName: 'Requests per Second',\n  description: 'Active socket connection count',\n  labels: [{\n    key: 'foo',\n    description: 'foo label description',\n    valueType: 'INT64'\n  }],\n  unit: 'req/s',\n  valueType: 'INT64'\n}).then((cumulative) => {\n  // use cumulative...\n})\n"
    },
    {
@@ -1562,7 +1485,7 @@
     "snippet": "//or sync version\ncp.sync('fixtures/:module/public', 'public/:module');\n\n"
    },
    {
-    "description": "# options\n",
+    "description": "## cp.sync(srcPattern, destPattern [,options])\nsync glob cp version.\n# options\n",
     "snippet": "// options with the following default values:\nvar options = {\n\n  // recusively copy files\n  recursive: false,\n\n  // remove destination before operation\n  force: false\n\n};\n"
    }
   ]
@@ -1582,33 +1505,11 @@
  },
  {
   "package": "grunt-cdnify_v2",
-  "snippets": [
-   {
-    "description": "### base\nFor the most common use case, just set a `base` string for your URLs – e.g., `'//cdn.example.com/'`.\nThe cdnify task will automatically search for all **local** URLs in your files, and prefix them with this string.\n(It will automatically avoid double-slashes.)\nExample:\n",
-    "snippet": "cdnify: {\n  someTarget: {\n    options: {\n      base: '//cdn.example.com/stuff/'\n    },\n    files: [{\n      expand: true,\n      cwd: 'app',\n      src: '**/*.{css,html}',\n      dest: 'dist'\n    }]\n  }\n}\n"
-   },
-   {
-    "description": "### rewriter\nFor more control, you can specify a custom `rewriter` function instead. In this case,\nthe task will search for **all** URLs (not just local ones) and run your function on each one.\nYour function should return the new value.\nExample:\n",
-    "snippet": "cdnify: {\n  someTarget: {\n    options: {\n      rewriter: function (url) {\n        if (url.indexOf('data:') === 0) {\n          return url;            // leave data URIs untouched\n        } else {\n          return url + '?12345'; // add query string to all other URLs\n        }\n      }\n    },\n    files: [{\n      expand: true,\n      cwd: 'app',\n      src: '**/*.{css,html}',\n      dest: 'dist'\n    }]\n  }\n}\n"
-   },
-   {
-    "description": "### html (boolean/object)\nWhether/how to modify HTML. Defaults to `true`, which will update HTML according to this standard config:\n",
-    "snippet": "{\n  'img[data-src]': 'src',\n  'img[src]': 'src',\n  'link[rel=\"]': 'href',\n  'link[rel=\"shortcut icon\"]': 'href',\n  'link[rel=icon]': 'href',\n  'link[rel=stylesheet]': 'href',\n  'script[src]': 'src',\n  'source[src]': 'src',\n  'video[poster]': 'poster'\n}\n"
-   },
-   {
-    "description": "That is, any elements matching the CSS selector `img[src]` will have their `src` attributes cdnified, etc.\nTo customise this config, you can set the `html` option to an object of custom `selector:attribute` pairs.\nThese will be added to the standard set shown above – if you want to **not** use one of the standard pairs,\nyou have to explicitly override it with `false`.\nFor example:\n",
-    "snippet": "options: {\n  html: {\n    'img[ng-src]': 'ng-src', // cdnify angular images\n    'script[src]': false     // don't cdnify script tags\n  }\n}\n"
-   }
-  ]
+  "snippets": []
  },
  {
   "package": "grunt-rm",
-  "snippets": [
-   {
-    "description": "## Config\n",
-    "snippet": "rm: {\n  foo: 'js/*/**',\n  bar: [\n    'css/reset.css',\n    'css/style.css'\n  ]\n}\n"
-   }
-  ]
+  "snippets": []
  },
  {
   "package": "grunt-sk-imgsize",
@@ -1622,7 +1523,7 @@
     "snippet": "grunt.initConfig({\n  inlineImgSize: {\n  }\n})\n"
    },
    {
-    "description": "#### Basic Image Size Inlining\n",
+    "description": "### Usage Examples\n#### Basic Image Size Inlining\n",
     "snippet": "grunt.initConfig({\n  inlineImgSize: {\n    files: {\n      src: ['index.html', 'contact.html']\n    }\n  }\n})\n"
    },
    {
@@ -1635,7 +1536,7 @@
   "package": "grunt-thrall",
   "snippets": [
    {
-    "description": "",
+    "description": "Install the module:\n",
     "snippet": "// gruntfile.js\nmodule.exports = function(grunt) {\n\tvar thrall = require('grunt-thrall');\n\t\n\tthrall.init({\n\t\t/* see config */\t\n\t});\t\n};\n"
    },
    {
@@ -1643,15 +1544,15 @@
     "snippet": "thrall.init({dir: __dirname + 'myTasks' /* ,... */ });\n"
    },
    {
-    "description": "### Required _string_: `basePath`\n",
+    "description": "The basic directory for custom tasks and grunt plugin configuration.\nExpects subdir `tasks/` for custom tasks and `config/` for grunt plugin configuration\nto be present.\n### Required _string_: `basePath`\n",
     "snippet": "thrall.init({basePath: __dirname /* ,... */ });\n"
    },
    {
-    "description": "### Required _object_: `grunt`\n",
+    "description": "The projects base path.\nUsed to findup `node_modules/grunt-*/tasks/*` when auto-loading grunt plugins.\n### Required _object_: `grunt`\n",
     "snippet": "thrall.init({grunt: grunt /* ,... */ });\n"
    },
    {
-    "description": "### _string_: `name`\n",
+    "description": "The currently running grunt instance.\n### _string_: `name`\n",
     "snippet": "thrall.init({name: 'myProject' /* ,... */ });\n"
    },
    {
@@ -1663,23 +1564,23 @@
     "snippet": "thrall.init({loadDevDependencies: false /* ,... */ });\n"
    },
    {
-    "description": "### _boolean_: `loadDependencies`\n",
+    "description": "Default: `true`\nWhether or not to include `devDependencies` from `package.json` when auto-loading grunt plugins.\n### _boolean_: `loadDependencies`\n",
     "snippet": "thrall.init({loadDependencies: true /* ,... */ });\n"
    },
    {
-    "description": "### _object_: `module`\n",
+    "description": "Default: `false`\nWhether or not to include `dependencies` from `package.json` when auto-loading grunt plugins.\n### _object_: `module`\n",
     "snippet": "thrall.init({\n\tmodule: {\n\t\tmyHelper: ['factory', require('./helpers/myHelper')]\n\t}\n\t/* ,... */ \n});\n"
    },
    {
-    "description": "### _function_: `getDefaults`\n",
+    "description": "Default: `{}`\nTask definitions, grunt plugin configurations and getDefaults are being invoked using \n[node-di](https://github.com/vojtajina/node-di) providing basic node modules.\nWhen you need a custom helper, it can be registered here.\nSee [DI](#DI) for further informations.\n### _function_: `getDefaults`\n",
     "snippet": "thrall.init({\n\tgetDefaults: function(/* di here */) {\n\t\treturn {\n\t\t\tfoo: 'bar'\n\t\t}\n\t}\n\t/* ,... */ \n});\n"
    },
    {
-    "description": "### Naming\n",
+    "description": "every file in `config.dir`/`tasks/` is expected to export a factory function, returning \na task definition object. The name will be generated by the path relative to the tasks dir.\nFactories are being invoked using node-di, see [DI](#DI) for further informations.\n### Naming\n",
     "snippet": "// tasks/foo/bar.js\nmodule.exports = function(/* di here */) {\n\treturn {};\n};\n"
    },
    {
-    "description": "### _string/array_: `description`\n",
+    "description": "will register task `foo:bar` that, when can be called with `grunt foo:bar` and does nothing.\n### _string/array_: `description`\n",
     "snippet": "module.exports = function() {\n\treturn {\n\t\tdescription: [\n\t\t\t'this is the bar tasks',\n\t\t\t'it will foo.'\n\t\t]\n\t\t/* ... */\n\t};\n};\n"
    },
    {
@@ -1715,7 +1616,7 @@
     "snippet": "grunt.initConfig({\n\tjshint: {\n\t\tsrc: {\n\t\t\toptions: {\n\t\t\t\tignores: ['**/*.coffee'],\n\t\t\t\tjshintrc: true,\n\t\t\t},\n\t\t\tsrc: [\n\t\t\t\t'<%= my.src.files.js %>'\n\t\t\t]\n\t\t}\n\t}\n});\n"
    },
    {
-    "description": "#### merged callback\n",
+    "description": "[`getDefaults`](#function-getdefaults), [Task Factories](#task-factories) and \n[Configuration Factories](#task-factories) are being invoked with a \n[node-di](https://github.com/vojtajina/node-di) module, providing the following\nservices:\n - `_`: [lodash](https://github.com/lodash/lodash)\n - `cliOptions`: CLI Options using [minimist](https://github.com/substack/minimist)\n - `del`: [del](https://github.com/sindresorhus/del)\n - `findupSync`: [node-findup-sync](https://github.com/cowboy/node-findup-sync)\n - `fs`: node module\n - `getobject`: [node-getobject](https://github.com/cowboy/node-getobject)\n - `glob`: [node-glob](https://github.com/isaacs/node-glob)\n - `grunt`: currently running grunt instance\n - `mkdirp`: [node-mkdirp](https://github.com/substack/node-mkdirp) \n - `path`: node module\n - `merged`: (`getDefaults` ONLY) See [merged callback](#merged-callback)\n - `name`: (Task Factories ONLY) name of the task\n - `rootTask`: (Task Factories ONLY) the name of the task that has actually been called\n#### merged callback\n",
     "snippet": "/* ... */\ngetDefaults: function(merged) {\n\tmerged(function(mergedConfig) {\n\t\tmergedConfig.foo = 'baz';\n\t});\n\treturn {foo: 'bar'};\n}\n"
    }
   ]
@@ -1745,10 +1646,6 @@
     "snippet": "var sloc = require('gulp-sloc2');\r\n\r\ngulp.task('sloc', function(){\r\n  gulp.src(['lib/**/*.js'])\r\n    .pipe(sloc({\r\n      reportType: 'json'\r\n    }))\r\n    .pipe(gulp.dest('./reports/'));\r\n});\r\n"
    },
    {
-    "description": "\r\nWould output the following in the file `./reports/sloc.json`:\r\n\r\n",
-    "snippet": "{\"total\":138,\"source\":100,\"comment\":5,\"single\":5,\"block\":0,\"empty\":33,\"file\":2}\r\n"
-   },
-   {
     "description": "#### options.reportFile\r\nType: `String`\r\nDefault: `sloc.json`\r\n\r\n The name of the file which would contain you'd like to output the JSON file. Use with the `json` as `reportType`. Ignored if used with the `stdout` report type. Example:\r\n\r\n",
     "snippet": "var sloc = require('gulp-sloc2');\r\n\r\ngulp.task('sloc', function(){\r\n  gulp.src(['./test/**/*.js'])\r\n    .pipe(sloc({\r\n      reportType: 'json',\r\n      reportFile: 'testSloc.json'\r\n    }))\r\n    .pipe(gulp.dest('./reports/'));\r\n});\r\n"
    }
@@ -1766,7 +1663,7 @@
     "snippet": "const Habrok = require('habrok');\n\nconst habrok = new Habrok();\n\nhabrok.request({\n  method: 'GET',\n  uri: 'https://api.github.com/repositories'\n})\n.then(console.log);\n"
    },
    {
-    "description": "#### Definition\n",
+    "description": "### `Habrok` (Constructor)\n#### Definition\n",
     "snippet": "Habrok([configuration])\n"
    },
    {
@@ -1782,7 +1679,7 @@
     "snippet": "const Habrok = require('habrok');\n\nconst habrok = new Habrok({ disableCustomHeaders: true });\n"
    },
    {
-    "description": "#### Definition\n",
+    "description": "### `Habrok#request`\n#### Definition\n",
     "snippet": "habrok.request(req[, options])\n"
    },
    {
@@ -1820,7 +1717,7 @@
   "package": "html-inline-assets-loader",
   "snippets": [
    {
-    "description": "# useage\n",
+    "description": "# html-inline-assets-loader\n自动处理 html 文件中的相对引用 css/js/html 资源 文件，直接内联到 html 文件中，或者自动编译并拷贝到 dist 目录\n# useage\n",
     "snippet": "const configureHtmlLoader = () => {\n  return {\n    test: /\\.(html|njk|nunjucks)$/,\n    use: [\n      resolve('html-loader'),\n      // 自动处理html中的相对路径引用 css/js/html文件\n      resolve('html-inline-assets-loader'),\n      {\n        loader: resolve('nunjucks-html-loader'),\n        options: {\n          // Other super important. This will be the base\n          // directory in which webpack is going to find\n          // the layout and any other file index.njk is calling.\n          searchPaths: ['./src'],\n        },\n      },\n    ],\n  };\n};\n"
    }
   ]
@@ -1913,18 +1810,6 @@
    {
     "description": "This will not send the message if the last message was a PM to the bot.  \r\nThe third param is an array that manually defines the message recipients. Channel names start with a # and are otherwise considered users.\r\n",
     "snippet": "myBot.send(\"This is a message.\", false, [\"user1\", \"#channel1\", \"user2\", \"#channel2\"]);\r\n"
-   },
-   {
-    "description": "### modifier\r\nThe modifier is what must be before the actual command name for the callback to be called.\r\n",
-    "snippet": "ping: {\r\n\tmodifier: \"!\",\r\n\tcallback: function(bot, args) {\r\n\t\tbot.send(\"pong\");\r\n\t}\r\n}\r\n"
-   },
-   {
-    "description": "This will listen for the \"!ping\" command. Modifier are not restricted to a single character.\r\n",
-    "snippet": "ping: {\r\n\tmodifier: \"\",\r\n\tcallback: function(bot, args) {\r\n\t\tbot.send(\"pong\");\r\n\t}\r\n}\r\n"
-   },
-   {
-    "description": "This will listen for just a \"ping\" command.\r\n",
-    "snippet": "ping: {\r\n\tmodifier: \"!?$\",\r\n\tcallback: function(bot, args) {\r\n\t\tbot.send(\"pong\");\r\n\t}\r\n}\r\n"
    }
   ]
  },
@@ -1932,7 +1817,7 @@
   "package": "is-json-object",
   "snippets": [
    {
-    "description": "## Usage\n",
+    "description": "This is a small package with a minimal footprint that tries to detect if an\nobject is a JSON-like value in the most generic way possible, using the\nfollowing rules for edge cases\n - Though not specified in the standard, root objects may be other values than plain objects\n - `NaN` and `Infinitiy` are not acceptable JSON values, as per the standard\n - Objects constructed with `Object.create(null)` will be accepted\n - Array-like objects with a `length` property will get accepted\nThese rules should cover most common use cases, while users requiring more\nfine-grained contol can take a look at the source (it isn't that much).\n## Usage\n",
     "snippet": "const isJSON = require('is-json-object')\n\nclass Foo {  }\n\nisJSON({ a: 1, b: 2 }) // true\nisJSON(new Foo) // false\nisJSON('test test test') // true\n"
    }
   ]
@@ -1941,7 +1826,7 @@
   "package": "is-kotlin-keyword",
   "snippets": [
    {
-    "description": "## Use\n",
+    "description": "## Install\n[![https://nodei.co/npm/is-kotlin-keyword.png](https://nodei.co/npm/is-kotlin-keyword.png)](https://www.npmjs.com/package/is-kotlin-keyword)\n## Use\n",
     "snippet": "// load the module\nvar isKotlinKeyword = require('index.js');\n\n// check a keyword\nisKotlinKeyword(\"while\"); // true\n"
    }
   ]
@@ -1961,10 +1846,6 @@
  {
   "package": "jackeytest",
   "snippets": [
-   {
-    "description": "### Webpack Configuration\nUsing Webpack you may encounter the following error: \"Module not found: Error:\nCannot resolve module\", most certainly you should disable AMD loader. Add/merge\nthe following section to your webpack config:\n",
-    "snippet": "module: {\n  rules: [\n    {\n      parser: {\n        amd: false\n      }\n    }\n  ]\n}\n"
-   },
    {
     "description": "## Getting Started\nPlease follow the [installation](#installation) instruction and execute the following JS code:\n",
     "snippet": "var Jackeytest = require('jackeytest');\n\nvar api = new Jackeytest.JackeytestApi()\n\nvar callback = function(error, data, response) {\n  if (error) {\n    console.error(error);\n  } else {\n    console.log('API called successfully. Returned data: ' + data);\n  }\n};\napi.getHaha(callback);\n\n"
@@ -1999,7 +1880,7 @@
   "package": "js-avl-tree",
   "snippets": [
    {
-    "description": "## AVLTree\n",
+    "description": "## 案例\n请查看[**`example`**](https://github.com/wanls4583/js-avl-tree/tree/master/src/example)\n[**`online demo`**](https://blog.lisong.hn.cn/code/example/js-avl-tree/src/example/index.html)\n## AVLTree\n",
     "snippet": "/**\n * 二叉平衡树\n * @param {Function} compartor 关键字的比较器\n * @param {Boolean}  ifMerge   是否将插入的数据合并到节点\n */\nfunction AVLTree(compartor, ifMerge)\n"
    },
    {
@@ -2055,12 +1936,7 @@
  },
  {
   "package": "koco-toastr",
-  "snippets": [
-   {
-    "description": "## Usage with KOCO\nThis is a shared module that is used in many other modules. It includes the toastr library as a bower dependency. The convention is to configure an alias in the `require.configs.js` with the name `bootstrap-toastr` like so:\n",
-    "snippet": "paths: {\n  ...\n  'bootstrap-toastr': 'bower_components/koco-toastr/src/koco-toastr-ui',\n  'toastr': 'bower_components/toastr/toastr',\n  ...\n}\n"
-   }
-  ]
+  "snippets": []
  },
  {
   "package": "koot-redux",
@@ -2078,7 +1954,7 @@
     "snippet": "    const module = {\n        state: {\n            // 在此处定义默认的state\n            // 程序将在创建时将此处定义好的值初始化为默认值\n            userinfo: {\n                username: 'liudehua',\n                password: '123456'\n            }\n        },\n        reducers: {\n            // reducer 为一个 funciton\n            // reducer的调用名称 = funciton的名称\n            ['SOME_REDUCER_FUNCTION'](state, payload){\n\n            }\n        },\n        actions: {\n            // action 为一个 funciton\n            // action的调用名称 = funciton的名称\n            ['SOME_ACTION_FUNCTION']({\n                commit,\n                state,\n                rootState,\n                dispatch\n            }, payload){\n                // commit 用来提交 reducer\n                // eg: commit('SOME_REDUCER_FUNCTION', payload)\n\n                // state 用来获取当前模块的局部 state\n                // eg: state.userinfo.username\n\n                // rootState 整个状态树的根层，你可以再此拿到整个状态树\n                // eg: rootState.App.test\n\n                // dispatch 可以继续派发其他的 action 操作\n                // eg: dispatch('OTHER_ACTION_FUNCTION')\n            }\n        },\n        modules: {\n            // 此处可扩展子集的 module 模块\n            // 子级可以同样扩展自己的子级\n            App: {\n                state: {\n                    test: 1\n                },\n                reducers: {},\n                actions: {},\n                modules: {}\n            }\n        }\n    }\n"
    },
    {
-    "description": "### 派发 action\n",
+    "description": "## Action\n这里我们将 action 实体化一个 “必须存在” 的逻辑层。\n在开发中我们发现，无论是大量的异步请求，或是存储数据之前的复杂逻辑，我们都需要一个支持异步且实际存在的 action function 存在，即使是同步的需求，action 也可以通常用来处理数据存储之前的逻辑，可使得 reducer 的功能更纯净，且给未来的开发带来了足够的扩展性。\n所以当你执行派发操作时，你必须在先执行一个 action\n然后在 action 中，提交你要执行的 reducer 操作\n### 派发 action\n",
     "snippet": "    // 派发 action\n    this.props.dispatch('SOME_ACTION_NAME')\n    \n    // or\n    this.props.dispatch('SOME_ACTION_NAME', payload)\n"
    },
    {
@@ -2148,7 +2024,7 @@
   "package": "list-runner",
   "snippets": [
    {
-    "description": "\r\n**Import**\r\n\r\n_importing the commonly needed classes_\r\n",
+    "description": "## Install, Import & Instantiate\r\n\r\n**Install**\r\n\r\n\r\n**Import**\r\n\r\n_importing the commonly needed classes_\r\n",
     "snippet": "import { CellSingly, CellDoubly, StemSingly, StemDoubly } from 'list-runner';\r\n"
    },
    {
@@ -2209,7 +2085,7 @@
   "package": "map-pickas",
   "snippets": [
    {
-    "description": "\r\n> NOTE: [map-pickas](https://www.npmjs.com/package/map-pickas) was renamed to [@extra-map/pick-as](https://www.npmjs.com/package/@extra-map/pick-as).\r\n[![NPM](https://nodei.co/npm/map-pickas.png)](https://nodei.co/npm/map-pickas/)\r\n\r\nFilter [map] with specified key(s), like [_.pick()].\r\n\r\n",
+    "description": "# map-pickas\r\n\r\n> NOTE: [map-pickas](https://www.npmjs.com/package/map-pickas) was renamed to [@extra-map/pick-as](https://www.npmjs.com/package/@extra-map/pick-as).\r\n[![NPM](https://nodei.co/npm/map-pickas.png)](https://nodei.co/npm/map-pickas/)\r\n\r\nFilter [map] with specified key(s), like [_.pick()].\r\n\r\n",
     "snippet": "const pickAs = require('map-pickas');\r\n// pickAs(<map>, <key(s)>, [begin=0], [end], [target=new Map()])\r\n// -> <value> (for single key) | <target> (for multiple keys)\r\n\r\nvar m = new Map([['i', 9], ['n', 14], ['c', 3]]);\r\npickAs(m, 'n');\r\n// 14\r\npickAs(m, ['n', 'i']);\r\n// Map {'n'=>14, 'i'=>9}\r\npickAs(m, ['n', 'i', 'c'], 1);\r\n// Map {'i'=>9, 'c'=>3}\r\npickAs(m, ['n', 'i', 'c'], 1, 2);\r\n// Map {'i'=>9}\r\npickAs(m, ['n', 'i', 'c'], 1, 2, new Map([['e', 5]]));\r\n// Map {'e'=>5, 'i'=>9}\r\n"
    }
   ]
@@ -2226,7 +2102,7 @@
   "package": "memory-scheduler",
   "snippets": [
    {
-    "description": "## Example\n",
+    "description": "## Guide\nTo learn with this algorithm, two arguments have to be fed to it:\n- intervals([int]): intervals between each study session.\n- scroreToProgressChange([int]): how to update the progress based on the score the user gives when reviewing items\nFor one item we want to learn, store two data:\n- dueDate(int): the next day scheduled to review this item.\n- progress(int): How many times continuously the user has correctly answered this item.\nWhen reviewing an item, send these data to the calculate function and get the updated record of that item:\n- score(int): how confident the user is with this item.\n- prevRecord(object): the previous record of this item\n- now(int): the date of today\nThe answer is deemed as correct only when the score is equal to the length of scroreToProgressChange, and in this circumstance the nextDute is intervals[progress] days after today.\nOtherwise, the answer is deemed as incorrect and the next review is scheduled at tomorrow.\nIn both cases, progress should be updated in this way: progress+=scroreToProgressChange[score].\n## Example\n",
     "snippet": "import  MS from 'memory-scheduler';\n\nconst DAY_IN_MINISECONDS = 24 * 60 * 60 * 1000;\n\nconst today = Math.round(new Date().getTime() / DAY_IN_MINISECONDS);\n\nconst yesterday = today-1;\n\nconst ms = new MS([1, 2, 3, 8, 17], [-3, -1, 1]);\n\nconst record = ms.getInitialRecord(yesterday);\nconst updatedRecord = ms.calculate(1, record, today);\n\n"
    }
   ]
@@ -2285,7 +2161,7 @@
   "package": "mongodb-js-repo-list",
   "snippets": [
    {
-    "description": "## Usage\n",
+    "description": "# mongodb-js-repo-list [![travis][travis_img]][travis_url] [![npm][npm_img]][npm_url]\n> List repositories in a specified GitHub Organization\nThis module hits the Github API and returns a list of repositories in a specified organization. At the command line, it must be called with a Github oauth access token (following -t). Options include :\n- `format` (json, yaml, table)\n- `grep` (a word to filter the search on)\n- `out` (output to file)\n- `keys` (choose data about each repository to see)\n- `forked` (include forked repositories)\n## Usage\n",
     "snippet": "mongodb-js-repo-list <organization> -t <oauth token> [options]\n"
    },
    {
@@ -2302,7 +2178,7 @@
   "package": "multiplexing-log4js",
   "snippets": [
    {
-    "description": "\r\nA multiplexing log4js logger component\r\n\r\nYou can send logs over socket, and controll the appender's state, and event trigger listeners.\r\n\r\nExample:\r\n\r\nserver side:\r\n\r\n",
+    "description": "# multiplexing-log4js\r\n\r\nA multiplexing log4js logger component\r\n\r\nYou can send logs over socket, and controll the appender's state, and event trigger listeners.\r\n\r\nExample:\r\n\r\nserver side:\r\n\r\n",
     "snippet": "log4js.configure({\r\n    appenders: {\r\n        file: MultiplexingFileAppender.createConfig(filename, pattern, listener),\r\n        server: MultiplexingSocketServerAppender.createConfig(port)\r\n    },\r\n    categories: {\r\n        default: { appenders: [\"file\"], level: \"all\" }\r\n    }\r\n})\r\n"
    },
    {
@@ -2349,10 +2225,6 @@
    {
     "description": "Дополнительно можно задать параметры поиска в объекте ```options```:\n",
     "snippet": "var query = \"YOUR QUERY HERE\",\n    options = {\n      forums: [1000, 1001], // массив id форумов\n      sortBy: 'seeds', // см. ниже\n      sortOrder: 'desc' // или 'asc'\n    },\n    callback = console.log.bind(console);\n\nrutracker.search(query, options, callback);\n"
-   },
-   {
-    "description": "Возможна сортировка по следующим полям:\n- ```created``` -- зарегистрирован\n- ```name``` -- название темы\n- ```downloads``` -- количество скачиваний\n- ```seeds``` -- количество сидов\n- ```leeches``` -- количество личей\n- ```size``` -- размер\n- ```updated``` -- последнее сообщение\nВ callback будет передан объект вида:\n",
-    "snippet": "[\n  {\n    state: 'проверено',\n    id: 'XXXXXXXX'\n    category: 'CATEGORY_NAME',\n    title: 'TITLE',\n    author: 'AUTHOR_NAME',\n    size: '1.07 GB',\n    seeds: '7123',\n    leechs: '275',\n    url: 'rutracker.org/forum/viewtopic.php?t=XXXXXX'\n  }, ...\n]\n"
    }
   ]
  },
@@ -2368,7 +2240,7 @@
     "snippet": "  (function (global) {\r\n      System.config({\r\n          paths: {\r\n              'npm:': 'node_modules/'\r\n          },\r\n          map: {\r\n              // Other components are here...\r\n\r\n              'ng-pick-datetime': 'npm:ng-pick-datetime',\r\n          },\r\n          packages: {\r\n              // Other components are here...\r\n\r\n            // the picker\r\n              'ng-pick-datetime': {\r\n                  main: 'picker.bundle.js',\r\n                  defaultExtension: 'js'\r\n              },\r\n          }\r\n      });\r\n  })(this);\r\n"
    },
    {
-    "description": "\r\n",
+    "description": "This picker uses angular animations to improve the user experience, \r\nstarting with Angular 4 animations have their own module so you need to import BrowserAnimationsModule to your application. \r\nIf you prefer to disable animation effect, use NoopAnimationsModule instead.\r\n\r\n\r\n",
     "snippet": "    import {BrowserModule} from '@angular/platform-browser';\r\n    import {BrowserAnimationsModule} from '@angular/platform-browser/animations';\r\n    \r\n    @NgModule({\r\n        imports: [\r\n            BrowserModule,\r\n            BrowserAnimationsModule,\r\n            //...\r\n        ],\r\n        //...\r\n    })\r\n    export class YourAppModule { }\r\n"
    },
    {
@@ -2434,7 +2306,7 @@
   "package": "panda-portfolio",
   "snippets": [
    {
-    "description": "## Installation\n",
+    "description": "<p align=\"center\"><img src=\"https://raw.githubusercontent.com/YashMeh/panda-portfolio/master/images/logoPanda.png\" alt=\"Panda-portfolio logo\"></p>\n<h1 align=\"center\">Panda Portfolio</h1>\n<p align=\"center\">No more worries while making single page github portfolio websites.</p>\n<p align=\"center\"><a href=\"https://www.npmjs.com/package/panda-portfolio\"><img src=\"https://img.shields.io/badge/npm-6.8.0-brightgreen.svg\" alt=\"npm\"></a> <img src=\"https://img.shields.io/badge/node-11.8.0-brightgreen.svg\" alt=\"node\"> <img src=\"https://img.shields.io/npm/dw/panda-portfolio.svg\" alt=\"downloads\"> <img src=\"https://img.shields.io/github/license/YashMeh/panda-portfolio.svg\" alt=\"LICENSE\"></p>\n## Installation\n",
     "snippet": "// For npm<5.2.0\nsudo npm install -g panda-portfolio\n\n// For npm>=5.2.0\nnpx panda-portfolio <command>\n"
    },
    {
@@ -2444,10 +2316,6 @@
    {
     "description": "## Creating the index page\n",
     "snippet": "panda config.json\n"
-   },
-   {
-    "description": "## Alternate Method\n- Create a FILENAME.json file within the directory\n- Paste the following content.\n",
-    "snippet": "{\n    \"theme\":\"(dark or light)\",\n    \"name\":\"YOUR-NAME\",\n    \"profilePhoto\":\"PICTURE-LINK\",\n    \"resumeLink\":\"RESUME-LINK\",\n    \"about\":[\n        \"Paragraph1\",\n        \"Paragraph2\",\n        \"Paragraph3\",\n        \"So on..\"\n    ],\n    \"links\":{\n        \"github\":\"YOUR-GITHUB-PROFILE\",\n        \"linkedin\":\"YOUR-LINKEDIN-PROFILE\",\n        \"medium\":\"YOUR-MEDIUM-PROFILE\",\n        \"facebook\":\"YOUR-FACEBOOK-PROFILE\",\n        \"instagram\":\"YOUR-INSTAGRAM-PROFILE\"\n    }\n}\n"
    }
   ]
  },
@@ -2490,7 +2358,7 @@
   "package": "pg-tsquery",
   "snippets": [
    {
-    "description": "### Usage\n",
+    "description": "### Why?\nUsing pg's `to_tsquery` directly with user input can throw errors. `plainto_tsquery` sanitizes the user input, but it's very limited (it just puts an and between words), `websearch_to_tsquery` extends this behavior a little further only between double-quotes, with followedBy operator and negations.\nThis module allows customizable text-search operators: and, or, followedBy, not, prefix, parentheses, quoted text (same behavior than `websearch_to_tsquery`).\nSee the [options defaults values](index.js#L52-L61)\n### Usage\n",
     "snippet": "const tsquery = require('pg-tsquery')(/* options can be passed to override the defaults */);\n\npool.query('SELECT * FROM tabby WHERE to_tsvector(col) @@ to_tsquery($1)', [tsquery(str)])\n"
    }
   ]
@@ -2503,7 +2371,7 @@
   "package": "piece-table",
   "snippets": [
    {
-    "description": "## Usage\n",
+    "description": "    \n## Usage\n",
     "snippet": "const PieceTable = require(\"piece-table\");\n\nconst document = new PieceTable(\"This is a document with some text.\");\n\ndocument.insert(\"This is some more text to insert at offset 33.\", 33);\n\n// Delete the previously inserted sentence\ndocument.delete(79, 46);\n\nvar sequence = document.getSequence();\n// sequence == \"This is a document with some text.\"\n\nvar subString = document.stringAt(9, 8);\n// subString == \"document\"\n\n// PieceTable is an iterable:\nfor (let character of document) {\n    console.log(character);\n    // 'T', 'h', 'i', 's', ...\n}\n"
    }
   ]
@@ -2619,7 +2487,7 @@
   "package": "react-native-sms-x",
   "snippets": [
    {
-    "description": "***\n**SendSMS**\n> ##### A react-native api to send SMS messages. It works only for android. This component used android native api to send sms and response a callback to react-native. This react-native component doesn't link to the mobile default messenger view. It will programmatically send the message to a phone number which is provided as a parameter and will response a callback with a string indicating message was sent or failure or no service.\n*usage*\n",
+    "description": "## react-native-sms-x\n***\n**SendSMS**\n> ##### A react-native api to send SMS messages. It works only for android. This component used android native api to send sms and response a callback to react-native. This react-native component doesn't link to the mobile default messenger view. It will programmatically send the message to a phone number which is provided as a parameter and will response a callback with a string indicating message was sent or failure or no service.\n*usage*\n",
     "snippet": "import SendSMS from 'react-native-sms-x';\n// you can put any number as Id to identify which message being process\nSendSMS.send(123, \"+959254687254\", \"Hey.., this is me!\\nGood to see you. Have a nice day.\", (msg)=>{ alert(msg) });\n"
    },
    {
@@ -2649,7 +2517,7 @@
   "package": "react-slick-cong",
   "snippets": [
    {
-    "description": "### Example\n",
+    "description": "### Starter Kit\nCheckout [yeoman generator](https://github.com/akiran/generator-react-slick) to quickly\nget started with react-slick.\n### Example\n",
     "snippet": "var React = require('react');\nvar Slider = require('react-slick');\n\nclass SimpleSlider extends React.Component {\n  render: function () {\n    var settings = {\n      dots: true,\n      infinite: true,\n      speed: 500,\n      slidesToShow: 1,\n      slidesToScroll: 1\n    };\n    return (\n      <Slider {...settings}>\n        <div><h3>1</h3></div>\n        <div><h3>2</h3></div>\n        <div><h3>3</h3></div>\n        <div><h3>4</h3></div>\n        <div><h3>5</h3></div>\n        <div><h3>6</h3></div>\n      </Slider>\n    );\n  }\n}\n"
    },
    {
@@ -2674,16 +2542,12 @@
   "package": "rebas",
   "snippets": [
    {
-    "description": "## Usage\n",
+    "description": "## How\nRebas 使首屏渲染由服务器端完成，极大地降低了 SPA 首屏的白屏时间并解决了 SEO 问题。借助于 node ，服务器端的渲染逻辑不用额外开发，只需要对现有的 Saber 应用进行小幅修改就能让已有的逻辑同时运行在客户端与服务器端。\nSaber 所有的基础组件都进行了同构升级，确保能同时运行在客户端与服务器端。对于业务开发只需聚焦业务逻辑，不用特别关注运行平台，剩下的一切就交给 Saber 与 Rebas 吧～\n## Usage\n",
     "snippet": "/**\n * @file app.js 应用启动脚本\n */\nvar app = require('rebas');\n\n// 加载路由配置\napp.load(require('./lib/config'));\n\n// 启动服务\napp.start();\n"
    },
    {
     "description": "#### get(name)\n获取存储在 `配置文件夹` 下的 `JSON` 配置信息，`配置文件夹` 的默认路径为 `config`\n* **name** `{string}` 配置文件名称，不包含 `.json` 后缀名\n* _return_ `{*}` 配置信息\n例如需要获取 `config/app.json` 文件中的配置信息可以通过如下方式获得：\n",
     "snippet": "var app = require('rebas');\n\n// 获取 `config/app.json` 中的配置信息\napp.get('app');\n"
-   },
-   {
-    "description": "#### log\n日志配置文件 `log.json` ，`rebas` 使用 [log4js-node](https://github.com/nomiddlename/log4js-node) 提供日志服务，相关配置信息更详细的说明请参考 [log4js-node 的配置说明](https://github.com/nomiddlename/log4js-node/wiki/Appenders)，默认的配置信息如下：\n",
-    "snippet": "{\n    // 是否将日志输出到标准输出(stdout)\n    console: false,\n    // 日志等级\n    level: 'INFO',\n    // 日志类型，默认为按时间分割的日志文件\n    type: 'dateFile',\n    // 日志默认存储在 `log` 目录下，名为 `rebas.log`\n    filename: 'log/rebas.log',\n    // 日志以小时级别切分\n    patter: '-MM-dd-hh',\n    alwaysIncludePattern: false,\n    // 日志输出格式\n    layout: {\n        type: 'pattern',\n        pattern: '[%d] [%x{pid}] [%p] - %m',\n        tokens: {\n            pid: process.pid\n        }\n    }\n}\n"
    }
   ]
  },
@@ -2691,7 +2555,7 @@
   "package": "regexp-clone",
   "snippets": [
    {
-    "description": "==============\nClones RegExps with flag and `lastIndex` preservation.\n",
+    "description": "#regexp-clone\n==============\nClones RegExps with flag and `lastIndex` preservation.\n",
     "snippet": "const regexpClone = require('regexp-clone');\n\nconst a = /somethin/misguy;\nconsole.log(a.global); // true\nconsole.log(a.ignoreCase); // true\nconsole.log(a.multiline); // true\nconsole.log(a.dotAll); // true\nconsole.log(a.unicode); // true\nconsole.log(a.sticky); // true\n\nconst b = regexpClone(a);\nconsole.log(b.global); // true\nconsole.log(b.ignoreCase); // true\nconsole.log(b.multiline); // true\nconsole.log(b.dotAll); // true\nconsole.log(b.unicode); // true\nconsole.log(b.sticky); // true\n\nconst c = /hi/g;\nc.test('this string hi there');\nassert.strictEqual(c.lastIndex, 3);\n\nconst d = regexpClone(c);\nassert.strictEqual(d.lastIndex, 3);\nd.test('this string hi there');\nassert.strictEqual(d.lastIndex, 14);\nassert.strictEqual(c.lastIndex, 3);\n"
    }
   ]
@@ -2717,7 +2581,7 @@
   "package": "replace-constructor",
   "snippets": [
    {
-    "description": "\r\n",
+    "description": "# replace-constructor\r\n\r\n**Replace/wrap a class constructor, while keeping the prototype, name and properties of the original class. Like extending a class, but suitable for use in decorators and such. Babel compatible. Adapted from [autocreate](https://github.com/pjeby/autocreate) - all credits to [@pjeby](https://github.com/pjeby).**\r\n\r\n[![npm status](http://img.shields.io/npm/v/replace-constructor.svg?style=flat-square)](https://www.npmjs.org/package/replace-constructor) [![Dependency status](https://img.shields.io/david/vweevers/replace-constructor.svg?style=flat-square)](https://david-dm.org/vweevers/replace-constructor)\r\n\r\n## example\r\n\r\n\r\n",
     "snippet": "const replace = require('replace-constructor')\r\n\r\nclass Original {\r\n  constructor(x, y) {\r\n    // ..\r\n  }\r\n}\r\n\r\nconst Wrapped = replace(Original, function(x, y){\r\n  Original.call(this, x, y)\r\n})\r\n"
    }
   ]
@@ -2739,7 +2603,7 @@
   "package": "resolve-bin",
   "snippets": [
    {
-    "description": "Resolves the full path to the bin file of a given package by inspecting the `\"bin\"` field in its package.json.\n",
+    "description": "# resolve-bin [![build status](https://secure.travis-ci.org/thlorenz/resolve-bin.png)](http://travis-ci.org/thlorenz/resolve-bin)\nResolves the full path to the bin file of a given package by inspecting the `\"bin\"` field in its package.json.\n",
     "snippet": "var resolveBin = require('resolve-bin');\n\n// package.json: \"bin\": \"bin/tap.js\"\nresolveBin('tap', function (err, bin) {\n  if (err) return console.error(err);\n  console.log(bin);  \n});\n\n// => [..]/resolve-bin/node_modules/tap/bin/tap.js\n"
    }
   ]
@@ -2748,7 +2612,7 @@
   "package": "resolve-subscribe-mqtt",
   "snippets": [
    {
-    "description": "#### Client Side\n",
+    "description": "# **resolve-subscribe-mqtt**\n[![npm version](https://badge.fury.io/js/resolve-subscribe-mqtt.svg)](https://badge.fury.io/js/resolve-subscribe-mqtt)\nThis package is a `resolve-redux` adapter used to subscribe to events via an [MQTT](https://github.com/mqttjs/MQTT.js) protocol.\n#### Client Side\n",
     "snippet": "import createClientAdapter from 'resolve-subscribe-mqtt';\n\n(async () => {\n  const adapter = createClientAdapter({ origin, rootPath, url, appId, onEvent })\n  \n  await adapter.init()\n})() \n"
    },
    {
@@ -2769,7 +2633,7 @@
   "package": "rtpengine-client",
   "snippets": [
    {
-    "description": "## Usage\n",
+    "description": "# rtpengine-client [![Build Status](https://travis-ci.org/davehorton/rtpengine-client.svg?branch=master)](http://travis-ci.org/davehorton/rtpengine-client) [![NPM version](https://badge.fury.io/js/rtpengine-client.svg)](http://badge.fury.io/js/rtpengine-client) [![Coverage Status](https://coveralls.io/repos/github/davehorton/rtpengine-client/badge.svg?branch=master)](https://coveralls.io/github/davehorton/rtpengine-client?branch=master)\nA Promises-based nodejs client for accessing rtpengine via ng protocol\n## Usage\n",
     "snippet": "const Client = require('rtpengine-client').Client ;\nconst client = new Client() ;\n\nclient.ping(22222, '39.194.250.246')\n  .then((res) => {\n    console.log(`received ${JSON.stringify(res)}`); // {result: 'pong'}\n  })\n  .catch((err) => {\n    console.log(`Error: ${err}`);\n  }\n}\n"
    },
    {
@@ -2797,16 +2661,7 @@
  },
  {
   "package": "savey-wavey",
-  "snippets": [
-   {
-    "description": "## Usage\nCreate an `.on-save.json` file at the root of you project.\nFor example, if you want to babelify every `.js` file from `src` to `lib`:\n",
-    "snippet": "{\n  \"commands\": [\n    {\n      \"files\": \"src/**/*.js\",\n      \"baseDir\": \"src\",\n      \"command\": \"./node_modules/.bin/babel ${filePath} --out-file libs/${fileDirRelativeToBase}/${fileBase}.js\"\n    }\n  ],\n  \"config\": <optional configuration options>\n}\n"
-   },
-   {
-    "description": "### Configuration Options\n",
-    "snippet": "{\n  commands: [<your command definitions>],\n  config: {\n    showSuccess: true;\n    autohideSuccess: true;\n    autohideSuccessTimeout: 1200;\n  }\n}\n"
-   }
-  ]
+  "snippets": []
  },
  {
   "package": "scaffold-static",
@@ -2824,12 +2679,8 @@
   "package": "search_by_tags",
   "snippets": [
    {
-    "description": "## How to use\n",
+    "description": "# Search by tag/s (search_by_tags)\n## How to use\n",
     "snippet": "const { searchByTags } = require('search_by_tags');\n// Parse your query url to this => ['eq:a|b', 'eq:c', 'not:d']\n// Meaning:\n// - tag must contain `c`\n// - tag must contains `a` or `b`\n// - tag must NOT contains `d`\nconst res = searchByTags(['eq:a|b', 'eq:c', 'not:d']);\n// req.eqAnd = ['c']\n// req.eqOr = ['a', 'b']\n// req.notEqAnd = ['d']\n"
-   },
-   {
-    "description": "## Example\n- From input url like `https://api.example.com?tags=eq:a&tags=eq:b|c&tags=not:d`\n- To output:\n",
-    "snippet": "{\n  eqAnd: ['a'],\n  eqOr: ['b','c'],\n  notEqAnd: ['d']\n}\n"
    }
   ]
  },
@@ -2966,7 +2817,7 @@
   "package": "shim-require",
   "snippets": [
    {
-    "description": "Pre-process javascript files as they get `require`d\n",
+    "description": "# shim-require\nPre-process javascript files as they get `require`d\n",
     "snippet": "const shimRequire = require('shim-require');\nshimRequire((content, filename) => {\n  // return modified content\n  return `console.log(\"loading ${filename}\");\\n${content}`;\n});\n\nrequire('foo'); // `loading /path/to/foo`\n"
    },
    {
@@ -2992,7 +2843,7 @@
   "package": "showdown-target-blank",
   "snippets": [
    {
-    "description": "## Example\n",
+    "description": "### Enabling the extension\nAfter including the extension in your application, you just need to enable it in showdown.\n    var converter = new showdown.Converter({extensions: ['targetblank']});\n## Example\n",
     "snippet": "var converter = new Showdown.converter({extensions: ['targetblank']}),\n    input = 'This is a [link](http://www.example.com)',\n    html = converter.makeHtml(input);\n    console.log(html);\n"
    }
   ]
@@ -3057,10 +2908,6 @@
    {
     "description": "##### Setup webpack\nCreate a webpack.config.js file in the root of your project and paste in the following contents\n",
     "snippet": "var extractText = require('extract-text-webpack-plugin');\n\nmodule.exports = {\n    entry: {\n        app: './src/javascripts/test',\n        css: './src/stylesheets/test.scss'\n    },\n\n    output: {\n        filename: './dist/[name].bundle.js'\n    },\n    devtool: 'source-map',\n    module: {\n        loaders: [{\n            test: /\\.scss$/,\n            loader: extractText.extract('css-loader!sass-loader?sourceMap')\n        }]\n    },\n\n    plugins: [\n        new extractText({\n            filename: 'dist/test.css',\n            disable: false,\n            allChunks: true\n        }),\n    ]\n};\n"
-   },
-   {
-    "description": "This is a basic setup of webpack, it tells webpack to look at 2 entries (app and css) at their corresponding paths and put them in /dist/app.bundle.js and /dist/css.bundle.js respectively. The modules define loaders and how to process files with the .scss extension. In this case it will first be compiled using the sass-loader, then the css will interpret url(..) and import statements and embed the results into the css.bundle.js file found in the dist folder. Finally this is extracted back out using the extract text plugin to a test.css file (which is setup in the plugins array)\nTo start the build simply run 'webpack' in a terminal window on the root of your project (requires webpack to be installed globally and sufficient rights). Another option is to set the scripts of your packages.json file to the following:\n",
-    "snippet": "\"scripts\": {\n    \"start\": \"webpack-dev-server --watch --progress --inline --open\",\n    \"build\": \"webpack --progress\"\n},\n"
    }
   ]
  },
@@ -3093,23 +2940,23 @@
   "package": "stats-filelist",
   "snippets": [
    {
-    "description": "[![npm](https://img.shields.io/npm/v/stats-filelist.svg)](https://www.npmjs.com/package/stats-filelist) [![GitHub issues](https://img.shields.io/github/issues/anseki/stats-filelist.svg)](https://github.com/anseki/stats-filelist/issues) [![dependencies](https://img.shields.io/badge/dependencies-No%20dependency-brightgreen.svg)](package.json) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)\nGet a list of files and directories with `Stats` of each item. And filter the list with evaluating path, path pattern, type, size, modified time, and more.\nBy default, statsFilelist gets all files and directories under specific directories recursively, and it returns an Array that includes the expanded [`fs.Stats`](https://nodejs.org/api/fs.html#fs_class_fs_stats) objects of each item.  \nThat expanded `fs.Stats` object has additional properties such as `fullPath`, `extension`, etc.. (See [`Stats` object](#stats-object).)  \nThe got `Stats` objects will be useful more than the path list because you are supposed to do something with those files or directories after getting those.\nIt returns the filtered list if you want. That filter evaluates that `Stats` object by using flexible ways such as RegExp, callback, etc..  \nAnd also, the filter can control the behavior of statsFilelist. For example, it make statsFilelist stop getting files any more when the file you want was found out.\n",
+    "description": "# statsFilelist\n[![npm](https://img.shields.io/npm/v/stats-filelist.svg)](https://www.npmjs.com/package/stats-filelist) [![GitHub issues](https://img.shields.io/github/issues/anseki/stats-filelist.svg)](https://github.com/anseki/stats-filelist/issues) [![dependencies](https://img.shields.io/badge/dependencies-No%20dependency-brightgreen.svg)](package.json) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)\nGet a list of files and directories with `Stats` of each item. And filter the list with evaluating path, path pattern, type, size, modified time, and more.\nBy default, statsFilelist gets all files and directories under specific directories recursively, and it returns an Array that includes the expanded [`fs.Stats`](https://nodejs.org/api/fs.html#fs_class_fs_stats) objects of each item.  \nThat expanded `fs.Stats` object has additional properties such as `fullPath`, `extension`, etc.. (See [`Stats` object](#stats-object).)  \nThe got `Stats` objects will be useful more than the path list because you are supposed to do something with those files or directories after getting those.\nIt returns the filtered list if you want. That filter evaluates that `Stats` object by using flexible ways such as RegExp, callback, etc..  \nAnd also, the filter can control the behavior of statsFilelist. For example, it make statsFilelist stop getting files any more when the file you want was found out.\n",
     "snippet": "var filelist = require('stats-filelist');\n\n// Asynchronous method:\nfilelist.get(['dir-1', 'dir-2'], function(list) {\n  console.log(list);\n}, /\\.js$/i); // Get JavaScript files.\n// `extension` property also can be used.\n\n// Synchronous method:\nvar list = filelist.getSync(['dir-1', 'dir-2'],\n  function(stats) { return stats.size > 1024; }); // Get 1KB+ files.\nconsole.log(list);\n"
    },
    {
-    "description": "### `get`, `getSync`\n",
+    "description": "## Methods\n### `get`, `getSync`\n",
     "snippet": "filelist.get(path, callback[, options])\n"
    },
    {
-    "description": "### `get`, `getSync`\n",
+    "description": "## Methods\n### `get`, `getSync`\n",
     "snippet": "filelist.get(path, callback[, filter[, recursive]])\n"
    },
    {
-    "description": "### `get`, `getSync`\n",
+    "description": "## Methods\n### `get`, `getSync`\n",
     "snippet": "list = filelist.getSync(path[, options])\n"
    },
    {
-    "description": "### `get`, `getSync`\n",
+    "description": "## Methods\n### `get`, `getSync`\n",
     "snippet": "list = filelist.getSync(path[, filter[, recursive]])\n"
    },
    {
@@ -3149,7 +2996,7 @@
     "snippet": "list = filelist.getSync('./project', '/.');\n"
    },
    {
-    "description": "##### When it returns a boolean\n",
+    "description": "#### function\nThis function decides whether the current item is included to the list, and also, it can control the behavior of statsFilelist.  \nIt is called with the [`Stats` object](#stats-object) of the current item.\n##### When it returns a boolean\n",
     "snippet": "include = filter(stats)\n"
    },
    {
@@ -3189,24 +3036,12 @@
     "snippet": "list = filelist.getSync(null, { listOf: 'fullPath' });\n"
    },
    {
-    "description": "`list`:\n",
-    "snippet": "[\n  '/path/to/file-1',\n  '/path/to/file-2',\n  '/path/to/dir-1',\n  '/path/to/file-3'\n]\n"
-   },
-   {
     "description": "For example, the list of names of each file and directory is returned:\n",
     "snippet": "list = filelist.getSync(null, { listOf: 'name' });\n"
    },
    {
-    "description": "`list`:\n",
-    "snippet": "[\n  'file-1',\n  'file-2',\n  'dir-1',\n  'file-3'\n]\n"
-   },
-   {
     "description": "For example, the list of booleans to indicate whether it is file (return value of `isFile` method) of each item is returned:\n",
     "snippet": "list = filelist.getSync(null, { listOf: 'isFile' });\n"
-   },
-   {
-    "description": "`list`:\n",
-    "snippet": "[\n  true,\n  true,\n  false,\n  true\n]\n"
    }
   ]
  },
@@ -3220,20 +3055,7 @@
  },
  {
   "package": "swordjs",
-  "snippets": [
-   {
-    "description": "#### renderText(inPassage, inOptions, inCallback) ####\n```inPassage``` is a passage in a bible like ```Gen 1``` or ```Romans 3```. ```inOptions``` is an Object and optional. It can contain the following porperties (default values):\n",
-    "snippet": "{\n    oneVersePerLine: false,\n    footnotes: false,\n    crossReferences: false,\n    headings: false,\n    wordsOfChristInRed: false,\n    intro: false, //show book or chapter introductions\n}\n"
-   },
-   {
-    "description": "The callback will return an object as second argument:\nExample:\n",
-    "snippet": "{\n    text: \"...\", //the rendered text (HTML),\n    footnotes: {\n        \"Gen.1.1\": [{note: \"/*Note text*/\", n: \"1\"}, {...}],\n        \"Gen.1.4\": [{note: \"/*Note text*/\", n: \"2\"}, {...}],\n        ...\n    }\n}\n"
-   },
-   {
-    "description": "#### verseKey.parse(inPassage, inV11n) ####\nTakes a passage (e.g. Matt 1:1) as argument an returns an object like this:\n",
-    "snippet": "{\n    osisRef: \"Matt.1.1\",\n    book: \"Matt\",\n    bookNum: 39,\n    chapter: 1\n    verse: 1 //this can also be NaN if you pass a passage the has no verse in it like \"Matt 1\".\n}\n"
-   }
-  ]
+  "snippets": []
  },
  {
   "package": "tamvan-meter",
@@ -3243,7 +3065,7 @@
   "package": "tcomb-react-bootstrap",
   "snippets": [
    {
-    "description": "# Usage\n",
+    "description": "# Constraint examples\nSome constraints among others enforced by this library:\n- `Alert`: `onDismiss` and `dismissAfter` must either or neither passed\n- `ButtonGroup`: can have only `Button` children\n- `Col`: props must be integers between 1 and 12\n- `Glyphicon`: can't have children\n- `Nav`: bsStyle must be one of `pills`, `tabs`\nFor now the constraints are quite relaxed in order to allow an easier demo, however they can be tighten up to the point of accepting \nonly whitelisted props.\n# Usage\n",
     "snippet": "/** @jsx React.DOM */\n// development\nvar Alert = require('tcomb-react-bootstrap/Alert');\n// production\n// var Alert = require('react-bootstrap/Alert');\n\nvar good = (\n  <Alert bsStyle=\"warning\">\n    <strong>Holy guacamole!</strong>\n  </Alert>\n); // => ok!\n\nvar bad = (\n  <Alert bsStyle=\"warn\"> // <-- should be \"warning\"\n    <strong>Holy guacamole!</strong>\n  </Alert>\n); // => fail! debugger kicks in\n"
    }
   ]
@@ -3350,7 +3172,7 @@
   "package": "virtual-webtorrent",
   "snippets": [
    {
-    "description": "## Usage\n",
+    "description": "# virtual-webtorrent [![stability][0]][1]\n[![npm version][2]][3] [![build status][4]][5] [![test coverage][6]][7]\n[![downloads][8]][9] [![js-standard-style][10]][11]\nWebtorrent video element for virtual-dom.\n## Usage\n",
     "snippet": "const hyperx = require('hyperx')\nconst vdom = require('virtual-dom')\nconst hx = hyperx(vdom.h)\nconst createWebTorrent = require('virtual-webtorrent')\n\nconst tree = hx`\n  <section>\n    ${createWebTorrent({ torrent: torrent })}\n  </section>\n`\ndocument.body.appendChild(vdom.create(tree))\n"
    }
   ]
@@ -3380,7 +3202,7 @@
   "package": "vue-analytics-fb",
   "snippets": [
    {
-    "description": "### Preparations\n",
+    "description": "## Usage\n### Preparations\n",
     "snippet": "import Vue from 'Vue'\nimport VueFacebookPixel from 'vue-analytics-fb'\n\nVue.use(VueFacebookPixel)\n"
    },
    {
@@ -3395,12 +3217,7 @@
  },
  {
   "package": "vue-for-echarts",
-  "snippets": [
-   {
-    "description": "#### props\r\n",
-    "snippet": "// 图表容器宽度\r\nwidth: {\r\n  type: String,\r\n  required: true,\r\n},\r\n// 图表容器高度\r\nheight: {\r\n  type: String,\r\n  required: true,\r\n},\r\n// 图表容器 ID（可选）\r\nid: {\r\n  type: String,\r\n},\r\n// echarts 图表具体配置项和数据\r\noptions: {\r\n  type: Object,\r\n  required: true,\r\n},\r\n// 是否在组件挂载时立即渲染\r\nrenderOnMounted: {\r\n  type: Boolean,\r\n  default: true,\r\n},\r\n// 是否自动 resize\r\nautoResize: {\r\n  type: Boolean,\r\n  default: true,\r\n},\r\n"
-   }
-  ]
+  "snippets": []
  },
  {
   "package": "vue-hash-router",
@@ -3431,7 +3248,7 @@
   "package": "vue-phone-number-input-countrylist",
   "snippets": [
    {
-    "description": "### ES6 Modules / CommonJS\n",
+    "description": "## Usage\n### ES6 Modules / CommonJS\n",
     "snippet": "import VuePhoneNumberInput from 'vue-phone-number-input';\nimport 'vue-phone-number-input/dist/vue-phone-number-input.css';\n\nVue.component('vue-phone-number-input', VuePhoneNumberInput);\n"
    }
   ]
@@ -3440,11 +3257,7 @@
   "package": "vue-photo-carousel-preview",
   "snippets": [
    {
-    "description": "## Usage\r\n\r\n使用须知：\r\n\r\n* 插件目前仅支持vue2.0以上版本\r\n* img标签上的class不能去掉\r\n\r\n如果你是使用vue-cli生成的项目，你需要修改`webpack.base.conf.js`文件中的loaders，添加一个loader。\r\n原因：插件编写中使用了es6的语法，需要进行代码编译\r\n",
-    "snippet": "{\r\n    test: /vue-preview.src.*?js$/,\r\n    loader: 'babel'\r\n}\r\n"
-   },
-   {
-    "description": "### Install plugin\r\n\r\n",
+    "description": "\r\n### Install plugin\r\n\r\n",
     "snippet": "import vuePhotoCarouselPreview from 'vue-photo-carousel-preview'\r\nVue.use(vuePhotoCarouselPreview)\r\n"
    }
   ]
@@ -3453,7 +3266,7 @@
   "package": "vue-simple-uploader",
   "snippets": [
    {
-    "description": "### init\n",
+    "description": "## Usage\n### init\n",
     "snippet": "import Vue from 'vue'\nimport uploader from 'vue-simple-uploader'\nimport App from './App.vue'\n\nVue.use(uploader)\n\n/* eslint-disable no-new */\nnew Vue({\n  render(createElement) {\n    return createElement(App)\n  }\n}).$mount('#app')\n"
    },
    {
@@ -3468,24 +3281,7 @@
  },
  {
   "package": "watchpush",
-  "snippets": [
-   {
-    "description": "## Configuration\n`watchpush.json` file is required in the root directory of your application\nIt contains following configurations\n",
-    "snippet": "{\n    \"name\": \"Name of your project\",\n    \"hook_port\":4000, // Port at which webhook sends request\n    \"secret\":\"Secret token registered at github webhook\",\n    \"preProcesses\":[ // Processes that need to run before starting app\n        \"git pull\",\n        \"install module\"\n    ],\n    \"runScript\":\"Final command that lifts/run/start your application\"\n}\n"
-   },
-   {
-    "description": "### For a node app\n",
-    "snippet": "{\n    \"name\": \"Simple node project\",\n    \"hook_port\":4000,\n    \"secret\":\"qwerty\",\n    \"preProcesses\":[\n        \"git pull origin master\",\n        \"npm install\"\n    ],\n    \"runScript\":\"node index.js\"\n}\n"
-   },
-   {
-    "description": "### For a react app\n",
-    "snippet": "{\n    \"name\": \"Simple react project\",\n    \"hook_port\":4000,\n    \"secret\":\"qwerty\",\n    \"preProcesses\":[\n        \"git pull origin master\",\n        \"npm install\",\n        \"npm run build\"\n    ],\n    \"runScript\":\"serve ./public\"\n}\n"
-   },
-   {
-    "description": "### For a python app\n",
-    "snippet": "{\n    \"name\": \"Simple python project\",\n    \"hook_port\":4000,\n    \"secret\":\"qwerty\",\n    \"preProcesses\":[\n        \"git pull origin master\",\n        \"pip install -r requirements.txt\"\n    ],\n    \"runScript\":\"python app.py\"\n}\n"
-   }
-  ]
+  "snippets": []
  },
  {
   "package": "wd-check",
@@ -3503,44 +3299,12 @@
     "snippet": "module.exports = {\n  module: {\n    rules: [\n      {\n        test: /\\.(png|jpg|gif)$/,\n        use: [\n          {\n            loader: 'file-loader',\n            options: {}  \n          }\n        ]\n      }\n    ]\n  }\n}\n"
    },
    {
-    "description": "#### `{String}`\n**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    name: '[path][name].[ext]'\n  }  \n}\n"
-   },
-   {
-    "description": "#### `{Function}`\n**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    name (file) {\n      if (env === 'development') {\n        return '[path][name].[ext]'\n      }\n\n      return '[hash].[ext]'\n    }\n  }  \n}\n"
-   },
-   {
     "description": "### `regExp`\nDefines a `regExp` to match some parts of the file path. These capture groups can be reused in the `name` property using `[N]` placeholder. Note that `[0]` will be replaced by the entire tested string, whereas `[1]` will contain the first capturing parenthesis of your regex and so on...\n",
     "snippet": "import img from './customer01/file.png'\n"
    },
    {
-    "description": "**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    regExp: /\\/([a-z0-9]+)\\/[a-z0-9]+\\.png$/,\n    name: '[1]-[name].[ext]'\n  }  \n}\n"
-   },
-   {
-    "description": "### `context`\n**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    name: '[path][name].[ext]',\n    context: ''\n  }  \n}\n"
-   },
-   {
-    "description": "### `publicPath`\n**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    name: '[path][name].[ext]',\n    publicPath: 'assets/'\n  }  \n}\n"
-   },
-   {
-    "description": "### `outputPath`\n**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    name: '[path][name].[ext]',\n    outputPath: 'images/'\n  }  \n}\n"
-   },
-   {
-    "description": "### `useRelativePath`\n`useRelativePath` should be `true` if you wish to generate a relative URL to the for each file context.\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    useRelativePath: process.env.NODE_ENV === \"production\"\n  }\n}\n"
-   },
-   {
     "description": "### `emitFile`\nBy default a file is emitted, however this can be disabled if required (e.g. for server side packages).\n",
     "snippet": "import img from './file.png'\n"
-   },
-   {
-    "description": "### `emitFile`\nBy default a file is emitted, however this can be disabled if required (e.g. for server side packages).\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    emitFile: false\n  }  \n}\n"
    },
    {
     "description": "<h2 align=\"center\">Examples</h2>\n",
@@ -3548,19 +3312,7 @@
    },
    {
     "description": "**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    name: 'dirname/[hash].[ext]'\n  }  \n}\n"
-   },
-   {
-    "description": "**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    name: '[sha512:hash:base64:7].[ext]'\n  }  \n}\n"
-   },
-   {
-    "description": "**webpack.config.js**\n",
     "snippet": "import png from 'path/to/file.png'\n"
-   },
-   {
-    "description": "**webpack.config.js**\n",
-    "snippet": "{\n  loader: 'file-loader',\n  options: {\n    name: '[path][name].[ext]?[hash]'\n  }  \n}\n"
    }
   ]
  },
@@ -3651,7 +3403,7 @@
   "package": "ws-engine-request",
   "snippets": [
    {
-    "description": "### Single Task Server Example\n",
+    "description": "## Examples\n### Single Task Server Example\n",
     "snippet": "#!/usr/bin/env node\n\n'use strict';\n\nvar wer = require('ws-engine-request');\n\nwer.server({\n    port: 5000\n}, (messageData, callback) => {\n    let error = null;\n    let data = {\n        id: 1,\n        title: 'A Random Title'\n    };\n    let message = null;\n    callback(error, data, message);\n});\n"
    },
    {
@@ -3729,7 +3481,7 @@
     "snippet": "/**\r\n\tCalls for collector 'nbLoop' times. Creates an array of objects.<br/>\r\n\t@param {string} varName : data property to witch the  the resulting array will be assigned.<br/>\r\n\t@param {number>0|function} nbLoop : is or returns the size of the resulting array.<br/>\r\n\t@param {function(prompter,datas,localDatas)} collector : calls for a new collector 'nbLoop' times.<br/>\r\n\t- {Prompter} prompter : the prompter used to collect new questions.<br/>\r\n\t- {object} datas : The current global datas.<br/>\r\n\t- {object} localDatas : The local prompter datas.<br/>\r\n\t@return {Prompter} the current prompter.\r\n\t*/\r\n\tprompter.askLoop(varName,nbLoop,collector);\r\n"
    },
    {
-    "description": "#### <a name=\"tg_start\"></a> prompter.start\r\n\r\n",
+    "description": "### <a name=\"tg_result\"></a>Get the result.\r\n\r\n<hr/>\r\n\r\n#### <a name=\"tg_start\"></a> prompter.start\r\n\r\n",
     "snippet": "\t/**\r\n\tStarts the prompt session.<br/>\r\n\tDoes not return a prompter. 'start' is the final action, call it only when all questions are prepared.\r\n\t@return {Promise} a promise flushed with the resulting datas when all questions are answered.\r\n\t*/\r\n\tprompter.start().then(datas=>{/* proceed result */})\r\n"
    }
   ]
@@ -3738,7 +3490,7 @@
   "package": "yamoo9-unique-id",
   "snippets": [
    {
-    "description": "### 사용법\n",
+    "description": "# UniqueID 모듈\n### 사용법\n",
     "snippet": "var uniqueID = require('yamoo9-unique-id');\n\nuniqueID(); // 함수 호출하면 고유 ID 코드가 출력\n"
    }
   ]
