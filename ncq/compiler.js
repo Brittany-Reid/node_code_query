@@ -1,3 +1,5 @@
+const { width } = require("enquirer/lib/utils");
+
 const Linter = require("eslint").Linter;
 
 /**
@@ -5,8 +7,13 @@ const Linter = require("eslint").Linter;
  * Will likely rename the class.
  */
 
+
 class Compiler {
-  constructor() {}
+  constructor() {
+  }
+
+  async compile(code){
+  }
 
   async compile(code) {
     var linter = new Linter();
@@ -17,12 +24,41 @@ class Compiler {
     rules.forEach(function (value, index) {
         var severity = "error";
         switch (value) {
+            /*
+             * Allowed Patterns
+             * These don't cause runtime errors.
+             * And they aren't likely to create other errors.
+             * For example, style errors.
+             */
+            case "no-class-assign":
+            case "require-yield":
+            case "no-mixed-spaces-and-tabs":
+            case "no-case-declarations":
+                break;
+            /*
+             * Warnings
+             * These don't cause fatal errors, but can
+             * have unintended effects and should generally be avoided.
+             */
+            case "no-dupe-class-members":
             case "no-unused-vars":
-                severity = "warn";
-                break;
             case "no-extra-semi":
+            case "no-shadow-restricted-names":
+            case "no-useless-escape":
+            case "no-useless-catch":
+            case "no-unused-labels":
+            case "no-self-assign":
+            case "no-redeclare":
+            case "no-octal":
+            case "no-global-assign":
+            case "no-fallthrough":
+            case "no-empty-pattern":
                 severity = "warn";
                 break;
+            /*
+             * Errors
+             * Cause fatal error during runtime
+             */
             default:
                 severity = "error";
                 break;
@@ -31,6 +67,7 @@ class Compiler {
     });
 
     config.rules["semi"] = "warn";
+    config.rules["no-useless-constructor"] =  "warn";
     
 
     var messages = linter.verify(code, config, { filename: "main.js" });
@@ -38,4 +75,4 @@ class Compiler {
   }
 }
 
-new Compiler().compile("var foo = bar;");
+new Compiler().compile("var foo = bar; bar+1");
