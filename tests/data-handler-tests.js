@@ -67,7 +67,7 @@ describe('DataHandler', function() {
             await data.loadSnippets(SNIPPET_DIR);
             var snippets = await data.getSnippetsFor("file");
             var snippets2 = await data.getSnippetsFor("files");
-            assert(snippets.length == snippets2.length);
+            assert(snippets == snippets2);
         });
     });
 });
