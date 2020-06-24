@@ -61,5 +61,13 @@ describe('DataHandler', function() {
             var snippets = await data.getSnippetsFor("file filename using paths"); //we dont have nlp atm so we have to use a specific example
             assert(snippets.length > 0);
         });
+        it('results for file and files should be the same', async function(){
+            //test the stemming
+            var data = new DataHandler();
+            await data.loadSnippets(SNIPPET_DIR);
+            var snippets = await data.getSnippetsFor("file");
+            var snippets2 = await data.getSnippetsFor("files");
+            assert(snippets.length == snippets2.length);
+        });
     });
 });

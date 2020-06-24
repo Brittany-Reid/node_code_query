@@ -1,14 +1,11 @@
 const fs = require("fs");
 const path = require("path");
-const readline = require("readline");
 const natural = require("natural");
 const stopword = require("stopword");
 
-const tfidf = new natural.TfIdf();
-var library_desc = {};
-
 class DataHandler {
   constructor() {
+
     //stopword language
     this.language = stopword.en;
     //regex for removing all non-alpha numeric characters
@@ -22,12 +19,32 @@ class DataHandler {
     this.keyWordMap = new Map();
   }
 
+
+  /**
+   * Returns stemmed keywords.
+   */
+  stem(words){
+    var stemmedWords = [];
+
+    for (var word of words){
+      var stem = natural.PorterStemmer.stem(word);
+      stemmedWords.push(stem);
+    }
+
+    return stemmedWords;
+  }
+
+  /**
+   * Returns a set of matching code snippets, given a task.
+   */
   getSnippetsFor(task) {
     var ids = [];
     if (this.packageToSnippet.has(task)) {
       ids = this.packageToSnippet.get(task);
     } else {
       var words = this.getKeywords(task);
+      words = this.stem(words);
+
       //for each word
       for (var word of words) {
         //get associated ids
@@ -153,6 +170,7 @@ class DataHandler {
 
         if (description) {
           var keywords = await this.getKeywords(description);
+          keywords = this.stem(keywords);
           for await (var word of keywords) {
             if (!this.keyWordMap.has(word)) {
               this.keyWordMap.set(word, [id]);
@@ -167,8 +185,5 @@ class DataHandler {
     }
   }
 }
-
-// const {Input} = require("enquirer");
-// new Input({multiline:true}).run();
 
 module.exports = DataHandler;
