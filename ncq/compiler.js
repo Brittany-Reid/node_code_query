@@ -1,5 +1,3 @@
-const { width } = require("enquirer/lib/utils");
-
 const Linter = require("eslint").Linter;
 
 /**
