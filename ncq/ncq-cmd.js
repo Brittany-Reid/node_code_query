@@ -7,6 +7,10 @@ const winston = require("winston");
 const Cmd = require("./base-cmd");
 const ncq = require("./ncq");
 const repl = require("./repl");
+const utils = require("./utils");
+
+var BASE;
+var OPTIONS;
 
 /**
  * Extended Cmd with our commands, for our CLI.
@@ -14,6 +18,9 @@ const repl = require("./repl");
 class NcqCmd extends Cmd {
   constructor(input, packages) {
     super(input);
+
+    BASE = utils.getBaseDirectory();
+    OPTIONS = utils.options(process.argv);
 
     this.opening =
       "Welcome to NCQ Command Line Interface. Type help() for more information.";
@@ -94,7 +101,7 @@ class NcqCmd extends Cmd {
 
     //make temporary folder
     this.counter++;
-    var tmpDir = path.join(ncq.BASE, "tmp" + this.counter);
+    var tmpDir = path.join(BASE, "tmp" + this.counter);
     if (fs.existsSync(tmpDir)) {
       rimraf.sync(tmpDir);
     }
@@ -120,15 +127,16 @@ class NcqCmd extends Cmd {
     this.resetStdin();
 
     //do repl
-    var args = ["repl.js"];
-    args.push(required);
-    args.push("--save");
-    cprocess.execSync("node ../ncq/repl.js " + required.join(" "), {
+    var args = [];
+    if(OPTIONS.log){
+      args.push("--log");
+    }
+    cprocess.execSync("node ../ncq/repl.js " + required.join(" ") + " " + args.join(" "), {
       stdio: "inherit",
     });
 
     //return to our directory
-    process.chdir(ncq.BASE);
+    process.chdir(BASE);
 
     //delete the temporary folder
     rimraf.sync(tmpDir);

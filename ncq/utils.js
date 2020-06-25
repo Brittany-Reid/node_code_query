@@ -1,20 +1,22 @@
 const path = require("path");
 
+var opts;
+var defaultOptions = { log : false};
+
 function options(args){
 
-    //default options
-    var options = {
-        log : false,
-    }
+  if(opts) return opts;
 
-    for (let i = 0; i < args.length; i++) {
-        const arg = args[i];
-        if(arg === "--log"){
-            options.log = true;
-        }
-    }
+  opts = defaultOptions;
+  
+  for (let i = 0; i < args.length; i++) {
+      const arg = args[i];
+      if(arg === "--log"){
+          opts.log = true;
+      }
+  }
 
-    return options;
+    return opts;
 }
 
 function getBaseDirectory() {

@@ -7,6 +7,7 @@ const fs = require("fs");
 const cprocess = require("child_process");
 const winston = require("winston");
 const fse = require("fs-extra");
+const {getLogger} = require("./logger");
 const {footer} = require("./ui/footer");
 
 var BASE = __dirname;
@@ -38,51 +39,12 @@ const VERSION = "1.0.0";
 const NAME = "NCQ";
 const threshold_sim = 0.25;
 const NUM_KEYWORDS = 20;
-const ARG_PACKS = process.argv
-  .slice(2)
-  .reduce((acc, y) => {
-    acc = acc + y + " ";
-    return acc;
-  }, "")
-  .trim();
 var installedPackages = [];
-if (ARG_PACKS.trim() != "") {
-  installedPackages = ARG_PACKS.split(" ");
-}
 var data;
 var taskMap;
-
-//set up the repl logger
-if (!fs.existsSync(LOGDIR)) {
-  //make dir if it doesnt exist
-  fse.mkdirSync(LOGDIR, { recursive: true });
-}
-const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.simple(),
-  defaultMeta: { service: "user-service" },
-  transports: [
-    //debug for debugging
-    new winston.transports.File({
-      filename: path.join(
-        LOGDIR,
-        "/debug" + Math.floor(Date.now() / 1000) + ".log"
-      ),
-      level: "debug",
-    }),
-    //info for results
-    new winston.transports.File({
-      filename: path.join(
-        LOGDIR,
-        "/run" + Math.floor(Date.now() / 1000) + ".log"
-      ),
-      level: "info",
-    }),
-  ],
-});
-
 var options = {};
 var myRepl;
+var logger;
 
 /**
  * REPL functions.
@@ -207,9 +169,25 @@ function defineReplFunctions() {
   Object.assign(myRepl.context, state);
 }
 
+/**
+ * Process args for installed packages.
+ */
+function processArgs(){
+  var args = process.argv.slice(2);
+  installedPackages = [];
+
+  for(var pk of args){
+    //ignore passed options
+    if(!pk.trim().startsWith("--")){
+      installedPackages.push(pk);
+    }
+  }
+}
+
 async function main() {
-  logger.log("debug", "Base directory: " + BASE);
-  logger.log("debug", "Logger initialized at: " + LOGDIR);
+  processArgs();
+
+  logger = getLogger(true);
 
   //set up data handler
   data = new DataHandler();

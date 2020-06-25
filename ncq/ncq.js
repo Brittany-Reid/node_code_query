@@ -17,12 +17,6 @@ var data = new DataHandler();
 var packages = [];
 var logger;
 
-/**
- * Main file. Main function will only run if we run this as main.
- */
-if (require.main == module) {
-  main();
-}
 
 /**
  * Main function.
@@ -55,6 +49,9 @@ async function main() {
   cmd.run();
 }
 
-//export logger and BASE directory
-exports.logger = logger;
-exports.BASE = BASE;
+/**
+ * Main file. Main function will only run if we run this as main.
+ */
+if (require.main == module) {
+  main();
+}

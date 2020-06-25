@@ -11,25 +11,34 @@ const utils = require("./utils");
 
 const BASE = utils.getBaseDirectory();
 const LOGDIR = path.join(BASE, "logs/main");
+const REPLLOGDIR = path.join(BASE, "logs/repl");
 const OPTIONS = utils.options(process.argv);
 var log = OPTIONS.log;
 var logger;
+var isRepl = false;
 
 /**
  * Return logger, initializing if neccessary.
  */
-function getLogger() {
+function getLogger(repl = false) {
   if (!logger) {
-    setupLogger();
+    isRepl = repl;
+    setupLogger(repl);
   }
   return logger;
 }
 
+
 /**
  * Setup logger.
  */
-function setupLogger() {
+function setupLogger(repl = false) {
   logger = winston.createLogger();
+
+  var dir = LOGDIR;
+  if(isRepl){
+    dir = REPLLOGDIR;
+  }
 
   //create default silent logger
   logger.add(
@@ -42,16 +51,16 @@ function setupLogger() {
 
   //if --log is set as arg
   if (log == true) {
-    if (fs.existsSync(LOGDIR)) {
+    if (fs.existsSync(dir)) {
       //make dir if it doesnt exist
-      fse.mkdirSync(LOGDIR, { recursive: true });
+      fse.mkdirSync(dir, { recursive: true });
     }
 
     //debug for debugging
     logger.add(
       new winston.transports.File({
         filename: path.join(
-          LOGDIR,
+          dir,
           "/debug" + Math.floor(Date.now() / 1000) + ".log"
         ),
         level: "debug",
@@ -62,7 +71,7 @@ function setupLogger() {
     logger.add(
       new winston.transports.File({
         filename: path.join(
-          LOGDIR,
+          dir,
           "/run" + Math.floor(Date.now() / 1000) + ".log"
         ),
         level: "info",

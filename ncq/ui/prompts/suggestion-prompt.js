@@ -143,12 +143,11 @@ class SuggestionPrompt extends BasePrompt {
   /**
    * Overwrite choice rendering to add background colour.
    */
-  async renderChoice(choice, i) {
-    await this.onChoice(choice, i);
+  renderChoice(choice, i) {
     let focused = this.index === i;
 
     let ind = this.indent(choice);
-    let msg = await this.choiceMessage(choice, i);
+    let msg = this.choiceMessage(choice, i);
     let line = () =>
       [this.margin[3], ind, msg, this.margin[1]].filter(Boolean).join(" ");
 

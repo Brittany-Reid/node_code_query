@@ -6,6 +6,11 @@ const wrapAnsi = require("wrap-ansi");
 const colors = require("ansi-colors");
 const { getConfig } = require("../../config");
 const { width } = require("enquirer/lib/utils");
+const keypress = require('enquirer/lib/keypress');
+const utils = require('enquirer/lib/utils');
+const {getLogger} = require("../../logger");
+
+var logger = getLogger();
 
 /**
  * Extended Enquirer AutoComplete.
@@ -22,6 +27,9 @@ const { width } = require("enquirer/lib/utils");
  * - Can insert at toggle point and multiple times
  * - Enable Multiline
  */
+
+
+
 class BasePrompt extends AutoComplete {
   /**
    * Constructor.
@@ -42,6 +50,7 @@ class BasePrompt extends AutoComplete {
 
     this.scroll = this.options.scroll;
     this.scrollPos = 0;
+    this.keybuffer = [];
   }
 
   /** Extend dispatch to fix this bug https://github.com/enquirer/enquirer/issues/285.
@@ -53,8 +62,32 @@ class BasePrompt extends AutoComplete {
       return;
     }
     if (s) {
-      super.dispatch(s, key);
+      //await super.dispatch(s, key);
+      await this.append(s);
     }
+  }
+
+  moveCursor(n) {
+    logger.debug("move cursor: " + n);
+    this.state.cursor += n;
+  }
+
+  async append(ch) {
+    logger.debug("append: " + ch);
+    let { cursor, input } = this.state;
+    this.input = input.slice(0, cursor) + ch + input.slice(cursor);
+    this.moveCursor(1);
+    await this.complete();
+  }
+
+  async complete() {
+    logger.debug("completing");
+    this.completing = true;
+    this.choices = this.suggest(this.input, this.state._choices);
+    this.state.limit = void 0; // allow getter/setter to reset limit
+    this.index = Math.min(Math.max(this.visible.length - 1, 0), this.index);
+    await this.render();
+    this.completing = false;
   }
 
   scrollDown(i){
@@ -97,6 +130,8 @@ class BasePrompt extends AutoComplete {
    * Extend keypress to ignore certain keys.
    */
   async keypress(input, key = {}) {
+    logger.debug("Pressed key: " + JSON.stringify(key) + "\n");
+
     //autocomplete
     var check = this.keys["autocomplete"];
     if (this.isKey(key, check)) {
@@ -128,8 +163,23 @@ class BasePrompt extends AutoComplete {
       return await this.lineStart();
     }
 
+
     //otherwise,
-    return await super.keypress(input, key);
+    this.skeypress(input, key);
+    //await super.keypress(input, key);
+    logger.debug("Done key: " + JSON.stringify(key) + "\n");
+  }
+
+  async skeypress(input, event){
+    this.keypressed = true;
+    let key = keypress.action(input, keypress(input, event), this.options.actions);
+    this.state.keypress = key;
+    this.emit('keypress', input, key);
+    this.emit('state', this.state.clone());
+    let fn = this.options[key.action] || this[key.action] || this.dispatch;
+    if (typeof fn === 'function') {
+      return await fn.call(this, input, key);
+    }
   }
 
   /**
@@ -275,10 +325,47 @@ class BasePrompt extends AutoComplete {
     };
   }
 
+  renderChoice(choice, i){
+    logger.debug("renderChoice");
+
+    let focused = this.index === i;
+    let pointer = this.pointer(choice, i);
+    let check = this.indicator(choice, i) + (choice.pad || '');
+    let hint = this.resolve(choice.hint, this.state, choice, i);
+
+    if (hint && !utils.hasColor(hint)) {
+      hint = this.styles.muted(hint);
+    }
+
+    let ind = this.indent(choice);
+    let msg = this.choiceMessage(choice, i);
+    let line = () => [this.margin[3], ind + pointer + check, msg, this.margin[1], hint].filter(Boolean).join(' ');
+
+    if (choice.role === 'heading') {
+      return line();
+    }
+
+    if (choice.disabled) {
+      if (!utils.hasColor(msg)) {
+        msg = this.styles.disabled(msg);
+      }
+      return line();
+    }
+
+    if (focused) {
+      msg = this.styles.em(msg);
+    }
+
+    return line();
+  }
+
   /**
    * Renders the list of choices.
    */
-  async renderChoices() {
+  renderChoices() {
+    logger.debug("renderChoices");
+
+
     //only when suggesting
     if (!this.isSuggesting) {
       this.visible.push("");
@@ -288,7 +375,23 @@ class BasePrompt extends AutoComplete {
     if (!this.visible.length) {
       return "";
     }
-    return super.renderChoices();
+
+    if (this.state.loading === 'choices') {
+      return this.styles.warning('Loading choices');
+    }
+
+    if (this.state.submitted) return '';
+    let choices = this.visible.map((ch, i) => this.renderChoice(ch, i));
+    let visible = choices;
+    if (!visible.length) visible.push(this.styles.danger('No matching choices'));
+    let result = this.margin[0] + visible.join('\n');
+    let header;
+
+    if (this.options.choicesHeader) {
+      header = this.resolve(this.options.choicesHeader, this.state);
+    }
+    logger.debug("renderChoicesEnd");
+    return [header, result].filter(Boolean).join('\n');
   }
 
   /**
@@ -296,6 +399,7 @@ class BasePrompt extends AutoComplete {
    * On submit, don't print focused suggestion.
    */
   format() {
+    logger.debug("format");
     if (this.state.cancelled) return colors.grey(this.value);
     if (this.state.submitted) {
       let value = (this.value = this.input);
@@ -357,6 +461,7 @@ class BasePrompt extends AutoComplete {
    * Render lines that fit on the terminal.
    */
   renderLines(header, prompt, body, footer) {
+    logger.debug("renderLines");
     //ignore header and footer for now
     var string = [prompt, body].filter(Boolean).join("\n");
 
@@ -454,6 +559,7 @@ class BasePrompt extends AutoComplete {
    * Clear asap, this avoids an extra line staying on cancel (why?)
    */
   async render() {
+    logger.debug("render");
     let style = this.options.highlight
       ? this.options.highlight.bind(this)
       : this.styles.placeholder;
@@ -464,23 +570,25 @@ class BasePrompt extends AutoComplete {
 
     let { submitted, size } = this.state;
 
-    await this.clear(size);
+    this.clear(size);
 
     let prompt = "";
-    let header = await this.header();
-    let prefix = await this.prefix();
-    let separator = await this.separator();
-    let message = await this.message();
+    let header = this.header();
+    let prefix = this.prefix();
+    let separator = this.separator();
+    let message = this.msg();
 
     if (this.options.promptLine !== false) {
       prompt = [prefix, message, separator, ""].join(" ");
       this.state.prompt = prompt;
     }
 
-    let output = await this.format();
-    let help = (await this.error()) || (await this.hint());
-    let body = await this.renderChoices();
-    let footer = await this.footer();
+    let output = this.format();
+    //let help = (await this.error()) || (await this.hint());
+    let help = "";
+    let body = this.renderChoices();
+    //let body = "";
+    let footer = this.footer();
 
     if (output) prompt += output;
     if (help && !prompt.includes(help)) prompt += " " + help;
@@ -488,16 +596,79 @@ class BasePrompt extends AutoComplete {
     //await new Promise(res => setTimeout(res, 2000));
     //await new Promise(res => setTimeout(res, 1000));
     var final = this.renderLines(header, prompt, body, footer);
-    await this.write(final);
-    await this.write(this.margin[2]);
-    await this.restore();
+    this.write(final);
+    this.write(this.margin[2]);
+    this.restore();
 
     this.writeCursor();
 
     this.choices = choices;
+    logger.debug("render end");
   }
 
-  async clear(lines = 0) {
+  write(str){
+    logger.debug('write');
+    return super.write(str);
+  }
+
+  footer(){
+    logger.debug("footer");
+    return super.footer();
+  }
+
+  element(name, choice, i) {
+    let { options, state, symbols, timers } = this;
+    let value = options[name] || state[name] || symbols[name];
+    let val = choice && choice[name] != null ? choice[name] : value;
+    if (val === '') return val;
+    let res = this.resolve(val, state, choice, i);
+    if (!res && choice && choice[name]) {
+      return this.resolve(value, state, choice, i);
+    }
+    return res;
+  }
+
+  prefix(){
+    logger.debug("prefix");
+    let element = this.element('prefix') || this.symbols;
+    let timer = this.timers && this.timers.prefix;
+    let state = this.state;
+    state.timer = timer;
+    if (utils.isObject(element)) element = element[state.status] || element.pending;
+    if (!utils.hasColor(element)) {
+      let style = this.styles[state.status] || this.styles.pending;
+      return style(element);
+    }
+    return element;
+  }
+
+  separator(){
+    logger.debug("separator");
+    let element = this.element('separator') || this.symbols;
+    let timer = this.timers && this.timers.separator;
+    let state = this.state;
+    state.timer = timer;
+    let value = element[state.status] || element.pending || state.separator;
+    let ele = this.resolve(value, state);
+    if (utils.isObject(ele)) ele = ele[state.status] || ele.pending;
+    if (!utils.hasColor(ele)) {
+      return this.styles.muted(ele);
+    }
+    return ele;
+  }
+
+  msg() {
+    logger.debug("msg");
+    let message = this.element('message');
+    logger.debug("message" + message);
+    if (!utils.hasColor(message)) {
+      return this.styles.strong(message);
+    }
+    return message;
+  }
+
+  clear(lines = 0) {
+    logger.debug("clear");
     let buffer = this.state.buffer;
     this.state.buffer = "";
     if ((!buffer && !lines) || this.options.show === false) return;
@@ -604,6 +775,6 @@ class BasePrompt extends AutoComplete {
   }
 }
 
-// new BasePrompt({footer: function(){return "aaaa";}, multiline:true, choices: ["a"]}).run();
+//new BasePrompt({footer: function(){return "aaaa";}, multiline:true, choices: ["a"]}).run();
 
 module.exports = BasePrompt;
