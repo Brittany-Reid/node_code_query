@@ -77,6 +77,14 @@ var defaultLineStart = {
     option: false
 }
 
+var defaultPaste = {
+    name: 'v',
+    ctrl: true,
+    meta: false,
+    shift: false,
+    option: false,
+}   
+
 var dflt = {
     keybindings: {
         autocomplete: defaultAutocomplete,
@@ -87,7 +95,8 @@ var dflt = {
         lineEnd: defaultLineEnd,
         lineStart: defaultLineStart,
         historyDown: defaultHistoryDown,
-        historyUp: defaultHistoryUp
+        historyUp: defaultHistoryUp,
+        paste: defaultPaste
     }
 }
 
@@ -131,6 +140,10 @@ function setupKeybindings(){
 
     if(!config.has("keybindings.lineStart") || JSON.stringify(config.get("keybindings.lineStart")) == '{}'){
         config.set("keybindings.lineStart", defaultLineStart);
+    }
+
+    if(!config.has("keybindings.paste") || JSON.stringify(config.get("keybindings.paste")) == '{}'){
+        config.set("keybindings.paste", defaultPaste);
     }
 
 }

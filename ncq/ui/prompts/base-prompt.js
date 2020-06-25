@@ -9,6 +9,7 @@ const { width } = require("enquirer/lib/utils");
 const keypress = require('enquirer/lib/keypress');
 const utils = require('enquirer/lib/utils');
 const {getLogger} = require("../../logger");
+const ncp = require("copy-paste-win32fix")
 
 var logger = getLogger();
 
@@ -138,6 +139,12 @@ class BasePrompt extends AutoComplete {
       return this.toggle();
     }
 
+    //paste
+    var check = this.keys["paste"];
+    if (this.isKey(key, check)) {
+      return this.paste();
+    }
+
     if (!this.isSuggesting) {
       //cursor up and cursor down
       var check = this.keys["cursorUp"];
@@ -217,6 +224,28 @@ class BasePrompt extends AutoComplete {
     }
     this.cursor = i + 1;
     return this.render();
+  }
+
+  paste(){
+    var cc= ncp.paste();
+
+    // cc = "paste: " + JSON.stringify(cc);
+
+    cc = cc.replace(/\r\n/g, "\n");
+    
+    //currentClipboard.replace(/\r\n/g, "\n");
+
+    //console.log(currentClipboard);
+
+    var before  = this.input.slice(0, this.cursor);
+    var after = this.input.slice(this.cursor);
+    this.input = before + cc;
+
+    this.cursor = this.input.length;
+
+    this.input += after;
+
+    this.render();
   }
 
   /**
