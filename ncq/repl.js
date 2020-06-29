@@ -2,6 +2,7 @@ const repl = require("repl");
 const PromptReadable = require("./ui/prompt-readable");
 const DataHandler = require("./data-handler");
 const path = require("path");
+const Store = require("data-store");
 const natural = require("natural");
 const fs = require("fs");
 const cprocess = require("child_process");
@@ -35,6 +36,7 @@ const our_stopwords = [
 
 const LOGDIR = path.join(BASE, "logs/repl");
 const SNIPPETDIR = path.join(BASE, "data/snippets");
+const HISTORYDIR = path.join(BASE, "history-repl.json");
 const VERSION = "1.0.0";
 const NAME = "NCQ";
 const threshold_sim = 0.25;
@@ -205,7 +207,11 @@ async function main() {
     message: "[" + installedPackages.join(" ") + "]",
     footer: footer,
     multiline: true,
-    scroll: true
+    scroll: true,
+    history: {
+      store: new Store({ path: HISTORYDIR}),
+      autosave: true,
+    },
   });
 
   //set options
