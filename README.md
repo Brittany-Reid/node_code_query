@@ -18,9 +18,8 @@ NCQ can be used to start node.js REPLs and find code snippets for given strings.
 
 1. Download and install Node.js and NPM (https://nodejs.org/en/)
 2. Clone this repository.
-3. Download the dataset and unzip into the data directory (https://doi.org/10.5281/zenodo.3836540) Our system requires an offline dataset of NPM readme files. This dataset is too large to upload to Github (600MB compressed, 2.6GB uncompressed). Please download the file from this link https://zenodo.org/record/3836540/files/readmes.zip?download=1, unzip it and put the containing JSON file into the data directory.
-4. (Optional) Download the info dataset from here: (https://doi.org/10.5281/zenodo.3898749). This contains information about packages such as dependancies, forks and stars. (Note: for now this is not filtered in anyway, we don't use it yet. I just need to include the link).
-5. Run `npm install` in the repository directory to install dependencies.
+3. Download the code snippet and package information data set (https://doi.org/10.5281/zenodo.3923490) and unzip into the data directory. Our system requires an offline dataset that is too large to upload to Github.
+4. Run `npm install` in the repository directory to install dependencies.
 
 ## Example
 
