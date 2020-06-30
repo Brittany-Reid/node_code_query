@@ -18,7 +18,6 @@
   "dependencies": {
     "ansi-colors": "^4.1.1",
     "copy-paste-win32fix": "^1.4.0",
-    "csv-parse": "^4.10.1",
     "data-store": "^4.0.3",
     "enquirer": "^2.3.5",
     "eslint": "^7.3.1",

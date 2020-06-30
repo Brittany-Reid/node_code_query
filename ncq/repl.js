@@ -7,6 +7,7 @@ const natural = require("natural");
 const fs = require("fs");
 const cprocess = require("child_process");
 const winston = require("winston");
+var events = require('events');
 const fse = require("fs-extra");
 const {getLogger} = require("./logger");
 const {footer} = require("./ui/footer");
@@ -35,7 +36,7 @@ const our_stopwords = [
 ];
 
 const LOGDIR = path.join(BASE, "logs/repl");
-const SNIPPETDIR = path.join(BASE, "data/snippets");
+const SNIPPETDIR = path.join(BASE, "data/snippets.json");
 const HISTORYDIR = path.join(BASE, "history-repl.json");
 const VERSION = "1.0.0";
 const NAME = "NCQ";
@@ -195,8 +196,31 @@ async function main() {
   data = new DataHandler();
   //load tasks
   await data.loadTasks(path.join(BASE, "data/tasks.txt"));
+
+  //loading event emitter
+  var loadingProgress = new events.EventEmitter();
+
+  console.log('LOADING SNIPPETS');
+
+  //we tick 10 times
+  var progress = 0;
+  loadingProgress.on("progress", function(){
+    progress += 10;
+    console.log(progress + "%...");
+    //for now this is just really simple, we can do a fancy progress bar or something later
+  });
+
+  loadingProgress.on("end", function(){
+    //newline
+    console.log("");
+  })
+
   //load snippets
-  await data.loadSnippets(SNIPPETDIR);
+  //data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
+  data.loadSnippets(SNIPPETDIR, loadingProgress);
+
+
+
   taskMap = data.getTasks();
   var tasks = Array.from(taskMap.keys());
 
