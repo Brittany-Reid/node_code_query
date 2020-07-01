@@ -17,30 +17,11 @@ if (parts[parts.length - 1] != "node_code_query") {
   BASE = path.join(BASE, "..");
 }
 
-/* library description */
-const library_desc = {};
-/* snippet description */
-const snippets = {};
-// keywords extracted from package description and snippet description (needs to clean up)
-const tfidf = new natural.TfIdf();
-// my stop words
-const our_stopwords = [
-  "package",
-  "js",
-  "based",
-  "zero",
-  "providing",
-  "massive",
-  "amounts",
-];
-
 const LOGDIR = path.join(BASE, "logs/repl");
 const SNIPPETDIR = path.join(BASE, "data/snippets");
 const HISTORYDIR = path.join(BASE, "history-repl.json");
 const VERSION = "1.0.0";
 const NAME = "NCQ";
-const threshold_sim = 0.25;
-const NUM_KEYWORDS = 20;
 var installedPackages = [];
 var data;
 var taskMap;
@@ -129,14 +110,6 @@ const state = {
       myRepl.inputStream.setSnippets(snippets);
     }
     // set = snippets[string.trim()];
-    // if (set == undefined) {
-    //   console.log("could not find any sample for this package");
-    // } else {
-    //   //convert set to array
-    //   var array = Array.from(set);
-    //   //set snippets to be cyclable
-    //   myRepl.inputStream.setSnippets(array);
-    // }
     return;
   },
 
@@ -220,6 +193,7 @@ async function main() {
     ignoreUndefined: true,
     input: pReadable,
     output: process.stdout,
+    breakEvalOnSigint: true
   };
 
   myRepl = repl.start(options);

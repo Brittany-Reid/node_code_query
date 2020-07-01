@@ -5,6 +5,8 @@ const path = require("path");
 const Entities = require("html-entities").AllHtmlEntities;
 const stripHtml = require("string-strip-html");
 
+var id = 0;
+
 
 /*
  * Copied from markdown-to-txt (it has an outdated dependency!)
@@ -108,6 +110,8 @@ const README_DIR = path.join(BASE, "data/SampleReadmes.json");
 const SNIPPET_DIR = path.join(BASE, "analysis/results/snippets.json");
 const CSV_DIR = path.join(BASE, "analysis/results/snippets.csv");
 const StreamObject = require("stream-json/streamers/StreamObject");
+const StreamArray = require("stream-json/streamers/StreamArray");
+const { info } = require("console");
 const FENCE = /^\`\`\`(\s*)([\w_-]+)?\s*$/;
 const OBJECT_ARRAY_OPEN = /({|\[)/;
 const STRING = /"([^"\\]*(\\.[^"\\]*)*)"|\'([^\'\\]*(\\.[^\'\\]*)*)\'/;
@@ -195,10 +199,10 @@ async function getRandomReadmes() {
  * Uses stream-json to load the database without storing it into memory.
  * Returns a promise when the end event triggers.
  */
-async function readFile(onData = function () {}, onEnd = function () {}, file) {
+async function readFile(onData = function () {}, onEnd = function () {}, file, streamer = StreamObject.withParser() ) {
   return (promise = new Promise((resolve, reject) => {
     //create pipeline
-    const pipeline = fs.createReadStream(file).pipe(StreamObject.withParser());
+    const pipeline = fs.createReadStream(file).pipe(streamer);
 
     //on data, load into memory
     pipeline.on("data", async (data) => {
@@ -414,6 +418,9 @@ function getSnippets(readme, package) {
             );
             snippetObject["snippet"] = block;
             snippetObject["num"] = num;
+            //global id
+            snippetObject["id"] = id;
+            id++;
             num++;
             snippets.push(snippetObject);
             snippetObject = {};
@@ -550,24 +557,83 @@ function format(string) {
   return text;
 }
 
+//reduce info.json down to only packages we have snippets for
+async function getInfo(){
+  var info_dir = "data/info.json";
+  var newInfo_dir = "data/packageStats.json";
+  var packages = [];
+  var infoObject = [];
+
+
+  var snippets  = fs.readFileSync("data/snippets.json", {encoding : "utf-8"});
+  snippets = JSON.parse(snippets);
+  for(var i=0; i<snippets.length; i++){
+    var package = snippets[i];
+    var name = package["package"];
+    packages.push(name);
+  }
+
+
+  // var stream = fs.createReadStream("data/readmes.json", {encoding: "utf-8"});
+
+  function onData(data){
+    var value = data["value"];
+    var package = value["Name"]
+    if(packages.includes(package)){
+      infoObject.push(value);
+    }
+
+  }
+
+  function onEnd(){
+    console.log(packages.length + ", " + infoObject.length);
+  }
+
+  await readFile(onData, onEnd, info_dir, StreamArray.withParser());
+
+  fs.writeFileSync(newInfo_dir, "[", {encoding: "utf-8"});
+  for(var i=0; i<infoObject.length; i++){
+    var o = infoObject[i];
+    if(i != 0){
+      fs.appendFileSync(newInfo_dir, ", ", {encoding: "utf-8"});
+    }
+    fs.appendFileSync(newInfo_dir, JSON.stringify(o), {encoding: "utf-8"})
+  }
+  fs.appendFileSync(newInfo_dir, "]", {encoding: "utf-8"})
+}
+
 //comment out unless u need to generate a new set of readmes
 //getRandomReadmes();
 
 //gets snippets
- main();
+// main();
 
 //run on full db
-// main2();
+//main2();
 
-// function readdddd(){
-//   var snippets  = fs.readFileSync("data/snippets.json", {encoding : "utf-8"});
-//   console.log(JSON.parse(snippets));
+//verify json file is parsable
+function readdddd(){
+  var snippets  = fs.readFileSync("data/snippets.json", {encoding : "utf-8"});
+  var data = JSON.parse(snippets);
 
-//   // var a= [];
-//   // readFile(function(data){console.log(data["value"])}, function(){console.log(a.length)}, "data/snippets.json")
-// }
+  var count = 0;
+
+  for(var pk of data){
+    count += pk["snippets"].length;
+  }
+
+  console.log(count)
+
+  //console.log(JSON.parse(snippets));
+
+  // var a= [];
+  // readFile(function(data){console.log(data["value"])}, function(){console.log(a.length)}, "data/snippets.json")
+}
 
 // readdddd();
+
+//getInfo(); //run with node --max-old-space-size=12192 analysis/readmes for more RAM
+//dont worry, the final files will be much smaller + js stores strings in utf-16, and we're not doing any optimization here
 
 
 //when we want to make a spreadsheet
