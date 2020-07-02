@@ -601,7 +601,7 @@ class BasePrompt extends AutoComplete {
    * Move cursor
    * Clear asap, this avoids an extra line staying on cancel (why?)
    */
-  async render() {
+  render() {
     logger.debug("render");
     let style = this.options.highlight
       ? this.options.highlight.bind(this)
@@ -614,6 +614,7 @@ class BasePrompt extends AutoComplete {
     let { submitted, size } = this.state;
 
     this.clear(size);
+
 
     let prompt = "";
     let header = this.header();
@@ -647,6 +648,51 @@ class BasePrompt extends AutoComplete {
 
     this.choices = choices;
     logger.debug("render end");
+  }
+
+  renderNoClear(){
+    let style = this.options.highlight
+      ? this.options.highlight.bind(this)
+      : this.styles.placeholder;
+
+    let color = this.highlight(this.input, style);
+    let choices = this.choices;
+    this.choices = choices.map((ch) => ({ ...ch, message: color(ch.message) }));
+
+    let { submitted, size } = this.state;
+
+    let prompt = "";
+    let header = this.header();
+    let prefix = this.prefix();
+    let separator = this.separator();
+    let message = this.msg();
+
+    if (this.options.promptLine !== false) {
+      prompt = [prefix, message, separator, ""].join(" ");
+      this.state.prompt = prompt;
+    }
+
+    let output = this.format();
+    //let help = (await this.error()) || (await this.hint());
+    let help = "";
+    let body = this.renderChoices();
+    //let body = "";
+    let footer = this.footer();
+
+    if (output) prompt += output;
+    if (help && !prompt.includes(help)) prompt += " " + help;
+
+    //await new Promise(res => setTimeout(res, 2000));
+    //await new Promise(res => setTimeout(res, 1000));
+    var final = this.renderLines(header, prompt, body, footer);
+
+    this.write(final);
+    //this.write(this.margin[2]);
+    //this.restore();
+
+    //this.writeCursor();
+
+    this.choices = choices;
   }
 
   write(str) {
@@ -712,8 +758,10 @@ class BasePrompt extends AutoComplete {
   }
 
   clear(lines = 0) {
-    logger.debug("clear");
+    logger.debug("clear lines: " + lines + "buffer length: " + this.state.buffer.length);
     let buffer = this.state.buffer;
+    //sometimes lines has a number despite no buffer!
+    if(buffer.length == 0|| lines.length == 0) return;
     this.state.buffer = "";
     if ((!buffer && !lines) || this.options.show === false) return;
 
@@ -750,6 +798,7 @@ class BasePrompt extends AutoComplete {
     let promptLine = prompt + (input ? " " + input : "");
     let len = promptLine.length;
     let after = len < first.length ? first.slice(len + 1) : "";
+    logger.debug("sections: " + lines.slice(1).length);
     return { header, prompt: first, after, rest: lines.slice(1), last };
   }
 
@@ -758,6 +807,7 @@ class BasePrompt extends AutoComplete {
       this.lineBuffer,
       this.cursor + width_of(this.state.prompt)
     );
+    logger.debug(coords);
     coords[0] = coords[0] - this.topLine;
 
     this.prevCoords = coords;

@@ -8,8 +8,9 @@ const fs = require("fs");
 const cprocess = require("child_process");
 const winston = require("winston");
 const fse = require("fs-extra");
-const {getLogger} = require("./logger");
-const {footer} = require("./ui/footer");
+const { getLogger } = require("./logger");
+const { footer } = require("./ui/footer");
+const stream= require("stream");
 
 var BASE = __dirname;
 parts = BASE.split("/");
@@ -29,6 +30,7 @@ var options = {};
 var myRepl;
 var logger;
 
+
 /**
  * REPL functions.
  */
@@ -36,19 +38,18 @@ const state = {
   /**
    * Get packages given a task.
    */
-  packages(string){
+  packages(string) {
     var task = string.trim();
     console.log("");
     console.log("task: " + task);
-    if(taskMap.has(task)){
+    if (taskMap.has(task)) {
       var list = taskMap.get(task);
       console.log("packages: ");
-      list.forEach(element => {
-        console.log(" - " + element.slice(0, element.length-5));
+      list.forEach((element) => {
+        console.log(" - " + element.slice(0, element.length - 5));
       });
       console.log("");
-    }
-    else{
+    } else {
       console.log("Can find no packages for task: " + task);
     }
   },
@@ -103,10 +104,9 @@ const state = {
 
   samples(string) {
     var snippets = data.getSnippetsFor(string);
-    if(!snippets || snippets.length < 1){
+    if (!snippets || snippets.length < 1) {
       console.log("could not find any sample for this task");
-    }
-    else{
+    } else {
       myRepl.inputStream.setSnippets(snippets);
     }
     // set = snippets[string.trim()];
@@ -132,7 +132,9 @@ const state = {
    */
   help() {
     console.log("========================================");
-    console.log("samples(str)             lists samples catalogued for that package");
+    console.log(
+      "samples(str)             lists samples catalogued for that package"
+    );
     console.log("packages(str)            lists packages for a given task");
     console.log("install(str)             install given package");
     console.log("uninstall(str)           uninstall given package");
@@ -147,13 +149,13 @@ function defineReplFunctions() {
 /**
  * Process args for installed packages.
  */
-function processArgs(){
+function processArgs() {
   var args = process.argv.slice(2);
   installedPackages = [];
 
-  for(var pk of args){
+  for (var pk of args) {
     //ignore passed options
-    if(!pk.trim().startsWith("--")){
+    if (!pk.trim().startsWith("--")) {
       installedPackages.push(pk);
     }
   }
@@ -182,18 +184,61 @@ async function main() {
     multiline: true,
     scroll: true,
     history: {
-      store: new Store({ path: HISTORYDIR}),
+      store: new Store({ path: HISTORYDIR }),
       autosave: true,
     },
   });
+
+  class PromptWritable extends stream.Writable{
+    constructor(promptReadable, options){
+      super(options);
+      this.isTTY = process.stdout.isTTY;
+      this.cleared = false;
+
+      this.promptReadable = promptReadable;
+    }
+
+    write(str){
+      var prompt = this.promptReadable.p;
+      var buffer;
+      if(prompt) prompt = prompt.prompt;
+      if(prompt){
+        if(!prompt.state.submitted){
+          buffer = prompt.state.buffer;
+          prompt.clear();
+          prompt.restore();
+        }
+      }
+
+      process.stdout.write(str);
+
+      if(prompt && !prompt.state.submitted){
+        //process.stdout.write(buffer);
+        //process.stdout.write("\n");
+        //waiting also works, but i dont want to make this async if i dont have to!
+        //new Promise(res => setTimeout(res, 100));
+        //prompt.render();
+
+        prompt.renderNoClear();
+      }
+    }
+
+    _write(str, encoding, done){
+
+      process.stdout.write(str);
+      done();
+    }
+  }
+
+  var pWritable = new PromptWritable(pReadable);
 
   //set options
   options = {
     prompt: "",
     ignoreUndefined: true,
     input: pReadable,
-    output: process.stdout,
-    breakEvalOnSigint: true
+    output: pWritable,
+    breakEvalOnSigint: true,
   };
 
   myRepl = repl.start(options);
