@@ -34,9 +34,10 @@ class SuggestionPrompt extends BasePrompt {
   }
 
   /**
-   * Extend keypress for history.
+   * Extend handleKey for history.
    */
-  async keypress(input, key = {}) {
+  async handleKey(input, key) {
+
     //history up
     var check = this.keys["historyUp"];
     if (this.isKey(key, check)) {
@@ -48,8 +49,8 @@ class SuggestionPrompt extends BasePrompt {
     if (this.isKey(key, check)) {
       return this.historyDown();
     }
-    //otherwise,
-    return super.keypress(input, key);
+
+    super.handleKey(input, key);
   }
 
   /**

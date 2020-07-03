@@ -1,6 +1,6 @@
 const SuggestionPrompt = require("./suggestion-prompt");
 const placeholder = require("enquirer/lib/placeholder");
-const utils = require('enquirer/lib/utils');
+const utils = require("enquirer/lib/utils");
 const { to_width, width_of } = require("to-width");
 
 /**
@@ -15,7 +15,7 @@ class CodePrompt extends SuggestionPrompt {
     // this.initial = this.options.initial;
     this.cursor = this.input.length;
     //set initial
-    if(this.snippets && this.snippets.length > 0){
+    if (this.snippets && this.snippets.length > 0) {
       this.setInput(this.snippets[0].trim());
       this.snippetIndex = 0;
       this.cursor = this.input.length;
@@ -28,7 +28,7 @@ class CodePrompt extends SuggestionPrompt {
 
     //cycle array
     this.snippetIndex++;
-    if (this.snippetIndex > this.snippets.length-1) {
+    if (this.snippetIndex > this.snippets.length - 1) {
       this.snippetIndex = 0;
     }
     //insert
@@ -36,20 +36,24 @@ class CodePrompt extends SuggestionPrompt {
 
     //move cursor
     this.cursor = this.input.length;
-    
+
     //must render before moving cursor
     this.render();
   }
 
-  setInput(input){
+  setInput(input) {
     this.input = input.replace(/\r\n/g, "\n");
   }
 
-  keypress(input, key = {}) {
+  /**
+   * Extend handleKeys for cycle.
+   */
+  async handleKey(input, key) {
+
     // no choices being displayed
     if (!this.isSuggesting) {
       //if we have snippets
-      if(this.snippets && this.snippets.length > 0){
+      if (this.snippets && this.snippets.length > 0) {
         //snippet cycle
         var check = this.keys["cycle"];
         if (this.isKey(key, check)) {
@@ -57,9 +61,9 @@ class CodePrompt extends SuggestionPrompt {
         }
       }
     }
-    return super.keypress(input, key);
-  }
 
+    super.handleKey(input, key);
+  }
 }
 
 module.exports = CodePrompt;
