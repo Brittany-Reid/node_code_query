@@ -449,20 +449,38 @@ class BasePrompt extends AutoComplete {
     return super.format();
   }
 
-  getCoords(lines, cursor) {
+  /**
+   * Set wrapped = true to handle wrapped lines. This is for compatibility reasons for now.
+   */
+  getCoords(lines, cursor, wrapped = false) {
+    //logger.debug(lines);
     var length = 0;
+    var wrapoffset = 0;
     var l = lines.length - 1;
     var x = 0;
     for (let i = 0; i < lines.length; i++) {
       var line = stripAnsi(lines[i]) + "\n";
+
       x = cursor - length;
       length += line.length;
       if (cursor < length) {
         l = i;
         break;
       }
+
+      // if(wrapped){
+      //   if(line.length > this.columns){
+      //     length -= 1;
+      //   }
+      // }
     }
+    if(wrapped){
+      x += this.newLineOffset;
+    }
+
+    //x += wrapoffset;
     //x = length - cursor;
+    logger.debug([l, x]);
     return [l, x];
   }
 
@@ -511,21 +529,26 @@ class BasePrompt extends AutoComplete {
     if (footer) {
       rows = rows - 1;
     }
-    var columns = this.width;
+    this.columns = this.width;
     //space for scroll bar
     if (this.scroll) {
-      columns -= 2;
+      this.columns -= 1;
     }
     var cursor = this.cursor + width_of(this.state.prompt);
 
     //get lines
-    var wrapped = wrapAnsi(string, columns, {
+    var wrapped = wrapAnsi(string, this.columns, {
       trim: false,
+      wordWrap: false,
       hard: true,
     });
+
+    //number of additional newlines from wrapping before cursor to account for when getting coords
+    this.newLineOffset = (stripAnsi(wrapped).substring(0, cursor).split("\n").length-1) - (stripAnsi(string).substring(0, cursor).split("\n").length-1);
+
     this.lineBuffer = wrapped.split("\n");
 
-    var l = this.getCoords(this.lineBuffer, cursor)[0];
+    var l = this.getCoords(this.lineBuffer, cursor, true)[0];
 
     if (l < this.topLine) {
       this.topLine = Math.max(Math.min(l, this.lineBuffer.length - rows), 0);
@@ -552,7 +575,7 @@ class BasePrompt extends AutoComplete {
         if (line == undefined) {
           line = "";
         }
-        line = to_width(line, columns, { align: "left" });
+        line = to_width(line, this.columns, { align: "left" });
         line += " " + scrollArray[i];
         this.renderedLines[i] = line;
       }
@@ -805,9 +828,9 @@ class BasePrompt extends AutoComplete {
   async writeCursor() {
     var coords = this.getCoords(
       this.lineBuffer,
-      this.cursor + width_of(this.state.prompt)
+      this.cursor + width_of(this.state.prompt),
+      true
     );
-    logger.debug(coords);
     coords[0] = coords[0] - this.topLine;
 
     this.prevCoords = coords;
