@@ -82,17 +82,31 @@ class DataHandler {
     return this.tasks;
   }
 
-  async loadTasks(file_path) {
-    var file = await fs.promises.readFile(file_path, "utf-8");
-    const lines = file.split("\n");
+  /**
+   * Loads in tasks from task file, returns task map.
+   */
+  loadTasks(file_path) {
+    //read file into memory
+    var file = fs.readFileSync(file_path, {encoding: "utf-8"});
+    //get lines
+    var lines = file.split("\n");
+
+    //for each line
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      var parts = line.split(", ");
-      //for now handle some bugged tasks
-      var task = parts[0].replace(/(<(\/?)tt>)/g, "").replace("  ", " ");
-      var packages = parts.slice(1);
-      this.tasks.set(task, packages);
+      var split = line.indexOf(", ");
+      var id = line.substring(0, split);
+      //TODO do more processng here:
+      var task = line.substring(split+2).trim().toLowerCase();
+      var ids = this.tasks.get(task);
+      if(!ids){
+        ids  = [];
+      }
+      ids.push(id);
+      this.tasks.set(task, ids);
     }
+
+    return this.tasks;
   }
 
   async loadPackges(dir) {
@@ -292,7 +306,9 @@ class DataHandler {
 }
 
 // var data = new DataHandler();
-// //data.MAX = 10;
+// data.loadTasks("data/id,tasks.txt");
+// console.log(data.tasks.size);
+//data.MAX = 10;
 // data.loadSnippets("data/snippets.json");
 // console.log(data.getSnippetsFor("read a file").length);
 

@@ -170,7 +170,7 @@ async function main() {
   //set up data handler
   data = new DataHandler();
   //load tasks
-  await data.loadTasks(path.join(BASE, "data/tasks.txt"));
+  var tasks = data.loadTasks(path.join(BASE, "data/id,tasks.txt"));
 
   //loading event emitter
   var loadingProgress = new events.EventEmitter();
@@ -194,10 +194,7 @@ async function main() {
   //data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
   data.loadSnippets(SNIPPETDIR, loadingProgress);
 
-
-
-  taskMap = data.getTasks();
-  var tasks = Array.from(taskMap.keys());
+  tasks = Array.from(tasks.keys());
 
   //create input readable
   var pReadable = new PromptReadable({
