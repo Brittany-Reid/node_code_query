@@ -165,24 +165,29 @@ class SuggestionPrompt extends BasePrompt {
       return line();
     }
 
+    var leftPadding = 1;
+    var rightPadding = 2;
+    //calculate available space
+    var availableWidth = this.width - (ind.length + leftPadding + rightPadding + 2);
+    //scale width but constain by terminal width
+    var width = Math.min(this.maxChoiceLength, availableWidth);
+    //if cannot fit, return nothing
+    if(width < 2) return "";
     //resize msg
-    //must be larger than 2
-    var width = Math.max(this.maxChoiceLength, 2);
-    //make sure is within terminal width
-    width = Math.min(width, this.width - (4 + ind.length));
-    if (width < 0) return "";
-    msg = to_width(msg, width + 1, { align: "left" });
-    //if we're displaying more than allowed add arrows
+    msg = to_width(msg, width, { align: "left" });
+
+    //add arrows if there are hidden
     if (this.filtered.length > this.limit) {
       if (i == 0) {
-        msg = msg + "▲";
-      } else if (i == this.limit - 1) {
-        msg = msg + "▼";
-      }
+            msg = msg + "▲";
+          } else if (i == this.limit - 1) {
+            msg = msg + "▼";
+          }
     }
-    //add padding to end
-    msg = to_width(msg, width + 3, { align: "left" });
-    msg = to_width(msg, width + 4, { align: "right" });
+
+    //add padding
+    msg = to_width(msg, width+rightPadding, { align: "left" });
+    msg = to_width(msg, width+rightPadding+leftPadding, { align: "right" });
 
     //colours
     if (focused) {
