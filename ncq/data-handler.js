@@ -83,6 +83,19 @@ class DataHandler {
   }
 
   /**
+   * Formats a task for us. Can return null *in the future, if we want to filter out some tasks.
+   */
+  processTask(task){
+    //remove extra whitespace on ends
+    task = task.trim();
+    //find any blocks of whitespace and make sure they are only spaces
+    task = task.replace(/\s+/g, " ");
+    //normalize to lowercase
+    task = task.toLowerCase();
+    return task;
+  }
+
+  /**
    * Loads in tasks from task file, returns task map.
    */
   loadTasks(file_path) {
@@ -96,14 +109,17 @@ class DataHandler {
       const line = lines[i];
       var split = line.indexOf(", ");
       var id = line.substring(0, split);
-      //TODO do more processng here:
-      var task = line.substring(split+2).trim().toLowerCase();
-      var ids = this.tasks.get(task);
-      if(!ids){
-        ids  = [];
+      var task = line.substring(split+2);
+      task = this.processTask(task);
+      //if the task was valid
+      if(task){
+        var ids = this.tasks.get(task);
+        if(!ids){
+          ids  = [];
+        }
+        ids.push(id);
+        this.tasks.set(task, ids);
       }
-      ids.push(id);
-      this.tasks.set(task, ids);
     }
 
     return this.tasks;

@@ -8,13 +8,17 @@ const BASE = getBaseDirectory();
 const SNIPPET_DIR = path.join(BASE, "data/snippets.json");
 const TASK_PATH = path.join(BASE, "data/id,tasks.txt");
 
+/**
+ * Test DataHandler class. This can be time intensive, because we are loading from a file, so some tests have extended time out.
+ * Feel free to adjust them if they timeout for you.
+ */
 describe('DataHandler', function() {
     describe('functions', function(){
         it('should return map of tasks to packages', async function(){
             var data = new DataHandler();
             var tasks = data.loadTasks(TASK_PATH);
             assert(tasks.size > 0);
-        });
+        }).timeout(60000);
         it('should make keyword array from string', async function(){
             var data = new DataHandler();
             var keywords  = await data.getKeywords("do a task");
@@ -32,7 +36,7 @@ describe('DataHandler', function() {
             // assert(data.packageToSnippet.get("cors").length > 0);
             //has keywords in keyword map
             assert(data.keyWordMap.size > 0);
-        }).timeout(60000); //this may take a while;
+        }).timeout(60000);
         // it('should be able to search for snippets using package name', function(){
         //     var data = new DataHandler();
         //     data.MAX = 1000;
