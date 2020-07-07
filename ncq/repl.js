@@ -191,10 +191,11 @@ async function main() {
   })
 
   //load snippets
-  //data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
+  data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
   data.loadSnippets(SNIPPETDIR, loadingProgress);
 
   tasks = Array.from(tasks.keys());
+
 
   //create input readable
   var pReadable = new PromptReadable({
@@ -210,6 +211,9 @@ async function main() {
     },
   });
 
+  /**
+   * Writable, clears prompt on write.
+   */
   class PromptWritable extends stream.Writable{
     constructor(promptReadable, options){
       super(options);
@@ -234,12 +238,6 @@ async function main() {
       process.stdout.write(str);
 
       if(prompt && !prompt.state.submitted){
-        //process.stdout.write(buffer);
-        //process.stdout.write("\n");
-        //waiting also works, but i dont want to make this async if i dont have to!
-        //new Promise(res => setTimeout(res, 100));
-        //prompt.render();
-
         prompt.renderNoClear();
       }
     }
@@ -251,6 +249,7 @@ async function main() {
     }
   }
 
+  //create the output object for repl, passing the input object so we can get the prompt
   var pWritable = new PromptWritable(pReadable);
 
   //set options

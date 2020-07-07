@@ -10,6 +10,7 @@ const keypress = require("enquirer/lib/keypress");
 const utils = require("enquirer/lib/utils");
 const { getLogger } = require("../../logger");
 const ncp = require("copy-paste-win32fix");
+const { debug } = require("winston");
 
 var logger = getLogger();
 
@@ -518,7 +519,8 @@ class BasePrompt extends AutoComplete {
    */
   renderLines(header, prompt, body, footer) {
     logger.debug("renderLines");
-    //ignore header and footer for now
+
+    //get prompt
     var string = [prompt, body].filter(Boolean).join("\n");
 
     if (this.state.submitted || this.state.cancelled) {
@@ -529,6 +531,10 @@ class BasePrompt extends AutoComplete {
     if (footer) {
       rows = rows - 1;
     }
+    if(header) {
+      rows = rows - 1;
+    }
+
     this.columns = this.width;
     //space for scroll bar
     if (this.scroll) {
@@ -579,6 +585,18 @@ class BasePrompt extends AutoComplete {
         line += " " + scrollArray[i];
         this.renderedLines[i] = line;
       }
+    }
+
+    if(header){
+      var firstLine = header;
+      if (width_of(header) > this.width) {
+        firstLine = wrapAnsi(header, this.width, {
+          trim: false,
+          hard: true,
+        }).split("\n")[0];
+      }
+
+      this.renderedLines.unshift(firstLine);
     }
 
     //if we have a footer
@@ -799,21 +817,33 @@ class BasePrompt extends AutoComplete {
   }
 
   /**
-   * Overwrite sectioons to not rely on prompt, because the prompt may be hidden.
-   * For now this means header must be static, but we don't print header atm.
+   * Overwrite sections to not rely on prompt, because the prompt may be hidden.
+   * Handles header correctly.
    */
   sections() {
     let { buffer, input, prompt } = this.state;
     prompt = colors.unstyle(prompt);
+
+    //find prompt index
     let buf = colors.unstyle(buffer);
     let idx = buf.indexOf(prompt);
+
+    let header = colors.unstyle(this.state.header);
+    //if there is a header and it doesnt have a newline
+    if(header && !header.endsWith("\n")){
+      header += "\n";
+    }
+
     if (idx == -1) {
-      idx = buf.indexOf(this.state.header);
+      idx = buf.indexOf(header);
       if (idx == -1) {
         idx = 0;
       }
+      else{
+        idx += header.length;
+      }
     }
-    let header = buf.slice(0, idx);
+    // let header = buf.slice(0, idx);
     let rest = buf.slice(idx);
     let lines = rest.split("\n");
     let first = lines[0];
@@ -821,7 +851,7 @@ class BasePrompt extends AutoComplete {
     let promptLine = prompt + (input ? " " + input : "");
     let len = promptLine.length;
     let after = len < first.length ? first.slice(len + 1) : "";
-    logger.debug("sections: " + lines.slice(1).length);
+    logger.debug("sections: " + lines);
     return { header, prompt: first, after, rest: lines.slice(1), last };
   }
 
@@ -831,6 +861,7 @@ class BasePrompt extends AutoComplete {
       this.cursor + width_of(this.state.prompt),
       true
     );
+
     coords[0] = coords[0] - this.topLine;
 
     this.prevCoords = coords;

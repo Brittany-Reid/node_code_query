@@ -1,3 +1,5 @@
+const Snippet = require("./snippet");
+
 const fs = require("fs");
 const path = require("path");
 const natural = require("natural");
@@ -218,8 +220,12 @@ class DataHandler {
         var order = snippet["num"];
         var description = snippet["description"];
 
+
+        var snippetObject = new Snippet(code, id, name, order);
+
+
         //snippet map
-        this.idTosnippets.set(id, code);
+        this.idTosnippets.set(id, snippetObject);
 
         //package to ids
         var packSnippets = this.packageToSnippet.get(name);
@@ -258,72 +264,14 @@ class DataHandler {
       eventEmiter.emit("end");
     }
   }
-
-  //old load snippets
-
-  // /**
-  //  * Loads snippets from directory.
-  //  */
-  // async loadSnippets(dir) {
-  //   var files = fs.readdirSync(dir);
-
-  //   for (var i = 0; i < files.length; i++) {
-  //     var file = files[i];
-  //     const filepath = path.join(dir, file);
-  //     const text = fs.readFileSync(filepath, "utf8");
-  //     var extension = path.extname(file);
-  //     if (extension != ".ignore" && extension != ".desc") {
-  //       var name = path.basename(file).split(".")[0];
-  //       var description = "";
-  //       var snippet = "";
-  //       await text.split("\n").forEach(function (line) {
-  //         //comments
-  //         if (line.trim().startsWith("#")) {
-  //           description += line.substring(1).trim() + "\n";
-  //           line = "//" + line.substring(1);
-  //         }
-
-  //         snippet += line + "\n";
-          
-  //         // //snippet
-  //         // else if (line.trim()) {
-  //         //   snippet += line + "\n";
-  //         // }
-  //       });
-  //       var id = this.snippets.size;
-  //       if (snippet) {
-  //         this.snippets.set(id, snippet);
-  //         if (this.packageToSnippet.has(name)) {
-  //           var snippets = this.packageToSnippet.get(name);
-  //           snippets.push(id);
-  //           this.packageToSnippet.set(name, snippets);
-  //         } else {
-  //           var snippets = [id];
-  //           this.packageToSnippet.set(name, snippets);
-  //         }
-  //       }
-
-  //       if (description) {
-  //         var keywords = await this.getKeywords(description);
-  //         keywords = this.stem(keywords);
-  //         for await (var word of keywords) {
-  //           if (!this.keyWordMap.has(word)) {
-  //             this.keyWordMap.set(word, [id]);
-  //           } else {
-  //             var ids = this.keyWordMap.get(word);
-  //             ids.push(id);
-  //             this.keyWordMap.set(word, ids);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 // var data = new DataHandler();
+// data.loadSnippets("data/snippets.json");
+// console.log(data.getSnippetsFor("read a file").length);
+// var data = new DataHandler();
 // data.loadTasks("data/id,tasks.txt");
-// console.log(data.tasks.size);
+
 //data.MAX = 10;
 // data.loadSnippets("data/snippets.json");
 // console.log(data.getSnippetsFor("read a file").length);
