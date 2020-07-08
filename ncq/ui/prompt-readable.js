@@ -29,7 +29,9 @@ class PromptReadable extends stream.Readable {
    * Function that creates a new prompt, runs and returns the result.
    */
   async prompt() {
+    this.p.options.snippets = this.pOptions.snippets;
     var response = await this.p.run();
+    this.pOptions.snippets = [];
     return response;
     //reset snippets for next prompt
     //this.snippets = [];
