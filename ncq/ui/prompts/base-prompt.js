@@ -52,7 +52,6 @@ class BasePrompt extends AutoComplete {
     this.scrollPos = 0;
     this.keybuffer = [];
 
-
     //logger.debug("New prompt init");
   }
 
@@ -83,24 +82,47 @@ class BasePrompt extends AutoComplete {
     await this.complete();
   }
 
+  /**
+   * Complete function is called when typing.
+   */
   async complete() {
     logger.debug("completing");
     this.completing = true;
-    this.choices = this.suggest(this.input, this.state._choices);
-    this.state.limit = void 0; // allow getter/setter to reset limit
-    this.index = Math.min(Math.max(this.visible.length - 1, 0), this.index);
+    if (this.isSuggesting) {
+      this.choices = this.suggest(this.input, this.state._choices);
+      this.state.limit = void 0; // allow getter/setter to reset limit
+      this.index = Math.min(Math.max(this.visible.length - 1, 0), this.index);
+    }
     await this.render();
     this.completing = false;
   }
 
-  scrollDown(i) {
+  scrollDown(i = this.visible.length - 1) {
     if (!this.isSuggesting) return;
-    return super.scrollDown(i);
+
+    //shift this.choices order, this way is faster than spread and slice in enquirer utils
+    var first = this.choices.shift();
+    this.choices.push(first);
+
+    this.index = i;
+    if (this.isDisabled()) {
+      return this.down();
+    }
+    return this.render();
   }
 
-  scrollUp(i) {
+  scrollUp(i = 0) {
     if (!this.isSuggesting) return;
-    return super.scrollUp(i);
+
+    //again, don't make a new array using [pop(), ...choices]
+    var last = this.choices.pop();
+    this.choices.unshift(last);
+
+    this.index = i;
+    if (this.isDisabled()) {
+      return this.up();
+    }
+    return this.render();
   }
 
   /**
@@ -332,13 +354,32 @@ class BasePrompt extends AutoComplete {
       return this.filtered;
     }
 
+    //no input, just return choices
+    if (this.input == "") return choices;
+
+    //if the input hasn't changed since the last call, don't refilter
+    if (this.previousInput == this.input) {
+      return this.filtered;
+    }
+    //otherwise store new for checking
+    this.previousInput = this.input;
+
     //get string to use as a substring from when we pressed tab and what we have written now
     let str = input.toLowerCase().substring(this.suggestionStart, this.cursor);
 
-    //filter
-    this.filtered = choices
-      .filter((ch) => !ch._userInput)
-      .filter((ch) => ch.message.toLowerCase().includes(str));
+    //actual filtering
+    this.filtered = [];
+    for (var i = 0; i < choices.length; i++) {
+      var ch = choices[i];
+      if (ch.message.toLowerCase().startsWith(str)) {
+        this.filtered.push(ch);
+      }
+    }
+
+    // //filter
+    // this.filtered = choices
+    //   .filter((ch) => !ch._userInput)
+    //   .filter((ch) => ch.message.toLowerCase().includes(str));
 
     //if none, return empty
     if (!this.filtered.length) {
@@ -350,7 +391,7 @@ class BasePrompt extends AutoComplete {
   }
 
   /**
-   * Custom ighlight function.
+   * Custom highlight function
    */
   highlight(input, color) {
     let val = input.toLowerCase().substring(this.suggestionStart, this.cursor);
@@ -398,6 +439,14 @@ class BasePrompt extends AutoComplete {
       msg = this.styles.em(msg);
     }
 
+    //get style
+    let style = this.options.highlight
+    ? this.options.highlight.bind(this)
+    : this.styles.placeholder;
+    let color = this.highlight(this.input, style);
+
+    msg = color(msg);
+
     return line();
   }
 
@@ -407,12 +456,12 @@ class BasePrompt extends AutoComplete {
   renderChoices() {
     logger.debug("renderChoices");
 
-    //only when suggesting
+    //if not suggesting, render nothing
     if (!this.isSuggesting) {
       this.visible.push("");
       return "";
     }
-    //no matching, don't print
+    //no matching, render nothing
     if (!this.visible.length) {
       return "";
     }
@@ -475,7 +524,7 @@ class BasePrompt extends AutoComplete {
       //   }
       // }
     }
-    if(wrapped){
+    if (wrapped) {
       x += this.newLineOffset;
     }
 
@@ -531,7 +580,7 @@ class BasePrompt extends AutoComplete {
     if (footer) {
       rows = rows - 1;
     }
-    if(header) {
+    if (header) {
       rows = rows - 1;
     }
 
@@ -550,7 +599,10 @@ class BasePrompt extends AutoComplete {
     });
 
     //number of additional newlines from wrapping before cursor to account for when getting coords
-    this.newLineOffset = (stripAnsi(wrapped).substring(0, cursor).split("\n").length-1) - (stripAnsi(string).substring(0, cursor).split("\n").length-1);
+    this.newLineOffset =
+      stripAnsi(wrapped).substring(0, cursor).split("\n").length -
+      1 -
+      (stripAnsi(string).substring(0, cursor).split("\n").length - 1);
 
     this.lineBuffer = wrapped.split("\n");
 
@@ -587,7 +639,7 @@ class BasePrompt extends AutoComplete {
       }
     }
 
-    if(header){
+    if (header) {
       var firstLine = header;
       if (width_of(header) > this.width) {
         firstLine = wrapAnsi(header, this.width, {
@@ -637,26 +689,29 @@ class BasePrompt extends AutoComplete {
 
   /**
    * Overwrite render
-   * Use our highlight function
+   * Use our highlight function-- moved to actual choice rendering
    * Render using lines
    * Move cursor
    * Clear asap, this avoids an extra line staying on cancel (why?)
    */
   render() {
     logger.debug("render");
-    let style = this.options.highlight
-      ? this.options.highlight.bind(this)
-      : this.styles.placeholder;
 
-    let color = this.highlight(this.input, style);
-    let choices = this.choices;
-    this.choices = choices.map((ch) => ({ ...ch, message: color(ch.message) }));
+    // moved to choice rendering so it only occurs for visible!
+    // if(this.isSuggesting){
+    //   let color = this.highlight(this.input, style);
+    //   let visible = this.visible;
+    //   this.visible = visible.map((ch) => ({ ...ch, message: color(ch.message) }));
+    //   //this.choices = choices.map((ch) => ({ ...ch, message: color(ch.message) }));
+    // }
 
+    //get state
     let { submitted, size } = this.state;
 
+    //clear previous
     this.clear(size);
 
-
+    //get top parts
     let prompt = "";
     let header = this.header();
     let prefix = this.prefix();
@@ -668,6 +723,7 @@ class BasePrompt extends AutoComplete {
       this.state.prompt = prompt;
     }
 
+    //get after parts
     let output = this.format();
     //let help = (await this.error()) || (await this.hint());
     let help = "";
@@ -675,11 +731,10 @@ class BasePrompt extends AutoComplete {
     //let body = "";
     let footer = this.footer();
 
+    //add output and help to prompt
     if (output) prompt += output;
     if (help && !prompt.includes(help)) prompt += " " + help;
 
-    //await new Promise(res => setTimeout(res, 2000));
-    //await new Promise(res => setTimeout(res, 1000));
     var final = this.renderLines(header, prompt, body, footer);
     this.write(final);
     this.write(this.margin[2]);
@@ -687,18 +742,10 @@ class BasePrompt extends AutoComplete {
 
     this.writeCursor();
 
-    this.choices = choices;
     logger.debug("render end");
   }
 
   renderNoClear(){
-    let style = this.options.highlight
-      ? this.options.highlight.bind(this)
-      : this.styles.placeholder;
-
-    let color = this.highlight(this.input, style);
-    let choices = this.choices;
-    this.choices = choices.map((ch) => ({ ...ch, message: color(ch.message) }));
 
     let { submitted, size } = this.state;
 
@@ -723,8 +770,6 @@ class BasePrompt extends AutoComplete {
     if (output) prompt += output;
     if (help && !prompt.includes(help)) prompt += " " + help;
 
-    //await new Promise(res => setTimeout(res, 2000));
-    //await new Promise(res => setTimeout(res, 1000));
     var final = this.renderLines(header, prompt, body, footer);
 
     this.write(final);
@@ -799,15 +844,20 @@ class BasePrompt extends AutoComplete {
   }
 
   clear(lines = 0) {
-    logger.debug("clear lines: " + lines + "buffer length: " + this.state.buffer.length);
+    logger.debug(
+      "clear lines: " + lines + "buffer length: " + this.state.buffer.length
+    );
     let buffer = this.state.buffer;
     //sometimes lines has a number despite no buffer!
-    if(buffer.length == 0|| lines.length == 0) return;
+    if (buffer.length == 0 || lines.length == 0) return;
     this.state.buffer = "";
     if ((!buffer && !lines) || this.options.show === false) return;
 
     //get the currently rendered cursor line
-    var current = this.prevCoords[0];
+    var current = 0;
+    if (this.prevCoords) {
+      current = this.prevCoords[0];
+    }
 
     //down to end of lines
     this.stdout.write(ansi.cursor.down(lines - current));
@@ -830,7 +880,7 @@ class BasePrompt extends AutoComplete {
 
     let header = colors.unstyle(this.state.header);
     //if there is a header and it doesnt have a newline
-    if(header && !header.endsWith("\n")){
+    if (header && !header.endsWith("\n")) {
       header += "\n";
     }
 
@@ -838,8 +888,7 @@ class BasePrompt extends AutoComplete {
       idx = buf.indexOf(header);
       if (idx == -1) {
         idx = 0;
-      }
-      else{
+      } else {
         idx += header.length;
       }
     }

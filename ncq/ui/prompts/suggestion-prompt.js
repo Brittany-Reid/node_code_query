@@ -1,5 +1,5 @@
 const { to_width, width_of } = require("to-width");
-const utils = require('enquirer/lib/utils');
+const utils = require("enquirer/lib/utils");
 const colors = require("ansi-colors");
 const Store = require("data-store");
 const BasePrompt = require("./base-prompt");
@@ -37,7 +37,6 @@ class SuggestionPrompt extends BasePrompt {
    * Extend handleKey for history.
    */
   async handleKey(input, key) {
-
     //history up
     var check = this.keys["historyUp"];
     if (this.isKey(key, check)) {
@@ -65,7 +64,7 @@ class SuggestionPrompt extends BasePrompt {
       var width = width_of(element.message);
       max = Math.max(max, width);
     });
-    this.maxChoiceLength = max;
+    this.maxChoiceLength = max; //max;
 
     return this.filtered;
   }
@@ -113,7 +112,7 @@ class SuggestionPrompt extends BasePrompt {
     if (this.hIndex > prev.length - 1) {
       this.input = this.data.present;
     } else {
-      this.input = prev[this.hIndex]
+      this.input = prev[this.hIndex];
     }
 
     this.cursor = this.input.length;
@@ -165,29 +164,38 @@ class SuggestionPrompt extends BasePrompt {
       return line();
     }
 
+    //get style
+    let style = this.options.highlight
+      ? this.options.highlight.bind(this)
+      : this.styles.placeholder;
+    let color = this.highlight(this.input, style);
+
+    msg = color(msg);
+
     var leftPadding = 1;
     var rightPadding = 2;
     //calculate available space
-    var availableWidth = this.width - (ind.length + leftPadding + rightPadding + 2);
+    var availableWidth =
+      this.width - (ind.length + leftPadding + rightPadding + 2);
     //scale width but constain by terminal width
     var width = Math.min(this.maxChoiceLength, availableWidth);
     //if cannot fit, return nothing
-    if(width < 2) return "";
+    if (width < 2) return "";
     //resize msg
     msg = to_width(msg, width, { align: "left" });
 
     //add arrows if there are hidden
     if (this.filtered.length > this.limit) {
       if (i == 0) {
-            msg = msg + "▲";
-          } else if (i == this.limit - 1) {
-            msg = msg + "▼";
-          }
+        msg = msg + "▲";
+      } else if (i == this.limit - 1) {
+        msg = msg + "▼";
+      }
     }
 
     //add padding
-    msg = to_width(msg, width+rightPadding, { align: "left" });
-    msg = to_width(msg, width+rightPadding+leftPadding, { align: "right" });
+    msg = to_width(msg, width + rightPadding, { align: "left" });
+    msg = to_width(msg, width + rightPadding + leftPadding, { align: "right" });
 
     //colours
     if (focused) {
@@ -230,24 +238,14 @@ class SuggestionPrompt extends BasePrompt {
   }
 
   async message() {
-    let message = await this.element('message');
+    let message = await this.element("message");
     if (!utils.hasColor(message)) {
-      if(this.state.cancelled)
+      if (this.state.cancelled)
         message = this.styles[this.state.status](message);
       return this.styles.strong(message);
     }
     return message;
   }
 }
-
-// new SuggestionPrompt({
-//   choices: ["a", "b", "c", "d", "eeeee"],
-//   limit: 4,
-//   multiline: true,
-//   history: {
-//     store: new Store({ path: `${process.cwd()}/history.json` }),
-//     autosave: true,
-//   },
-// }).run();
 
 module.exports = SuggestionPrompt;
