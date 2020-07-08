@@ -1,4 +1,5 @@
 const Snippet = require("./snippet");
+const Package = require("./package");
 
 const fs = require("fs");
 const path = require("path");
@@ -21,6 +22,8 @@ class DataHandler {
     this.packageToSnippet = new Map();
     //map of keywords to array of snippet ids
     this.keyWordMap = new Map();
+    //map of package name to packageInfo
+    this.packageToInfo = new Map();
   }
 
 
@@ -264,9 +267,36 @@ class DataHandler {
       eventEmiter.emit("end");
     }
   }
+
+  loadInfo(dir){
+    var id = 0;
+
+    //read in file
+    var data = fs.readFileSync(dir, {encoding: "utf-8"});
+
+    data = JSON.parse(data);
+
+    //for each package entry
+    for (var pk of data){
+      //create object from JSON
+      var packageObject = new Package(pk, id);
+
+      //get name
+      var name = packageObject.name;
+
+      //add to map
+      this.packageToInfo.set(name, packageObject);
+
+      //increment id
+      id++;
+    }
+
+  }
 }
 
 // var data = new DataHandler();
+// data.loadInfo("data/packageStats.json");
+// console.log(data.packageToInfo.size);
 // data.loadSnippets("data/snippets.json");
 // console.log(data.getSnippetsFor("read a file").length);
 // var data = new DataHandler();
