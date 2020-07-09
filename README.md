@@ -110,6 +110,8 @@ Variable file stores a buffer with byte contents. Try printing that on screen no
 
 #### repl("package1, package2...")
 
+![REPL](/media/repl().gif)
+
 Start a node.js REPL with the given packages installed.
 
 **Once the REPL is started you can use these commands:**
