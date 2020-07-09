@@ -9,9 +9,9 @@ class Package{
 
         //fields from info object
         this.name = info["Name"];
-
-        //set of snippets belonging to this package
-        this.snippets = [];
+        this.description = info["Description"];
+        this.stars = info["Repository Stars Count"];
+        this.keywords = info["Keywords"].split(",");
     }
 }
 

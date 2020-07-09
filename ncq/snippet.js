@@ -12,6 +12,11 @@
         this.packageName = packageName;
         //order in readme
         this.order = order;
+
+        //initialize values for ranking
+        this.packageStars = -1; //number of stars for package
+        this.lintErrors = -1; //linter errors
+        this.runtimeErrors = 1; //runtime errors
     }
  }
 

@@ -12,8 +12,6 @@ const {footer} = require("./ui/footer");
 
 const OPTIONS = utils.options(process.argv);
 const BASE = utils.getBaseDirectory();
-const SNIPPETDIR = path.join(BASE, "data/snippets");
-var data = new DataHandler();
 var packages = [];
 var logger;
 
@@ -23,7 +21,6 @@ var logger;
  */
 async function main() {
   logger = getLogger();
-  packages = await data.loadPackges(SNIPPETDIR);
 
   var myPrompt = new PromptHandler(SuggestionPrompt, {footer: footer});
 

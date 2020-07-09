@@ -6,6 +6,7 @@ const {getBaseDirectory} = require("../ncq/utils");
 
 const BASE = getBaseDirectory();
 const SNIPPET_DIR = path.join(BASE, "data/snippets.json");
+const INFO_DIR = path.join(BASE, "data/packageStats.json");
 const TASK_PATH = path.join(BASE, "data/id,tasks.txt");
 
 /**
@@ -74,5 +75,33 @@ describe('DataHandler', function() {
             var snippets2 = data.getSnippetsFor("files");
             assert(snippets.length == snippets2.length);
         }).timeout(60000);
+        it('should load in package info', function(){
+            var data = new DataHandler();
+            data.loadInfo(INFO_DIR);
+            assert(data.packageToInfo.size > 0);
+        }).timeout(0);
+        it('should get package snippets', function(){
+            //init datahandler
+            var data = new DataHandler();
+            data.MAX = 1000;
+
+            //load in snippets
+            data.loadSnippets(SNIPPET_DIR);
+
+            //get first packagename to test with
+            var packageName = Array.from(data.packageToSnippet.keys())[0];
+
+            //get snippets for this package name
+            var snippets = data.getPackageSnippets(packageName);
+
+            //must have at least 1 snippet
+            assert(snippets.length > 0);
+        }).timeout(0);
+        it('should get package names for task', function(){
+            var data = new DataHandler();
+            data.loadInfo(INFO_DIR);
+            var packages = data.getPackages("read files")
+            assert(packages.length > 0);
+        }).timeout(0);
     });
 });
