@@ -191,7 +191,7 @@ async function main() {
   })
 
   //load snippets
-  data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
+ // data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
   data.loadSnippets(SNIPPETDIR, loadingProgress);
 
   tasks = Array.from(tasks.keys());
