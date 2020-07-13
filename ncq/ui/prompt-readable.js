@@ -10,6 +10,7 @@ class PromptReadable extends stream.Readable {
   constructor(pOptions = {}, options) {
     super(options);
     this.pOptions = pOptions;
+    this.p = new PromptHandler(CodePrompt, this.pOptions);
   }
 
   setMessage(message = ""){
@@ -25,24 +26,23 @@ class PromptReadable extends stream.Readable {
   }
 
   /**
-   * Function that creates a new prompt. A new prompt will be made on each read.
-   * Overwrite this to use a custom prompt.
+   * Function that creates a new prompt, runs and returns the result.
    */
   async prompt() {
-    this.p = new PromptHandler(CodePrompt, this.pOptions);
+    this.p.options.snippets = this.pOptions.snippets;
+    var response = await this.p.run();
+    this.pOptions.snippets = [];
+    return response;
     //reset snippets for next prompt
-    this.snippets = [];
-    //this.p = new Prompt(this.suggestions, this.prefix, this.message);
+    //this.snippets = [];
   }
 
   /**
    * Overwrite the read function to prompt for input.
    */
   _read(size) {
-    //get prompt
-    this.prompt().then((response) => {
-      //run prompt
-      this.p.run().then((answer) => {
+    //run prompt
+    this.prompt().then((answer) => {
         //if below limit, just push
         if (answer.length < size) {
           this.push(answer + "\n");
@@ -59,11 +59,7 @@ class PromptReadable extends stream.Readable {
               ok = false;
             }
           }
-        }
-      })      
-      //catch ctrl + c
-      //this will catch other things :( be sure to remove when debugging so you don't miss errors.
-      .catch(console.error);
+        }    
     });
   }
 }

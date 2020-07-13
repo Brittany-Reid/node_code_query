@@ -16,7 +16,7 @@ var OPTIONS;
  * Extended Cmd with our commands, for our CLI.
  */
 class NcqCmd extends Cmd {
-  constructor(input, packages) {
+  constructor(input) {
     super(input);
 
     BASE = utils.getBaseDirectory();
@@ -29,7 +29,6 @@ class NcqCmd extends Cmd {
     this.unknown = "Did not understand command: ";
     this.helpPrompt = "Write help to show the list of commands.";
     this.replCmds = Object.keys(repl.state);
-    this.packages = packages;
     this.counter = 0;
   }
 
@@ -58,21 +57,22 @@ class NcqCmd extends Cmd {
     console.log(this.helpPrompt);
   }
 
-  /**
-   * Help for list_packages command.
-   */
-  help_list_packages(inp) {
-    console.log("Lists available packages.");
-  }
+  //TODO: move this into repl later
+  // /**
+  //  * Help for list_packages command.
+  //  */
+  // help_list_packages(inp) {
+  //   console.log("Lists available packages.");
+  // }
 
-  /**
-   * Lists packages in the snippet directory for repl.
-   */
-  do_list_packages(inp) {
-    for (let i = 0; i < this.packages.length; i++) {
-      console.log(this.packages[i]);
-    }
-  }
+  // /**
+  //  * Lists packages in the snippet directory for repl.
+  //  */
+  // do_list_packages(inp) {
+  //   for (let i = 0; i < this.packages.length; i++) {
+  //     console.log(this.packages[i]);
+  //   }
+  // }
 
   /**
    * Help for repl command.
@@ -87,16 +87,8 @@ class NcqCmd extends Cmd {
     if (inp.trim() != "") {
       //print packages
       console.log(inp);
-      //check packages
+      //get list of packages
       required = inp.split(" ");
-      for (let i = 0; i < required.length; i++) {
-        if (!this.packages.includes(required[i])) {
-          console.log(
-            "could not find package " + required[i] + " cannot create repl"
-          );
-          return false;
-        }
-      }
     }
 
     //make temporary folder

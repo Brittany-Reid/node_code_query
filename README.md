@@ -56,10 +56,11 @@ The square brackets indicate that you created a node repl, i.e., you can run any
 NCQ [] >  help() 
 help()
 ========================================
-samples(str)             lists samples catalogued for that package
-packages(str)            lists packages for a given task
-install(str)             install given package
-uninstall(str)           uninstall given package
+samples(String task)                 search for samples using a task 
+packages(String task)                search for packages using a task
+packageSamples(String package)       search for samples for a package
+install(String package)              install given package
+uninstall(String package)            uninstall given package
 ```
 
 4. Type samples("file") and see what happens.
@@ -107,32 +108,34 @@ Variable file stores a buffer with byte contents. Try printing that on screen no
 
 ### Commands
 
-```js
-repl("<packages>")
-```
-Start a node.js REPL with the given packages.
+#### repl("package1, package2...")
+
+![REPL](/media/repl().gif)
+
+Start a node.js REPL with the given packages installed.
 
 **Once the REPL is started you can use these commands:**
 
-```js
-packages("<task>")
-```
-Enter a task to find package recommendations (limited to the tasks in task.txt for now!)
+#### packages("task")
 
-```js
-install("<package>")
-```
+Enter a task to search for packages.
+
+#### samples("task")
+Enter a task to find code snippets. Code snippets will be inserted into your prompt, and cyclable using the cycle button (default <kbd>alt</kbd> + <kbd>1</kbd>)
+
+#### packageSamples("package")
+Search for samples for a specific package.
+
+#### install("package")
+
+![INSTALL](/media/install().gif)
+
 Runs `npm install` for a given package.
 
-```js
-uninstall("<package>")
-```
+#### uninstall("package")
 Runs `npm uninstall` for a given package.
 
-```js
-samples("<package>")
-```
-Enter a package to find code snippets. Code snippets will be inserted into your prompt, and cyclable using the cycle button (default <kbd>alt</kbd> + <kbd>1</kbd>)
+### Keybindings
 
 The following functinalities are mapped to these keys by default:
 

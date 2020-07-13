@@ -7,6 +7,7 @@ const natural = require("natural");
 const fs = require("fs");
 const cprocess = require("child_process");
 const winston = require("winston");
+var events = require('events');
 const fse = require("fs-extra");
 const { getLogger } = require("./logger");
 const { footer } = require("./ui/footer");
@@ -19,7 +20,8 @@ if (parts[parts.length - 1] != "node_code_query") {
 }
 
 const LOGDIR = path.join(BASE, "logs/repl");
-const SNIPPETDIR = path.join(BASE, "data/snippets");
+const SNIPPETDIR = path.join(BASE, "data/snippets.json");
+const INFODIR = path.join(BASE, "data/packageStats.json");
 const HISTORYDIR = path.join(BASE, "history-repl.json");
 const VERSION = "1.0.0";
 const NAME = "NCQ";
@@ -35,23 +37,51 @@ var logger;
  * REPL functions.
  */
 const state = {
+
+
+
+
   /**
    * Get packages given a task.
    */
   packages(string) {
     var task = string.trim();
-    console.log("");
-    console.log("task: " + task);
-    if (taskMap.has(task)) {
-      var list = taskMap.get(task);
-      console.log("packages: ");
-      list.forEach((element) => {
-        console.log(" - " + element.slice(0, element.length - 5));
-      });
-      console.log("");
-    } else {
-      console.log("Can find no packages for task: " + task);
+
+    var packages = data.getPackages(task);
+
+    //limit to top 10
+    console.log(packages.slice(0, 10).join("\n"));
+    if(packages.length > 10){
+      console.log("...and " + packages.length + " more");
     }
+  },
+
+  /**
+   * Get samples given a task.
+   */
+  samples(string) {
+    var snippets = data.getSnippetsFor(string);
+    if (!snippets || snippets.length < 1) {
+      console.log("could not find any samples for this task");
+    } else {
+      myRepl.inputStream.setSnippets(snippets);
+    }
+    // set = snippets[string.trim()];
+    return;
+  },
+
+  /**
+   * Get samples for a package name.
+   */
+  packageSamples(string){
+    var package = string.trim();
+    var snippets = data.getPackageSnippets(package);
+    if (!snippets || snippets.length < 1) {
+      console.log("could not find any samples for this package");
+    } else {
+      myRepl.inputStream.setSnippets(snippets);
+    }
+    return;
   },
 
   /**
@@ -102,17 +132,6 @@ const state = {
     }
   },
 
-  samples(string) {
-    var snippets = data.getSnippetsFor(string);
-    if (!snippets || snippets.length < 1) {
-      console.log("could not find any sample for this task");
-    } else {
-      myRepl.inputStream.setSnippets(snippets);
-    }
-    // set = snippets[string.trim()];
-    return;
-  },
-
   /**
    * Exit REPL.
    */
@@ -132,12 +151,11 @@ const state = {
    */
   help() {
     console.log("========================================");
-    console.log(
-      "samples(str)             lists samples catalogued for that package"
-    );
-    console.log("packages(str)            lists packages for a given task");
-    console.log("install(str)             install given package");
-    console.log("uninstall(str)           uninstall given package");
+    console.log("samples(String task)                 search for samples using a task");
+    console.log("packages(String task)                search for packages using a task");
+    console.log("packageSamples(String package)       search for samples for a package");
+    console.log("install(String package)              install given package");
+    console.log("uninstall(String package)            uninstall given package");
     console.log("");
   },
 };
@@ -169,15 +187,37 @@ async function main() {
   //set up data handler
   data = new DataHandler();
   //load tasks
-  await data.loadTasks(path.join(BASE, "data/tasks.txt"));
+  var tasks = data.loadTasks(path.join(BASE, "data/id,tasks.txt"));
+
+  //loading event emitter
+  var loadingProgress = new events.EventEmitter();
+
+  console.log('LOADING SNIPPETS');
+
+  //we tick 10 times
+  var progress = 0;
+  loadingProgress.on("progress", function(){
+    progress += 10;
+    console.log(progress + "%...");
+    //for now this is just really simple, we can do a fancy progress bar or something later
+  });
+
+  loadingProgress.on("end", function(){
+    //newline
+    console.log("");
+  })
+
   //load snippets
-  await data.loadSnippets(SNIPPETDIR);
-  taskMap = data.getTasks();
-  var tasks = Array.from(taskMap.keys());
+  data.loadInfo(INFODIR);
+  // data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
+  data.loadSnippets(SNIPPETDIR, loadingProgress);
+
+  tasks = Array.from(tasks.keys());
+
 
   //create input readable
   var pReadable = new PromptReadable({
-    choices: tasks.slice(0, 1000).sort(),
+    choices: tasks.slice(0, 10000).sort(),
     prefix: NAME,
     message: "[" + installedPackages.join(" ") + "]",
     footer: footer,
@@ -189,6 +229,9 @@ async function main() {
     },
   });
 
+  /**
+   * Writable, clears prompt on write.
+   */
   class PromptWritable extends stream.Writable{
     constructor(promptReadable, options){
       super(options);
@@ -213,12 +256,6 @@ async function main() {
       process.stdout.write(str);
 
       if(prompt && !prompt.state.submitted){
-        //process.stdout.write(buffer);
-        //process.stdout.write("\n");
-        //waiting also works, but i dont want to make this async if i dont have to!
-        //new Promise(res => setTimeout(res, 100));
-        //prompt.render();
-
         prompt.renderNoClear();
       }
     }
@@ -230,6 +267,7 @@ async function main() {
     }
   }
 
+  //create the output object for repl, passing the input object so we can get the prompt
   var pWritable = new PromptWritable(pReadable);
 
   //set options

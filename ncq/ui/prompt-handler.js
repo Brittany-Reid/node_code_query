@@ -4,6 +4,7 @@ const chalk = require("chalk");
 
 /**
  * Handles constructing a new prompt.
+ * Stores initialized choices between prompt objects in memory for us.
  */
 class PromptHandler {
   /**
@@ -20,15 +21,37 @@ class PromptHandler {
   }
 
   async run() {
+
+    //load with no choices if we have them in memory
+    if(this.choices){
+      this.options.choices = [];
+    }
+
     this.prompt = new this.promptClass(this.options);
-    //for testing, we can run a function on prompt run to insert input through keypress
+
+    //on run
     this.prompt.once("run", async () => {
+      //store formatted choices in memory
+      if(!this.choices){
+        this.choices = this.prompt.choices;
+      }
+      //if we have them already, set all values to loaded
+      else{
+        this.prompt.options.choices = this.choices;
+        this.prompt.state._choices = this.choices;
+        this.prompt.choices = this.choices;
+        this.prompt.state.choices = this.choices;
+      }
+
+      //allow us to send input for testing
       this.input();
     });
     //handle cancelling the prompt using ctrl+c
     this.prompt.on('cancel', () => {
       process.exit();
     });
+
+    //run and return result
     return await this.prompt.run();
   }
 
