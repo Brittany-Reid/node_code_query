@@ -127,6 +127,9 @@ Enter a task to find code snippets. Code snippets will be inserted into your pro
 Search for samples for a specific package.
 
 #### install("package")
+
+![INSTALL](/media/install().gif)
+
 Runs `npm install` for a given package.
 
 #### uninstall("package")
