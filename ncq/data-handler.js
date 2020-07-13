@@ -30,7 +30,7 @@ class DataHandler {
   /**
    * Returns list of package names based on a task.
    */
-  getPackages(task){
+  getPackages(task) {
     var names = [];
 
     //get keywords
@@ -39,23 +39,40 @@ class DataHandler {
     //for each word
     for (var word of words) {
       var currentNames = this.packageKeywords.get(word);
-      if(currentNames){
-        if(names.length < 1){
+      if (currentNames) {
+        if (names.length < 1) {
           names = currentNames;
-        }
-        else{
+        } else {
           //match all words
-          names = names.filter(function (e){
-            if(currentNames.includes(e)){
+          names = names.filter(function (e) {
+            if (currentNames.includes(e)) {
               return true;
             }
-          })
+          });
+        }
+      }
+    }
+
+    //look up task
+    var taskIds = this.tasks.get(task);
+    //if is a task suggestion
+    if (taskIds) {
+      //get snippets
+      for (var id of taskIds) {
+        var snippet = this.idTosnippets.get(id);
+        if (snippet) {
+          //get package name from snippet
+          var name = snippet.packageName;
+
+          //if not already in list of packages, add
+          if (!names.includes(name)) {
+            names.push(name);
+          }
         }
       }
     }
 
     return names;
-
   }
 
   /**
@@ -67,7 +84,7 @@ class DataHandler {
 
     //get snippets
     var snippets = [];
-    for(var id of ids){
+    for (var id of ids) {
       var current = this.idTosnippets.get(id);
       snippets.push(current);
     }
@@ -102,16 +119,33 @@ class DataHandler {
       }
     }
 
+    //look for task suggestion matches
+    var taskIds = this.tasks.get(task);
+    if (taskIds) {
+      ids = ids.concat(taskIds);
+    }
+
     //if we got no ids
     if (ids.length < 1) {
       return [];
     }
 
+    //get snippets from ids
     var snippets = [];
-    for (var id of ids) {
+    for (var i = 0; i < ids.length; i++) {
+      var id = ids[i];
+
+      //handle duplicates, filter out those that are not first occurance
+      if (ids.indexOf(id) == i) continue;
+
       var snippet = this.idTosnippets.get(id);
       snippets.push(snippet);
     }
+
+    // for (var id of ids) {
+    //   var snippet = this.idTosnippets.get(id);
+    //   snippets.push(snippet);
+    // }
 
     return snippets;
   }
@@ -177,7 +211,6 @@ class DataHandler {
     return processed;
   }
 
-  
   /**
    * Returns stemmed keywords.
    */
@@ -206,7 +239,7 @@ class DataHandler {
     });
 
     //if we already have some keyword array, join here
-    if(npmKeywords){
+    if (npmKeywords) {
       words = words.concat(npmKeywords);
     }
 
@@ -214,10 +247,10 @@ class DataHandler {
     words = this.stem(words);
 
     //remove duplicates
-    words = words.filter(function(e, i){
+    words = words.filter(function (e, i) {
       //will be true only on first occurance
       return words.indexOf(e) == i;
-    })
+    });
 
     return words;
   }
@@ -334,9 +367,9 @@ class DataHandler {
       //get keywords
       var keywords = this.getKeywords(description, npmKeywords);
 
-      for(var word of keywords){
+      for (var word of keywords) {
         var names = this.packageKeywords.get(word);
-        if(!names){
+        if (!names) {
           names = [];
         }
         names.push(name);
@@ -352,14 +385,14 @@ class DataHandler {
 }
 
 // var data = new DataHandler();
+// data.loadSnippets("data/snippets.json");
+// data.loadTasks("data/id,tasks.txt");
+
 // data.loadInfo("data/packageStats.json");
 // var packages = data.getPackages("read files");
 // console.log(packages);
 // console.log(data.packageToInfo.size);
-// data.loadSnippets("data/snippets.json");
 // console.log(data.getSnippetsFor("read a file").length);
-// var data = new DataHandler();
-// data.loadTasks("data/id,tasks.txt");
 
 //data.MAX = 10;
 // data.loadSnippets("data/snippets.json");
