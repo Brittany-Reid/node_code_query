@@ -58,11 +58,11 @@ const state = {
     var subset = packages.slice(index, index+25);
 
     var rows = [];
-    for(var i = index; i<subset.length; i++){
+    for(var i = 0; i<subset.length; i++){
       var p = subset[i];
       var name = p.name;
       var description = p.description;
-      rows.push([i.toString(), name, description]);
+      rows.push([(i+index).toString(), name, description]);
     }
 
     //do table using tty-table (will auto scale)
@@ -70,9 +70,9 @@ const state = {
     console.log(ANSI);
 
     //print how many are not displayed
-    var rest =  packages.length-subset.length;
+    var rest =  packages.length-(subset.length+index);
     if(rest > 0){
-      console.log("...and " + rest + " more packages. " + colors.green("Hint: Use packages(\"" + task + "\", 25) to see more."));
+      console.log("...and " + rest + " more packages. " + colors.green("Hint: Use packages(\"" + task + "\", " + (index+25) + ") to see more."));
     }
   },
 
@@ -229,7 +229,7 @@ async function main() {
 
   //load snippets
   data.loadInfo(INFODIR);
-  // data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
+  //data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
   data.loadSnippets(SNIPPETDIR, loadingProgress);
 
   tasks = Array.from(tasks.keys());
