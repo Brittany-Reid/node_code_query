@@ -116,9 +116,11 @@ Start a node.js REPL with the given packages installed.
 
 **Once the REPL is started you can use these commands:**
 
-#### packages("task")
+#### packages("task", index? = 0)
 
-Enter a task to search for packages.
+![PACKAGES](/media/packages().gif)
+
+Enter a task to search for packages. Prints a table of the 25 most starred packages and their descriptions. Optional index argument can be used to see more results. Starts at 0 by default.
 
 #### samples("task")
 Enter a task to find code snippets. Code snippets will be inserted into your prompt, and cyclable using the cycle button (default <kbd>alt</kbd> + <kbd>1</kbd>)

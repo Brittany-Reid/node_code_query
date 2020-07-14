@@ -44,6 +44,68 @@ function generateChoices(choices = [], type){
   return result;
 }
 
+/**
+ * Prints a list as columns that fit given width. Adapted from python Cmd.
+ */
+function printColumns(list = [], displaywidth = 80){
+    var size = list.length;
+    if (size === 1) {
+      console.log(list[0]);
+      return;
+    }
+    var nr,
+      nc,
+      cwidth = 0;
+    var cwidths = [];
+    var b = false;
+    for (nr = 1; nr < list.length; nr++) {
+      nc = size + nr - 1;
+      cwidths = [];
+      var totwidth = -2;
+      for (let c = 0; c < nc; c++) {
+        var cwidth = 0;
+        for (let r = 0; r < nr; r++) {
+          var i = r + nr * c;
+          if (i >= size) {
+            break;
+          }
+          var x = list[i];
+          cwidth = Math.max(cwidth, x.length);
+        }
+        cwidths.push(cwidth);
+        totwidth += cwidth + 2;
+        if (totwidth > displaywidth) {
+          break;
+        }
+      }
+      if (totwidth <= displaywidth) {
+        b = true;
+        break;
+      }
+    }
+    if (!b) {
+      nr = list.length;
+      nc = 1;
+      cwidths = [0];
+    }
+    for (let r = 0; r < nr; r++) {
+      var texts = [];
+      for (let c = 0; c < nc; c++) {
+        var i = r + nr * c;
+        var x = "";
+        if (i >= size) {
+          x = "";
+        } else {
+          x = list[i];
+        }
+        texts.push(x);
+      }
+      console.log(texts.join("  "));
+    }
+}
+
+
 exports.getBaseDirectory = getBaseDirectory;
 exports.generateChoices = generateChoices;
 exports.options = options;
+exports.printColumns = printColumns;

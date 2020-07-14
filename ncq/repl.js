@@ -12,6 +12,8 @@ const fse = require("fs-extra");
 const { getLogger } = require("./logger");
 const { footer } = require("./ui/footer");
 const stream= require("stream");
+let Table = require('tty-table');
+const colors = require('ansi-colors');
 
 var BASE = __dirname;
 parts = BASE.split("/");
@@ -42,17 +44,35 @@ const state = {
 
 
   /**
-   * Get packages given a task.
+   * Lists top 50 packages for a given task. By default prints from 0.
    */
-  packages(string) {
+  packages(string, index = 0) {
     var task = string.trim();
 
+    //search
     var packages = data.getPackages(task);
 
-    //limit to top 10
-    console.log(packages.slice(0, 10).join("\n"));
-    if(packages.length > 10){
-      console.log("...and " + packages.length + " more");
+    //format header
+    var header = [{value: "index", width: 10}, {value: "name"}, {value: "desciption", align: "left"}];
+
+    var subset = packages.slice(index, index+25);
+
+    var rows = [];
+    for(var i = index; i<subset.length; i++){
+      var p = subset[i];
+      var name = p.name;
+      var description = p.description;
+      rows.push([i.toString(), name, description]);
+    }
+
+    //do table using tty-table (will auto scale)
+    let ANSI = Table(header, rows, {headerAlign: "center"}).render()
+    console.log(ANSI);
+
+    //print how many are not displayed
+    var rest =  packages.length-subset.length;
+    if(rest > 0){
+      console.log("...and " + rest + " more packages. " + colors.green("Hint: Use packages(\"" + task + "\", 25) to see more."));
     }
   },
 
@@ -152,7 +172,7 @@ const state = {
   help() {
     console.log("========================================");
     console.log("samples(String task)                 search for samples using a task");
-    console.log("packages(String task)                search for packages using a task");
+    console.log("packages(String task, int index?)    search for packages using a task, optional index to navigate results");
     console.log("packageSamples(String package)       search for samples for a package");
     console.log("install(String package)              install given package");
     console.log("uninstall(String package)            uninstall given package");
@@ -209,7 +229,7 @@ async function main() {
 
   //load snippets
   data.loadInfo(INFODIR);
-  // data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
+  data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
   data.loadSnippets(SNIPPETDIR, loadingProgress);
 
   tasks = Array.from(tasks.keys());

@@ -72,7 +72,17 @@ class DataHandler {
       }
     }
 
-    return names;
+    //get package objects
+    var packages  = [];
+    for(var name of names){
+      var pObject = this.packageToInfo.get(name);
+      packages.push(pObject);
+    }
+
+    //sort packages
+    packages.sort(Package.sort);
+
+    return packages;
   }
 
   /**

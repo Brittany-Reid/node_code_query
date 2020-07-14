@@ -1,0 +1,491 @@
+# The configurations that used for the recording, feel free to edit them
+config:
+
+  # Specify a command to be executed
+  # like `/bin/bash -l`, `ls`, or any other commands
+  # the default is bash for Linux
+  # or powershell.exe for Windows
+  command: powershell.exe
+  
+  # Specify the current working directory path
+  # the default is the current working directory path
+  cwd: D:\Documents\GitHub\node_code_query
+  
+  # Export additional ENV variables
+  env:
+    recording: true
+  
+  # Explicitly set the number of columns
+  # or use `auto` to take the current
+  # number of columns of your shell
+  cols: 147
+  
+  # Explicitly set the number of rows
+  # or use `auto` to take the current
+  # number of rows of your shell
+  rows: 27
+  
+  # Amount of times to repeat GIF
+  # If value is -1, play once
+  # If value is 0, loop indefinitely
+  # If value is a positive number, loop n times
+  repeat: 0
+  
+  # Quality
+  # 1 - 100
+  quality: 100
+  
+  # Delay between frames in ms
+  # If the value is `auto` use the actual recording delays
+  frameDelay: auto
+  
+  # Maximum delay between frames in ms
+  # Ignored if the `frameDelay` isn't set to `auto`
+  # Set to `auto` to prevent limiting the max idle time
+  maxIdleTime: 3000
+  
+  # The surrounding frame box
+  # The `type` can be null, window, floating, or solid`
+  # To hide the title use the value null
+  # Don't forget to add a backgroundColor style with a null as type
+  frameBox:
+    type: floating
+    title: NCQ
+    style:
+      border: 0px black solid
+      # boxShadow: none
+      # margin: 0px
+  
+  # Add a watermark image to the rendered gif
+  # You need to specify an absolute path for
+  # the image on your machine or a URL, and you can also
+  # add your own CSS styles
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+  
+  # Cursor style can be one of
+  # `block`, `underline`, or `bar`
+  cursorStyle: block
+  
+  # Font family
+  # You can use any font that is installed on your machine
+  # in CSS-like syntax
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+  
+  # The size of the font
+  fontSize: 18
+  
+  # The height of lines
+  lineHeight: 1
+  
+  # The spacing between letters
+  letterSpacing: 0
+  
+  # Theme
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffff00"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#00FFFF"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
+  
+# Records, feel free to edit them
+records:
+  # - delay: 499
+  #   content: "\e[2J\e[?25l\e[m\e[H\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\e[H\e]0;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\a\e[?25h"
+  # - delay: 8
+  #   content: "\e[?25lWindows PowerShell\e[42X\e[42C\r\nCopyright (C) Microsoft Corporation. All rights reserved.   \r\n\e[60X\e[60C\r\nTry the new cross-platform PowerShell https://aka.ms/pscore6\e[6;1H\e[?25h"
+  # - delay: 101
+  #   content: "\e[?25lPS D:\\Documents\\GitHub\\node_code_query> \e[?25h"
+  # - delay: 1020
+  #   content: "\e[?25l\e[?25h"
+  # - delay: 8
+  #   content: "\e[93mc"
+  # - delay: 69
+  #   content: "\e[?25l\e[m\e[?25h"
+  # - delay: 9
+  #   content: "\e[?25l\e[93m\bcl\e[?25h"
+  # - delay: 100
+  #   content: "\e[?25l\e[m\e[?25h"
+  # - delay: 8
+  #   content: "\e[?25l\e[93m\e[6;41Hcle\e[?25h"
+  # - delay: 84
+  #   content: "\e[?25l\e[m\e[?25h"
+  # - delay: 8
+  #   content: "\e[?25l\e[93m\e[6;41Hclea\e[?25h"
+  # - delay: 130
+  #   content: "\e[?25l\e[m\e[?25h"
+  # - delay: 9
+  #   content: "\e[?25l\e[93m\e[6;41Hclear\e[?25h"
+  # - delay: 133
+  #   content: "\e[?25l\e[m\r\n\e[?25h"
+  # - delay: 18
+  #   content: "\e[?25l\e[H\e[?25h"
+  - delay: 13
+    content: "\e[?25l\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[40X\e[40C\e[93m     \e[m\e[102X\e[102C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[H\e[?25h"
+  - delay: 10
+    content: "\e[?25lPS D:\\Documents\\GitHub\\node_code_query>\e[108X\e[108C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[1;41H\e[?25h"
+  - delay: 1081
+    content: "\e[?25l\e[?25h"
+  - delay: 8
+    content: "\e[93mn"
+  - delay: 125
+    content: "\e[?25l\e[m\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[93m\bno\e[?25h"
+  - delay: 346
+    content: "\e[?25l\e[m\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[93m\e[1;41Hnod\e[?25h"
+  - delay: 93
+    content: "\e[?25l\e[m\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[93m\e[1;41Hnode\e[?25h"
+  - delay: 140
+    content: "\e[?25l\e[m\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[93m\e[1;41Hnode\e[m \e[?25h"
+  - delay: 438
+    content: "\e[?25l\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[93m\e[1;41Hnode\e[m .\e[?25h"
+  - delay: 228
+    content: "\e[?25l\r\n\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[HPS D:\\Documents\\GitHub\\node_code_query> \e[93mnode\e[m .\e[101X\e[101C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[2;1H\e[?25h"
+  - delay: 62
+    content: "\e[?25l\e[HPS D:\\Documents\\GitHub\\node_code_query> \e[93mnode\e[m .\e[101X\e[101C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[2;1H\e[?25h"
+  - delay: 477
+    content: "\e[?25lWelcome to NCQ Command Line Interface. Type help() for more information.\r\n\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36mNCQ\e[m  \e[90m> \e[m\e[139X\e[139C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[3;9H\e[?25h"
+  - delay: 1338
+    content: "\e[?25l\e[m\e[9;9H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36m\e[3;1HNCQ\e[m  \e[90m> \e[m e\e[138X\e[138C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[m \e[3;10H\e[?25h"
+  - delay: 498
+    content: "\e[?25l\e[9;10H\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[36m\e[3;1HNCQ\e[m  \e[90m> \e[m\e[140X\e[140C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[m \e[3;9H\e[?25h"
+  - delay: 198
+    content: "\e[?25l\e[9;9H\e[?25h"
+  - delay: 11
+    content: "\e[?25l\e[36m\e[3;1HNCQ\e[m  \e[90m> \e[m r\e[138X\e[138C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[m \e[3;10H\e[?25h"
+  - delay: 158
+    content: "\e[?25l\e[9;10H\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[36m\e[3;1HNCQ\e[m  \e[90m> \e[m re\e[137X\e[137C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[m \e[3;11H\e[?25h"
+  - delay: 77
+    content: "\e[?25l\e[9;11H\e[?25h"
+  - delay: 11
+    content: "\e[?25l\e[36m\e[3;1HNCQ\e[m  \e[90m> \e[m rep\e[136X\e[136C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[m \e[3;12H\e[?25h"
+  - delay: 149
+    content: "\e[?25l\e[9;12H\e[?25h"
+  - delay: 11
+    content: "\e[?25l\e[36m\e[3;1HNCQ\e[m  \e[90m> \e[m repl\e[135X\e[135C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[m \e[3;13H\e[?25h"
+  - delay: 332
+    content: "\e[?25l\e[9;13H\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[36m\e[3;1HNCQ\e[m  \e[90m> \e[m repl\e[135X\e[135C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[4;1H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[HPS D:\\Documents\\GitHub\\node_code_query> \e[93mnode\e[m .\e[101X\e[101C\r\nWelcome to NCQ Command Line Interface. Type help() for more information.\e[75X\e[75C\e[36m\r\nNCQ\e[m  \e[90m> \e[m repl\e[135X\e[135C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[4;1H\e[?25h"
+  - delay: 42
+    content: "\e[?25l\e]0;npm\a\e[?25h"
+  - delay: 944
+    content: "\e[?25l\e[?25h"
+  - delay: 9
+    content: "\e[?25l[\e[90m..................\e[m] | rollbackFailedOptional: \e[34mverb\e[m \e[35mnpm-session\e[m 330d880950544ea6\e[67X\e[67C\e[?25h"
+  - delay: 49
+    content: "\e[?25l\r[\e[30m\e[47m       \e[90m\e[49m...........\e[m] | postinstall: \e[30m\e[47msill\e[m \e[35minstall\e[m executeActions\e[84X\e[84C\e[?25h"
+  - delay: 50
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 51
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] - postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 52
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] - postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 50
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 50
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 52
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 50
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 53
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 52
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 51
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 66
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 76
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 50
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 52
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 52
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 62
+    content: "\e[?25l\r[\e[30m\e[47m\e[9X\e[9C\e[90m\e[49m.........\e[m] | postinstall:tmp1: \e[32minfo\e[m \e[35mlifecycle\e[m undefined~postinstall: undefined\e[59X\e[59C\e[?25h"
+  - delay: 26
+    content: "\e[?25l\r\e[147X\e[147C\r\e[?25h"
+  - delay: 9
+    content: "\e[?25lup to date in 0.954s   \r\nfound \e[92m0\e[m vulnerabilities\e[7;1H\e[?25h"
+  - delay: 52
+    content: "\e[?25l\r\n\e[?25h"
+  - delay: 18
+    content: "\e[?25l\e[HPS D:\\Documents\\GitHub\\node_code_query> \e[93mnode\e[m .\e[101X\e[101C\r\nWelcome to NCQ Command Line Interface. Type help() for more information.\e[75X\e[75C\e[36m\r\nNCQ\e[m  \e[90m> \e[m repl\e[135X\e[135C\r\nup to date in 0.954s\e[127X\e[127C\r\nfound \e[92m0\e[m vulnerabilities\e[124X\e[124C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[7;1H\e[?25h"
+  - delay: 2432
+    content: "\e[?25lLOADING SNIPPETS\r\n\e[?25h"
+  - delay: 18121
+    content: "\e[?25l10%...\r\n\e[?25h"
+  - delay: 282
+    content: "\e[?25l20%...\r\n\e[?25h"
+  - delay: 43
+    content: "\e[?25l30%...\r\n\e[?25h"
+  - delay: 9
+    content: "\e[?25l40%...\r\n\e[?25h"
+  - delay: 9
+    content: "\e[?25l50%...\r\n60%...\r\n\e[?25h"
+  - delay: 9
+    content: "\e[?25l70%...\r\n80%...\r\n90%...\r\n\e[?25h"
+  - delay: 9
+    content: "\e[?25l100%...\e[19;1H\e[?25h"
+  - delay: 106
+    content: "\e[?25l\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[?25h"
+  - delay: 809
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m\e[137X\e[137C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[m\e[19;11H\e[?25h"
+  - delay: 10237
+    content: "\e[?25l\e[25;11H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m p\e[135X\e[135C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;12H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;12H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36m\e[19;1HNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m pa\e[135X\e[135C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[m \e[19;13H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[25;13H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m pac\e[133X\e[133C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;14H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;14H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m pack\e[132X\e[132C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[19;15H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[25;15H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packa\e[131X\e[131C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[19;16H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[25;16H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packag\e[130X\e[130C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[19;17H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[25;17H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m package\e[129X\e[129C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[19;18H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[25;18H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages\e[128X\e[128C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;19H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;19H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\e[127X\e[127C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[m\e[19;20H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[25;20H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"\e[126X\e[126C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;21H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;21H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"w\e[125X\e[125C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;22H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;22H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"wr\e[124X\e[124C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;23H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;23H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"wri\e[123X\e[123C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;24H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;24H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 0
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"writ\e[122X\e[122C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;25H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;25H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write\e[121X\e[121C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;26H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;26H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write\e[121X\e[121C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;27H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;27H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write t\e[119X\e[119C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;28H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;28H\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write to\e[118X\e[118C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;29H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;29H\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write to\e[118X\e[118C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;30H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;30H\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write to c\e[116X\e[116C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;31H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;31H\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write to cs\e[115X\e[115C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;32H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;32H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write to csv\e[114X\e[114C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;33H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;33H\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write to csv\"\e[113X\e[113C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[19;34H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[m\e[25;34H\e[?25h"
+  - delay: 10
+    content: "\e[?25l\e[19;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[19;1H\e[?25h"
+  - delay: 14
+    content: "\e[?25l\e[36mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write to csv\")\e[112X\e[112C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\r\n\e[146X\e[146C\e[100m\r\n keys: autocomplete: <tab>\e[120X\e[120C\e[?25h"
+  - delay: 8
+    content: "\e[?25l\e[m\e[19;35H\e[?25h"
+  - delay: 100
+    content: "\e[?25l\e[25;35H\e[?25h"
+  - delay: 9
+    content: "\e[?25l\e[36m\e[19;1HNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m packages(\"write to csv\")\e[113X\e[113C\r\npackages(\"write to cs\e[126X\e[126C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[20;22H\e[?25h"
+  - delay: 9
+    content: "\e[?25lv\")\r\n\e[?25h"
+  - delay: 5
+    content: "\e[?25l\r\n  ┌─────────┬──────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────┐\r\n  │\e[33m  index  \e[m│\e[33m         name\e[9X\e[9C\e[m│\e[33m                                                 desciption\e[49X\e[49C\e[m│\r\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤\r\n  │    0    │      csv-writer      │ Convert objects/arrays into a CSV string or write them into a CSV file                                     │\r\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤\r\n  │    1    │   csv-writer-pipe    │ Convert objects/arrays into a CSV string or write them into a CSV file                                     │\r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │    2    │     indian-ocean     │ A library for reading in and writing out data in Node.js.                                                  │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │    3    │       exceljs        │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │    4    │  @prolaera/exceljs   │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │    5    │ @markdicksonjr/excel │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  │         │          js          │                                                                                                            │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │    6    │  exceljs-fixed-font  │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │    7    │     csv-interact     │ Write programs to easily interact with csv files                                                           │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │    8    │      rx-to-csv       │ RxJS 5 operator to write data into a CSV file                                                              │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h"
+  - delay: 17
+    content: "\e[?25l\n  │    9    │   tsv-to-database    │ Read tsv/csv stream and transform it to js objects stream. Can write object stream into mongo and sqlite   │  \r\e[?25h\e[?25l\n  │         │                      │ database                                                                                                   │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   10    │       csvdata        │ Async npm module for Node JS that loads, writes, and checks data operating with CSV files.                 │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   11    │     files-to-csv     │ This simple plugin creates a list of files and writes it to csv file                                       │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   12    │  grunt-files-to-csv  │ This is simple plugin that creates a list of files in given destination and writes them to csv file        │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   13    │      write-csv       │ Quickly write json array to a .csv file                                                                    │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   14    │       exceljs2       │ Excel Workbook Manager (forked) - Read and Write xlsx and csv Files.                                       │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   15    │     exceljs-rtl      │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   16    │     exceljs-plus     │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   17    │  exceljs-chrome-app  │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   18    │    sample-exceljs    │ Excel Workbook Manager - Read and Write xlsx and csv Files. From exceljs                                   │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   19    │     exceljs-node     │ Excel Workbook Manager - Read and Write xlsx and csv Files. Fork of exceljs specific to Node.js            │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   20    │      ng-exceljs      │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   21    │ @perkinelmer/exceljs │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   22    │    @pinemach/csv     │ Read and write CSV data pursuant to RFC 4180.                                                              │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   23    │ exceljs-lightweight  │ Excel Workbook Manager - Read and Write xlsx and csv Files. Fork from exceljs/exceljs                      │  \r\e[?25h\e[?25l\n  ├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  \r\e[?25h\e[?25l\n  │   24    │  @gradecam/exceljs   │ Excel Workbook Manager - Read and Write xlsx and csv Files.                                                │  \r\e[?25h\e[?25l\n  └─────────┴──────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────┘  \r\e[?25h\e[?25l\n\e[147X\e[147C\r\e[?25h\e[?25l...and 1 more packages. \e[32mHint: Use packages(\"write to csv\", 25) to see more.\r\e[?25h\e[?25l\e[m\n\e[147X\e[147C\r\e[?25h\e[?25l\n\e[36m\e[26;1HNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m\e[138X\e[138C\r\n\e[147X\e[147C\r\e[?25h\e[?25l\n\e[147X\e[147C\r\e[?25h\e[?25l\n\e[147X\e[147C\r\e[?25h"
+  - delay: 30
+    content: "\e[?25l\n\e[147X\e[147C\r\e[?25h\e[?25l\n\e[147X\e[147C\r\e[?25h\e[?25l\n\e[100m keys: autocomplete: <tab> | cycle: <alt + 1>\e[101X\e[101C\e[m \e[?25h"
+  - delay: 3000
+    content: "\e[?25l\e[21;11H\e[?25h"
+  # - delay: 7314
+  #   content: "\e[?25l\e[27;11H\e[?25h"
+  # - delay: 9
+  #   content: "\e[?25l\e[21;1H\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[21;1H\e[?25h"
+  # - delay: 9
+  #   content: "\e[?25l\e[90mNCQ\e[m \e[1m\e[97m[]\e[m \e[90m> \e[m \r\n\e[?25h"
+  # - delay: 127
+  #   content: "\e[?25l\e[?25h\e[?25l\e[36mNCQ\e[m  \e[90m> \e[m \e[27;1H\e[?25h"
+  # - delay: 7
+  #   content: "\e[?25l\n\e[100m keys: autocomplete: <tab>\e[120X\e[120C\e[m \e[21;9H\e[?25h"
+  # - delay: 644
+  #   content: "\e[?25l\e[27;9H\e[?25h"
+  # - delay: 2000
+  #   content: "\e[?25l\e[90m\e[21;1HNCQ\e[m  \e[90m> \e[m\e[140X\e[140C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\r\n\e[147X\e[147C\e[22;1H\e[?25h"
+  # - delay: 8
+  #   content: "\e[?25lPS D:\\Documents\\GitHub\\node_code_query> \e]0;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\a\e[?25h"
+  # - delay: 589
+  #   content: "\e[?25l\e[?25h"
+  # - delay: 10
+  #   content: "\e[93me"
+  # - delay: 201
+  #   content: "\e[?25l\e[m\e[?25h"
+  # - delay: 8
+  #   content: "\e[?25l\e[93m\bex\e[?25h"
+  # - delay: 157
+  #   content: "\e[?25l\e[m\e[?25h"
+  # - delay: 9
+  #   content: "\e[?25l\e[93m\e[22;41Hexi\e[?25h"
+  # - delay: 103
+  #   content: "\e[?25l\e[m\e[?25h"
+  # - delay: 9
+  #   content: "\e[?25l\e[92m\e[22;41Hexit\e[?25h"
+  # - delay: 135
+  #   content: "\e[?25l\e[m\r\n\e[?25h"
