@@ -441,8 +441,8 @@ class BasePrompt extends AutoComplete {
 
     //get style
     let style = this.options.highlight
-    ? this.options.highlight.bind(this)
-    : this.styles.placeholder;
+      ? this.options.highlight.bind(this)
+      : this.styles.placeholder;
     let color = this.highlight(this.input, style);
 
     msg = color(msg);
@@ -708,9 +708,6 @@ class BasePrompt extends AutoComplete {
     //get state
     let { submitted, size } = this.state;
 
-    //clear previous
-    this.clear(size);
-
     //get top parts
     let prompt = "";
     let header = this.header();
@@ -736,8 +733,13 @@ class BasePrompt extends AutoComplete {
     if (help && !prompt.includes(help)) prompt += " " + help;
 
     var final = this.renderLines(header, prompt, body, footer);
+
+    this.cursorHide();
+    //clear previous
+    this.clear(size);
     this.write(final);
     this.write(this.margin[2]);
+    this.cursorShow();
     this.restore();
 
     this.writeCursor();
@@ -745,8 +747,7 @@ class BasePrompt extends AutoComplete {
     logger.debug("render end");
   }
 
-  renderNoClear(){
-
+  renderNoClear() {
     let { submitted, size } = this.state;
 
     let prompt = "";
@@ -859,11 +860,13 @@ class BasePrompt extends AutoComplete {
       current = this.prevCoords[0];
     }
 
-    //down to end of lines
-    this.stdout.write(ansi.cursor.down(lines - current));
+    //down to end of lines then clear from bottom up
+    this.stdout.write(
+      ansi.cursor.down(lines - current) + ansi.clear(buffer, this.width)
+    );
 
     //clear from bottom up
-    this.stdout.write(ansi.clear(buffer, this.width));
+    //this.stdout.write(ansi.clear(buffer, this.width));
   }
 
   /**
