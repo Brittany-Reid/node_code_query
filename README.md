@@ -123,7 +123,7 @@ Start a node.js REPL with the given packages installed.
 Enter a task to search for packages. Prints a table of the 25 most starred packages and their descriptions. Optional index argument can be used to see more results. Starts at 0 by default.
 
 #### samples("task")
-Enter a task to find code snippets. Code snippets will be inserted into your prompt, and cyclable using the cycle button (default <kbd>alt</kbd> + <kbd>1</kbd>)
+Enter a task to find code snippets. Code snippets will be inserted into your prompt, and cyclable using the cycle button (default <kbd>alt</kbd> + <kbd>1</kbd>) or according to your platform. For that see the session Keybindings.
 
 #### packageSamples("package")
 Search for samples for a specific package.
@@ -147,12 +147,15 @@ The following functinalities are mapped to these keys by default:
 | open and close autocompletes | <kbd>tab</kbd> |
 | insert autocomplete | <kbd>enter</kbd> |
 | scroll autocompletes | <kbd>up</kbd> / <kbd>down</kbd> |
-| Cycle snippets | <kbd>alt</kbd> + <kbd>1</kbd> |
+| Cycle snippets Windows | <kbd>alt</kbd> + <kbd>1</kbd> |
+| Cycle snippets MacOs | <kbd>shift</kbd> + <kbd>right</kbd> |
 | View command history | <kbd>ctrl</kbd> + <kbd>up</kbd> / <kbd>ctrl</kbd> + <kbd>down</kbd> |
 | Move cursor up and down in REPL | <kbd>up</kbd> / <kbd>down</kbd> |
 | New line in REPL | <kbd>down</kbd> on last line |
 
 Because of different terminal configurations, many of these keybindings can be modified in the config.json file generated on first run.
+
+For MacOs, delete the files `config.Js` and `config.json`, rename the file config-macos.Js to config.Js and go ahead with your projects.
 
 
 <!--
