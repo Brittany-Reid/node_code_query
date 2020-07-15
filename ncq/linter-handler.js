@@ -1,22 +1,19 @@
 const Linter = require("eslint").Linter;
 
 /**
- * We need some alternative to Java compiler errors. This is currently just testing out how to get this.
- * Will likely rename the class.
+ * Handles linting with ESLint. Constructs linter with our settings.
  */
 
 
-class Compiler {
+class LinterHandler {
   constructor() {
-  }
-
-  async compile(code){
-  }
-
-  async compile(code) {
-    var linter = new Linter();
-    var rules = [...linter.getRules().entries()];
+    this.linter = new Linter();
+    //get rules list
+    var rules = [...this.linter.getRules().entries()];
+    //filter to recommended
     rules = rules.filter((data) => data[1].meta.docs.recommended);
+
+    //filter severity 
     rules = rules.map((data) => data[0]);
     var config = { rules: {} };
     rules.forEach(function (value, index) {
@@ -64,13 +61,31 @@ class Compiler {
       config.rules[value] = severity;
     });
 
-    config.rules["semi"] = "warn";
-    config.rules["no-useless-constructor"] =  "warn";
-    
+    this.config = config;
 
-    var messages = linter.verify(code, config, { filename: "main.js" });
-    console.log(messages);
+    this.config.rules["semi"] = "warn";
+    this.config.rules["no-useless-constructor"] =  "warn";
+  }
+
+  /**
+   * Lints string code.
+   */
+  lint(code) {
+
+    var messages = this.linter.verify(code, this.config, { filename: "main.js" });
+
+    return messages;
+  }
+
+  /**
+   * Filters an array of messages to error severity only.
+   */
+  static errors(messages){
+    var errors = messages.filter(function(message){
+      if(message.severity == 2) return true;
+    })
+    return errors;
   }
 }
 
-new Compiler().compile("var foo = bar; bar+1");
+module.exports = LinterHandler;
