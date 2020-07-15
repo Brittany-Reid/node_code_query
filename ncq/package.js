@@ -12,13 +12,18 @@ class Package{
         this.description = info["Description"];
         this.stars = info["Repository Stars Count"];
         this.keywords = info["Keywords"].split(",");
+
+        this.rankValue = undefined;
     }
 
     /**
      * Calculate a rank value for packages. For now let's just use stars.
      */
     rank(){
-        return this.stars;
+        if(!this.rankValue){
+            this.rankValue = this.stars;
+        }
+        return this.rankValue;
     }
 
     /**

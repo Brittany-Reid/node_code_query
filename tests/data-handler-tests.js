@@ -14,7 +14,7 @@ const TASK_PATH = path.join(BASE, "data/id,tasks.txt");
  * Feel free to adjust them if they timeout for you.
  */
 describe("DataHandler", function () {
-    var data;
+  var data;
   /**
    * Runs once. Makes a global datahandler.
    */
@@ -24,19 +24,19 @@ describe("DataHandler", function () {
   });
 
   describe("functions", function () {
-    it("should load in some snippets", function(){
-        data.loadSnippets(SNIPPET_DIR);
-
-        //has snippets
-        assert(data.idTosnippets.size > 0);
-        //has snippets for packages
-        assert(data.packageToSnippet.size > 0);
-        //has keywords in keyword map
-        assert(data.keyWordMap.size > 0);
+    it("should load in package info", function () {
+      data.loadInfo(INFO_DIR);
+      assert(data.packageToInfo.size > 0);
     }).timeout(0); //no timeout for load
-    it("should load in package info", function(){
-        data.loadInfo(INFO_DIR);
-        assert(data.packageToInfo.size > 0);
+    it("should load in some snippets", function () {
+      data.loadSnippets(SNIPPET_DIR);
+
+      //has snippets
+      assert(data.idTosnippets.size > 0);
+      //has snippets for packages
+      assert(data.packageToSnippet.size > 0);
+      //has keywords in keyword map
+      assert(data.keyWordMap.size > 0);
     }).timeout(0); //no timeout for load
     it("should load in tasks", async function () {
       data.loadTasks(TASK_PATH);
@@ -81,15 +81,13 @@ describe("DataHandler", function () {
       assert(packages.length > 0);
     });
     it("should get package names for task that is a suggestion", function () {
+      var ids = Array.from(data.idTosnippets.keys());
 
-        var ids = Array.from(data.idTosnippets.keys());
+      //add test task
+      data.tasks.set("test task", [ids[0]]);
 
-        //add test task
-        data.tasks.set("test task", [ids[0]]);
-
-
-        var packages = data.getPackages("test task");
-        assert(packages.length > 0);
-      });
+      var packages = data.getPackages("test task");
+      assert(packages.length > 0);
+    });
   });
 });

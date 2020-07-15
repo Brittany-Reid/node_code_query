@@ -28,6 +28,27 @@ class DataHandler {
   }
 
   /**
+   * Takes an array of ids and returns an array of snippet objects.
+   */
+  getSnippetsFromIds(ids = []) {
+    var snippets = [];
+    //get each id
+    for (var i = 0; i < ids.length; i++) {
+      var current = ids[i];
+
+      //handle duplicates, filter out those that are not first occurance
+      if (ids.indexOf(current) != i) continue;
+
+      var snippet = this.idTosnippets.get(current);
+
+      //add to array
+      snippets.push(snippet);
+    }
+
+    return snippets;
+  }
+
+  /**
    * Returns list of package names based on a task.
    */
   getPackages(task) {
@@ -73,8 +94,8 @@ class DataHandler {
     }
 
     //get package objects
-    var packages  = [];
-    for(var name of names){
+    var packages = [];
+    for (var name of names) {
       var pObject = this.packageToInfo.get(name);
       packages.push(pObject);
     }
@@ -92,12 +113,11 @@ class DataHandler {
     //get ids from name to id map
     var ids = this.packageToSnippet.get(packageName);
 
-    //get snippets
-    var snippets = [];
-    for (var id of ids) {
-      var current = this.idTosnippets.get(id);
-      snippets.push(current);
-    }
+    //get snippets from ids
+    var snippets = this.getSnippetsFromIds(ids);
+
+    //sort snippets
+    snippets.sort(Snippet.sort);
 
     return snippets;
   }
@@ -135,27 +155,11 @@ class DataHandler {
       ids = ids.concat(taskIds);
     }
 
-    //if we got no ids
-    if (ids.length < 1) {
-      return [];
-    }
-
     //get snippets from ids
-    var snippets = [];
-    for (var i = 0; i < ids.length; i++) {
-      var id = ids[i];
+    var snippets = this.getSnippetsFromIds(ids);
 
-      //handle duplicates, filter out those that are not first occurance
-      if (ids.indexOf(id) == i) continue;
-
-      var snippet = this.idTosnippets.get(id);
-      snippets.push(snippet);
-    }
-
-    // for (var id of ids) {
-    //   var snippet = this.idTosnippets.get(id);
-    //   snippets.push(snippet);
-    // }
+    //sort snippets
+    snippets.sort(Snippet.sort);
 
     return snippets;
   }
@@ -308,7 +312,10 @@ class DataHandler {
         var order = snippet["num"];
         var description = snippet["description"];
 
-        var snippetObject = new Snippet(code, id, name, order);
+        //get package info
+        var packageInfo = this.packageToInfo.get(name);
+
+        var snippetObject = new Snippet(code, id, name, order, packageInfo);
 
         //snippet map
         this.idTosnippets.set(id, snippetObject);
@@ -395,17 +402,8 @@ class DataHandler {
 }
 
 // var data = new DataHandler();
-// data.loadSnippets("data/snippets.json");
-// data.loadTasks("data/id,tasks.txt");
-
 // data.loadInfo("data/packageStats.json");
-// var packages = data.getPackages("read files");
-// console.log(packages);
-// console.log(data.packageToInfo.size);
-// console.log(data.getSnippetsFor("read a file").length);
-
-//data.MAX = 10;
 // data.loadSnippets("data/snippets.json");
-// console.log(data.getSnippetsFor("read a file").length);
+// console.log(data.idTosnippets.size);
 
 module.exports = DataHandler;
