@@ -125,11 +125,28 @@ var defaultPaste = {
 };
 
 /**
+ * Copy entire input to clipboard (even non-visble snippets scrolled off screen).
+ */
+var defaultCopy = {
+  name: "s",
+  ctrl: true,
+  meta: false,
+  shift: false,
+  option: false,
+};
+
+/**
  * Mac specific keybindng overwrites.
  */
 var macDefaults = {
   keybindings: {
-    cycle: defaultCycle,
+    cycle: {
+      name: "right",
+      ctrl: false,
+      meta: false,
+      shift: true,
+      option: false,
+    },
   },
 };
 
@@ -154,6 +171,7 @@ var dflt = {
     historyDown: defaultHistoryDown,
     historyUp: defaultHistoryUp,
     paste: defaultPaste,
+    copy: defaultCopy,
   },
 };
 
@@ -187,7 +205,6 @@ function reassignKeys(keySet) {
  * The config object is handled using data-store, allowing us to read and write to the file easily.
  */
 function setupKeybindings() {
-
   //overwrite defaults based on OS
   handleOS();
 
@@ -266,6 +283,13 @@ function setupKeybindings() {
     JSON.stringify(config.get("keybindings.paste")) == "{}"
   ) {
     config.set("keybindings.paste", keys.paste);
+  }
+
+  if (
+    !config.has("keybindings.copy") ||
+    JSON.stringify(config.get("keybindings.copy")) == "{}"
+  ) {
+    config.set("keybindings.copy", keys.copy);
   }
 }
 

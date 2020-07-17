@@ -21,7 +21,7 @@ function getKey(key){
         if(binding["option"]){
             name = "option + " + name;
         }
-        if(binding["option"]){
+        if(binding["ctrl"]){
             name = "ctrl + " + name;
         }
         return name;
@@ -53,6 +53,12 @@ function footer(){
         if(command){
             content.push(key + ": <" + command + ">");
         }
+    }
+    
+    key = "copy";
+    command = getKey(key);
+    if(command){
+        content.push(key + " all" + ": <" + command + ">");
     }
 
     content = " keys: " + content.join(" | ");

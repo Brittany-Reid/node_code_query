@@ -176,6 +176,12 @@ class BasePrompt extends AutoComplete {
       return this.paste();
     }
 
+    //copy
+    var check = this.keys["copy"];
+    if (this.isKey(key, check)) {
+      return this.copy();
+    }
+
     if (!this.isSuggesting) {
       //cursor up and cursor down
       var check = this.keys["cursorUp"];
@@ -258,16 +264,15 @@ class BasePrompt extends AutoComplete {
     return this.render();
   }
 
+  /**
+   * Multiline paste.
+   */
   paste() {
     var cc = ncp.paste();
 
     // cc = "paste: " + JSON.stringify(cc);
 
     cc = cc.replace(/\r\n/g, "\n");
-
-    //currentClipboard.replace(/\r\n/g, "\n");
-
-    //console.log(currentClipboard);
 
     var before = this.input.slice(0, this.cursor);
     var after = this.input.slice(this.cursor);
@@ -278,6 +283,14 @@ class BasePrompt extends AutoComplete {
     this.input += after;
 
     this.render();
+  }
+
+  /**
+   * Copy entire input to clipboard.
+   */
+  copy(){
+    logger.debug("copied");
+    ncp.copy(this.input);
   }
 
   /**

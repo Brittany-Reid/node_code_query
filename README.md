@@ -147,11 +147,13 @@ The following functinalities are mapped to these keys by default:
 | open and close autocompletes | <kbd>tab</kbd> |
 | insert autocomplete | <kbd>enter</kbd> |
 | scroll autocompletes | <kbd>up</kbd> / <kbd>down</kbd> |
-| Cycle snippets Windows | <kbd>alt</kbd> + <kbd>1</kbd> |
-| Cycle snippets MacOs | <kbd>shift</kbd> + <kbd>right</kbd> |
+| Cycle snippets (Windows) | <kbd>alt</kbd> + <kbd>1</kbd> |
+| Cycle snippets (MacOs) | <kbd>shift</kbd> + <kbd>right</kbd> |
 | View command history | <kbd>ctrl</kbd> + <kbd>up</kbd> / <kbd>ctrl</kbd> + <kbd>down</kbd> |
 | Move cursor up and down in REPL | <kbd>up</kbd> / <kbd>down</kbd> |
 | New line in REPL | <kbd>down</kbd> on last line |
+| Paste multi-line | <kbd>ctrl</kbd> + <kbd>v</kbd> |
+| Copy current input | <kbd>ctrl</kbd> + <kbd>s</kbd> |
 
 Because of different terminal configurations, many of these keybindings can be modified in the config.json file generated on first run.
 
