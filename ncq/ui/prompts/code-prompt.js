@@ -18,8 +18,8 @@ class CodePrompt extends SuggestionPrompt {
     this.cursor = this.input.length;
     //set initial
     if (this.snippets && this.snippets.length > 0) {
-      this.doSnippet(0);
       this.snippetIndex = 0;
+      this.doSnippet(0);
       this.cursor = this.input.length;
     }
   }
@@ -29,16 +29,20 @@ class CodePrompt extends SuggestionPrompt {
     var code = snippet.code;
     this.setInput(code.trim());
 
-    this.snippetInfoBar(snippet.packageName);
+    this.snippetInfoBar(snippet.packageName, snippet.rank());
   }
 
   /**
    * Format a header with package info. ATM must be 1 line.
    */
-  snippetInfoBar(packageName) {
+  snippetInfoBar(packageName, rank) {
     var packageLabel = "package: ";
 
     var headerString = packageLabel + packageName;
+
+    headerString += ", " + "rank: " + rank;
+
+    headerString += ", " + (this.snippetIndex+1) + "/" + this.snippets.length;
 
     //make full length
     headerString = to_width(headerString, this.width);
@@ -71,7 +75,10 @@ class CodePrompt extends SuggestionPrompt {
   }
 
   setInput(input) {
+    //remove carriage returns
     this.input = input.replace(/\r\n/g, "\n");
+    //remove tabs
+    this.input = input.replace(/\t/g, "  ")
   }
 
   /**

@@ -101,7 +101,7 @@ class DataHandler {
     }
 
     //sort packages
-    packages.sort(Package.sort);
+    packages = packages.sort(Package.sort);
 
     return packages;
   }
@@ -117,7 +117,7 @@ class DataHandler {
     var snippets = this.getSnippetsFromIds(ids);
 
     //sort snippets
-    snippets.sort(Snippet.sort);
+    snippets = snippets.sort(Snippet.sort);
 
     return snippets;
   }
@@ -159,7 +159,7 @@ class DataHandler {
     var snippets = this.getSnippetsFromIds(ids);
 
     //sort snippets
-    snippets.sort(Snippet.sort);
+    snippets = snippets.sort(Snippet.sort);
 
     return snippets;
   }

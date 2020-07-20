@@ -49,6 +49,10 @@ class Snippet {
             return -1;
         }
 
+        if(!rankA && !rankB){
+            return 0;
+        }
+
         //if a is less than b
         if(rankA < rankB){
             return 1;

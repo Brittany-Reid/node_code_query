@@ -14,6 +14,7 @@ const { footer } = require("./ui/footer");
 const stream= require("stream");
 let Table = require('tty-table');
 const colors = require('ansi-colors');
+const Snippet = require("./snippet");
 
 var BASE = __dirname;
 parts = BASE.split("/");
@@ -84,6 +85,20 @@ const state = {
     if (!snippets || snippets.length < 1) {
       console.log("could not find any samples for this task");
     } else {
+      
+      function installedSort(a, b){
+        if(installedPackages.includes(a.packageName) && !installedPackages.includes(b.packageName)){
+          return -1;
+        }
+        if(!installedPackages.includes(a.packageName) && installedPackages.includes(b.packageName)){
+          return 1;
+        }
+        //sort is stable so values maintain original order, by rank
+        return 0;
+      }
+
+      snippets.sort(installedSort);
+
       myRepl.inputStream.setSnippets(snippets);
     }
     // set = snippets[string.trim()];

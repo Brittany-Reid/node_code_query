@@ -10,7 +10,7 @@ class Package{
         //fields from info object
         this.name = info["Name"];
         this.description = info["Description"];
-        this.stars = info["Repository Stars Count"];
+        this.stars = parseInt(info["Repository Stars Count"]);
         this.keywords = info["Keywords"].split(",");
 
         this.rankValue = undefined;

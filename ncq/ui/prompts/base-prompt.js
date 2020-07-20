@@ -727,6 +727,8 @@ class BasePrompt extends AutoComplete {
 
     this.line = l;
 
+    logger.debug(this.renderedLines);
+
     var final = this.renderedLines.join("\n");
 
     return final;
