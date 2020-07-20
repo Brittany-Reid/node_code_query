@@ -17,6 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "ansi-colors": "^4.1.1",
+    "chalk": "^4.1.0",
+    "chalk-pipe": "^4.0.0",
     "copy-paste-win32fix": "^1.4.0",
     "data-store": "^4.0.3",
     "enquirer": "^2.3.5",

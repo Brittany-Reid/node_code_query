@@ -1,8 +1,12 @@
-const colors = require("ansi-colors");
+// const colors = require("ansi-colors");
 const { getConfig } = require("../config");
 const { to_width, width_of } = require("to-width");
+const chalkPipe = require('chalk-pipe');
+const chalk= require('chalk');
 
+var config;
 var keys;
+var colors;
 
 function getKey(key){
     var binding = keys[key];
@@ -33,42 +37,57 @@ function getKey(key){
  */
 function footer(){
     //get key bindings
-    if(!keys){
-        var config = getConfig();
+    if(!config){
+        config = getConfig();
         keys = config.get("keybindings");
+        colors = config.get("colors");
     }
 
     var content = [];
 
-    //autocomplete command
-    var key = "autocomplete";
-    var command = getKey(key);
-    if(command){
-        content.push(key + ": <" + command + ">");
+    //set commands for footer
+    //i want an empty array so we can leave elements empty by default
+    var commands = Array(12);
+    commands[0] = "Suggest ";
+    if(this.snippets && this.snippets.length > 1){
+        commands[1] = "Previous ";
+        commands[2] = "Next ";
     }
+    if(this.multiline){
+        commands[3] = "Newline ";
+    }
+    commands[4] = "Clear ";
+    commands[8] = "Copy ";
+    commands[9] = "Paste ";
+    commands[10] = "Help ";
+    commands[11] = "Exit ";
 
-    if(this.snippets){
-        key = "cycle";
-        command = getKey(key);
-        if(command){
-            content.push(key + ": <" + command + ">");
+
+    for(var i=1; i<=12; i++){
+        var key = "F" + i;
+        var command = commands[i-1];
+        if(!command){
+            command = " ".repeat(5);
         }
-    }
-    
-    key = "copy";
-    command = getKey(key);
-    if(command){
-        content.push(key + " all" + ": <" + command + ">");
+        command = chalkPipe("bg" + colors.contrast + "." + colors.contrastText)(command);
+        content.push(key);
+        content.push(command);
     }
 
-    content = " keys: " + content.join(" | ");
+    //join
+    content = content.join("");
 
+    //get left over width
+    var width = this.width - width_of(content);
 
-    //format length
-    content = to_width(content, this.width);
+    //bold all text
+    content = chalk.bold(content);
 
-    //format colour
-    content = colors.bgBlackBright(content)
+    //add leftover width on end
+    if(width >= 1){
+        content += chalkPipe("bg" + colors.contrast)(" ".repeat(width));
+    }
+
 
     return content;
 }

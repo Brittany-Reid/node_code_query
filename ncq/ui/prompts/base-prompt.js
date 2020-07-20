@@ -1,5 +1,6 @@
 const { AutoComplete, Select, Prompt } = require("enquirer");
 const { to_width, width_of } = require("to-width");
+const chalkPipe = require("chalk-pipe");
 const ansi = require("enquirer/lib/ansi");
 const stripAnsi = require("strip-ansi");
 const wrapAnsi = require("wrap-ansi");
@@ -11,6 +12,7 @@ const utils = require("enquirer/lib/utils");
 const { getLogger } = require("../../logger");
 const ncp = require("copy-paste-win32fix");
 const { debug } = require("winston");
+const { default: chalk } = require("chalk");
 
 var logger = getLogger();
 
@@ -40,6 +42,7 @@ class BasePrompt extends AutoComplete {
 
     //keybindings from config
     this.keys = getConfig().get("keybindings");
+    this.colors = getConfig().get("colors");
 
     //state
     this.isSuggesting = false;
@@ -137,15 +140,23 @@ class BasePrompt extends AutoComplete {
 
   /**
    * Returns true if check is the same as key.
+   * Check can now be an array of bindings!
    */
   isKey(key, check) {
     if (!check) return false;
-    var fields = Object.keys(check);
-    var is = true;
-    for (var i = 0; i < fields.length; i++) {
-      if (check[fields[i]] != key[fields[i]]) {
-        is = false;
+    //check can be an array lets add handling, always treat as array of potential bindings
+    if (!Array.isArray(check)) {
+      check = [check];
+    }
+    for (var binding of check) {
+      var fields = Object.keys(binding);
+      var is = true;
+      for (var i = 0; i < fields.length; i++) {
+        if (binding[fields[i]] != key[fields[i]]) {
+          is = false;
+        }
       }
+      if (is) break;
     }
 
     return is;
@@ -207,6 +218,18 @@ class BasePrompt extends AutoComplete {
       return await this.lineStart();
     }
 
+    //clear
+    var check = this.keys["clear"];
+    if (this.isKey(key, check)) {
+      return this.clearInput();
+    }
+
+    //exit
+    var check = this.keys["exit"];
+    if (this.isKey(key, check)) {
+      return this.cancel();
+    }
+
     //otherwise,
     this.skeypress(input, key);
   }
@@ -225,6 +248,12 @@ class BasePrompt extends AutoComplete {
     if (typeof fn === "function") {
       return await fn.call(this, input, key);
     }
+  }
+
+  clearInput() {
+    this.input = "";
+    this.cursor = 0;
+    return this.render();
   }
 
   /**
@@ -288,7 +317,7 @@ class BasePrompt extends AutoComplete {
   /**
    * Copy entire input to clipboard.
    */
-  copy(){
+  copy() {
     logger.debug("copied");
     ncp.copy(this.input);
   }
@@ -407,6 +436,7 @@ class BasePrompt extends AutoComplete {
    * Custom highlight function
    */
   highlight(input, color) {
+    color = chalkPipe(this.colors.secondary);
     let val = input.toLowerCase().substring(this.suggestionStart, this.cursor);
     return (str) => {
       let s = str.toLowerCase();
@@ -657,6 +687,7 @@ class BasePrompt extends AutoComplete {
       if (width_of(header) > this.width) {
         firstLine = wrapAnsi(header, this.width, {
           trim: false,
+          wordWrap: false,
           hard: true,
         }).split("\n")[0];
       }
@@ -671,6 +702,7 @@ class BasePrompt extends AutoComplete {
       if (width_of(footer) > this.width) {
         lastLine = wrapAnsi(footer, this.width, {
           trim: false,
+          wordWrap: false,
           hard: true,
         }).split("\n")[0];
       }
@@ -826,7 +858,12 @@ class BasePrompt extends AutoComplete {
     if (utils.isObject(element))
       element = element[state.status] || element.pending;
     if (!utils.hasColor(element)) {
-      let style = this.styles[state.status] || this.styles.pending;
+      let style;
+      if (state.status == "submitted" || state.status == "cancelled") {
+        style = this.styles[state.status];
+      } else {
+        style = chalkPipe(this.colors.contrast);
+      }
       return style(element);
     }
     return element;

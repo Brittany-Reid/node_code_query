@@ -3,13 +3,13 @@ const placeholder = require("enquirer/lib/placeholder");
 const utils = require("enquirer/lib/utils");
 const { to_width, width_of } = require("to-width");
 const colors = require("ansi-colors");
+const chalkPipe = require("chalk-pipe");
 
 /**
  * Extension of Suggestion Prompt for use in the REPL.
  * Allows code snippets to be cycled.
  */
 class CodePrompt extends SuggestionPrompt {
-
   constructor(options) {
     super(options);
     this.snippets = this.options.snippets;
@@ -24,7 +24,7 @@ class CodePrompt extends SuggestionPrompt {
     }
   }
 
-  doSnippet(index){
+  doSnippet(index) {
     var snippet = this.snippets[index];
     var code = snippet.code;
     this.setInput(code.trim());
@@ -35,29 +35,30 @@ class CodePrompt extends SuggestionPrompt {
   /**
    * Format a header with package info. ATM must be 1 line.
    */
-  snippetInfoBar(packageName){
+  snippetInfoBar(packageName) {
     var packageLabel = "package: ";
-    //packageLabel = colors.bold(packageLabel);
 
     var headerString = packageLabel + packageName;
 
     //make full length
     headerString = to_width(headerString, this.width);
     //colour
-    headerString = colors.cyan(headerString);
-    //headerString  = colors.bgBlackBright(headerString);
+    headerString = chalkPipe(this.colors.contrast)(headerString);
 
     this.state.header = headerString;
   }
 
-  cycle() {
+  cycle(i = 1) {
     //must have snippets
     if (!this.snippets || this.snippets.length < 1) return;
 
     //cycle array
-    this.snippetIndex++;
-    if (this.snippetIndex > this.snippets.length - 1) {
+    this.snippetIndex += i;
+    if (this.snippetIndex > (this.snippets.length - 1)) {
       this.snippetIndex = 0;
+    }
+    if(this.snippetIndex < 0){
+      this.snippetIndex = this.snippets.length-1;
     }
     //insert
     this.doSnippet(this.snippetIndex);
@@ -77,7 +78,6 @@ class CodePrompt extends SuggestionPrompt {
    * Extend handleKeys for cycle.
    */
   async handleKey(input, key) {
-
     // no choices being displayed
     if (!this.isSuggesting) {
       //if we have snippets
@@ -85,7 +85,20 @@ class CodePrompt extends SuggestionPrompt {
         //snippet cycle
         var check = this.keys["cycle"];
         if (this.isKey(key, check)) {
-          return this.cycle();
+          return this.cycle(1);
+        }
+
+        var check = this.keys["cyclePrev"];
+        if (this.isKey(key, check)) {
+          return this.cycle(-1);
+        }
+      }
+
+      //newline
+      if (this.multiline) {
+        var check = this.keys["newLine"];
+        if (this.isKey(key, check)) {
+          return this.append("\n");
         }
       }
     }

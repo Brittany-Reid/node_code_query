@@ -140,8 +140,8 @@ describe("SuggestionPrompt", function () {
 
       prompt.once("run", async () => {
         //default toggle
-        prompt.keys["autocomplete"] = getDefault().keybindings.autocomplete;
-        await prompt.keypress(null, getDefault().keybindings.autocomplete);
+        prompt.keys["autocomplete"] = getDefault().keybindings.autocomplete[0];
+        await prompt.keypress(null, getDefault().keybindings.autocomplete[0]);
         await prompt.submit();
         await prompt.submit();
       });
@@ -155,11 +155,11 @@ describe("SuggestionPrompt", function () {
 
       prompt.once("run", async () => {
         //default toggle
-        prompt.keys["autocomplete"] = getDefault().keybindings.autocomplete;
+        prompt.keys["autocomplete"] = getDefault().keybindings.autocomplete[0];
         prompt.keys["cursorDown"] = getDefault().keybindings.cursorDown;
         await send("abcd", prompt, false);
         await prompt.keypress(null, getDefault().keybindings.cursorDown);
-        await prompt.keypress(null, getDefault().keybindings.autocomplete);
+        await prompt.keypress(null, getDefault().keybindings.autocomplete[0]);
         await prompt.submit();
         await prompt.submit();
       });

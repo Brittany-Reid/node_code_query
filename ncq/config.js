@@ -6,10 +6,17 @@ const utils = require("./utils");
  * Generates a new config file when one doesn't exist based on defaults.
  * Delete your config to regen a new one.
  * The defaults are a guess of what works well, you can customize your config.json if neccessary.
- * To add mac/linux defaults, just replace = default<Key>.
  */
 
 var config;
+
+/**
+ * Colours. By default the contrast colour will be cyan.
+ * We use chalk-pipe for styles.
+ */
+var defaultContrast = "cyan"; //for contrast text and blocks
+var defaultContrastText = "#000000"; //for text in a contrast box, https://github.com/chalk/chalk/issues/303 use hex for black
+var defaultSecondary = "purple"; //an additional contrast
 
 /**
  * Keybinding that triggers task suggestions.
@@ -22,6 +29,7 @@ var defaultAutocomplete = {
   sequence: "\t",
   raw: "\t",
 };
+
 
 /**
  * Keybinding that triggers code snippet cycling.
@@ -161,17 +169,26 @@ var linuxDefaults = {
 
 var dflt = {
   keybindings: {
-    autocomplete: defaultAutocomplete,
-    cycle: defaultCycle,
-    newLine: defaultNewLine,
+    autocomplete: [defaultAutocomplete, {name: "f1"}],
+    cycle: [defaultCycle, {name: "f3"}],
+    cyclePrev: {name: "f2"},
+    newLine: [defaultNewLine, {name: "f4"}],
     cursorDown: defaultCursorDown,
     cursorUp: defaultCursorUp,
     lineEnd: defaultLineEnd,
     lineStart: defaultLineStart,
     historyDown: defaultHistoryDown,
     historyUp: defaultHistoryUp,
-    paste: defaultPaste,
-    copy: defaultCopy,
+    paste: [defaultPaste, {name:"f10"}],
+    copy: [defaultCopy, {name:"f9"}],
+    clear: {name:"f5"},
+    help: {name: "f11"},
+    exit: {name: "f12"},
+  },
+  colors: {
+    contrast: defaultContrast,
+    contrastText: defaultContrastText,
+    secondary: defaultSecondary,
   },
 };
 
@@ -201,95 +218,45 @@ function reassignKeys(keySet) {
 }
 
 /**
+ * Updates config with defaults if any are missing.
+ */
+function update(category){
+  var settings = dflt[category];
+  var fields = Object.keys(settings);
+
+  for(var field of fields){
+    var name = category + "." + field;
+    var current = config.get(name);
+    
+    if(!current || current == {}){
+      config.set(name, settings[field]);
+    }
+  }
+}
+
+/**
  * Sets up keybindings. If a config.json doesn't already have the key, the default is added.
  * The config object is handled using data-store, allowing us to read and write to the file easily.
  */
 function setupKeybindings() {
+  var current;
+
   //overwrite defaults based on OS
   handleOS();
 
-  //get keys
-  var keys = dflt.keybindings;
+  //do colours
+  if (!config.has("colors")) {
+    //set all defaults
+    config.set("colors",  dflt.colors);
+  } else {
+    update("colors");
+  }
 
+  //do keybindings
   if (!config.has("keybindings")) {
-    config.set("keybindings", "{}");
-  }
-
-  if (
-    !config.has("keybindings.autocomplete") ||
-    JSON.stringify(config.get("keybindings.autocomplete")) == "{}"
-  ) {
-    config.set("keybindings.autocomplete", keys.autocomplete);
-  }
-
-  if (
-    !config.has("keybindings.cycle") ||
-    JSON.stringify(config.get("keybindings.cycle")) == "{}"
-  ) {
-    config.set("keybindings.cycle", keys.cycle);
-  }
-
-  if (
-    !config.has("keybindings.newLine") ||
-    JSON.stringify(config.get("keybindings.newLine")) == "{}"
-  ) {
-    config.set("keybindings.newLine", keys.newLine);
-  }
-
-  if (
-    !config.has("keybindings.cursorUp") ||
-    JSON.stringify(config.get("keybindings.cursorUp")) == "{}"
-  ) {
-    config.set("keybindings.cursorUp", keys.cursorUp);
-  }
-
-  if (
-    !config.has("keybindings.cursorDown") ||
-    JSON.stringify(config.get("keybindings.cursorDown")) == "{}"
-  ) {
-    config.set("keybindings.cursorDown", keys.cursorDown);
-  }
-
-  if (
-    !config.has("keybindings.historyUp") ||
-    JSON.stringify(config.get("keybindings.historyUp")) == "{}"
-  ) {
-    config.set("keybindings.historyUp", keys.historyUp);
-  }
-
-  if (
-    !config.has("keybindings.historyDown") ||
-    JSON.stringify(config.get("keybindings.historyDown")) == "{}"
-  ) {
-    config.set("keybindings.historyDown", keys.historyDown);
-  }
-
-  if (
-    !config.has("keybindings.lineEnd") ||
-    JSON.stringify(config.get("keybindings.lineEnd")) == "{}"
-  ) {
-    config.set("keybindings.lineEnd", keys.lineEnd);
-  }
-
-  if (
-    !config.has("keybindings.lineStart") ||
-    JSON.stringify(config.get("keybindings.lineStart")) == "{}"
-  ) {
-    config.set("keybindings.lineStart", keys.lineStart);
-  }
-
-  if (
-    !config.has("keybindings.paste") ||
-    JSON.stringify(config.get("keybindings.paste")) == "{}"
-  ) {
-    config.set("keybindings.paste", keys.paste);
-  }
-
-  if (
-    !config.has("keybindings.copy") ||
-    JSON.stringify(config.get("keybindings.copy")) == "{}"
-  ) {
-    config.set("keybindings.copy", keys.copy);
+    config.set("keybindings", dflt.keybindings);
+  } else {
+    update("keybindings");
   }
 }
 

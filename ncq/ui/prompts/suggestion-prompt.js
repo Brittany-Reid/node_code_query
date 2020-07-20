@@ -3,6 +3,7 @@ const utils = require("enquirer/lib/utils");
 const colors = require("ansi-colors");
 const Store = require("data-store");
 const BasePrompt = require("./base-prompt");
+const chalkPipe = require("chalk-pipe");
 
 const unique = (arr) => arr.filter((v, i) => arr.lastIndexOf(v) === i);
 const compact = (arr) => unique(arr).filter(Boolean);
@@ -47,6 +48,15 @@ class SuggestionPrompt extends BasePrompt {
     var check = this.keys["historyDown"];
     if (this.isKey(key, check)) {
       return this.historyDown();
+    }
+
+    
+    //help
+    var check = this.keys["help"];
+    if (this.isKey(key, check)) {
+      this.input = "help()";
+      this.submit();
+      return;
     }
 
     super.handleKey(input, key);
@@ -199,9 +209,10 @@ class SuggestionPrompt extends BasePrompt {
 
     //colours
     if (focused) {
-      msg = colors.bold(colors.bgBlackBright(msg));
+      //msg = colors.bold(colors.bgBlackBright(msg));
+      msg = chalkPipe("bg" + this.colors.contrast + ".bold")(msg);
     } else {
-      msg = colors.bgWhite(colors.black(msg));
+      msg = chalkPipe("inverse")(msg);
     }
 
     return line();
