@@ -436,7 +436,6 @@ class BasePrompt extends AutoComplete {
    * Custom highlight function
    */
   highlight(input, color) {
-    color = chalkPipe(this.colors.secondary);
     let val = input.toLowerCase().substring(this.suggestionStart, this.cursor);
     return (str) => {
       let s = str.toLowerCase();

@@ -50,7 +50,6 @@ class SuggestionPrompt extends BasePrompt {
       return this.historyDown();
     }
 
-    
     //help
     var check = this.keys["help"];
     if (this.isKey(key, check)) {
@@ -174,14 +173,6 @@ class SuggestionPrompt extends BasePrompt {
       return line();
     }
 
-    //get style
-    let style = this.options.highlight
-      ? this.options.highlight.bind(this)
-      : this.styles.placeholder;
-    let color = this.highlight(this.input, style);
-
-    msg = color(msg);
-
     var leftPadding = 1;
     var rightPadding = 2;
     //calculate available space
@@ -210,8 +201,15 @@ class SuggestionPrompt extends BasePrompt {
     //colours
     if (focused) {
       //msg = colors.bold(colors.bgBlackBright(msg));
+      //get style
+      let style = chalkPipe(this.colors.secondary);
+      let color = this.highlight(this.input, style);
+      msg = color(msg);
       msg = chalkPipe("bg" + this.colors.contrast + ".bold")(msg);
     } else {
+      let style = chalkPipe("bg" + this.colors.secondary);
+      let color = this.highlight(this.input, style);
+      msg = color(msg);
       msg = chalkPipe("inverse")(msg);
     }
 
