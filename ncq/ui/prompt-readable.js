@@ -1,6 +1,7 @@
-const stream = require("stream");
 const PromptHandler = require("./prompt-handler");
 const CodePrompt = require("./prompts/code-prompt");
+
+const stream = require("stream");
 
 /**
  * Custom extended Readable that prompts a user for input on read().
@@ -29,12 +30,16 @@ class PromptReadable extends stream.Readable {
    * Function that creates a new prompt, runs and returns the result.
    */
   async prompt() {
-    this.p.options.snippets = this.pOptions.snippets;
+    //update options
+    this.p.handleOptions(this.pOptions);
+
+    //do prompt
     var response = await this.p.run();
+
+    //reset single prompt options
     this.pOptions.snippets = [];
+
     return response;
-    //reset snippets for next prompt
-    //this.snippets = [];
   }
 
   /**

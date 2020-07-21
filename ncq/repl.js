@@ -1,28 +1,19 @@
-const repl = require("repl");
 const PromptReadable = require("./ui/prompt-readable");
+const PromptWritable = require("./ui/prompt-writable");
 const DataHandler = require("./data-handler");
+const { footer } = require("./ui/footer");
+const { getLogger } = require("./logger");
+const utils = require("./utils");
+
 const path = require("path");
 const Store = require("data-store");
-const natural = require("natural");
-const fs = require("fs");
 const cprocess = require("child_process");
-const winston = require("winston");
-var events = require('events');
-const fse = require("fs-extra");
-const { getLogger } = require("./logger");
-const { footer } = require("./ui/footer");
-const stream= require("stream");
-let Table = require('tty-table');
-const colors = require('ansi-colors');
-const Snippet = require("./snippet");
+var events = require("events");
+let Table = require("tty-table");
+const colors = require("ansi-colors");
+const repl = require("repl");
 
-var BASE = __dirname;
-parts = BASE.split("/");
-if (parts[parts.length - 1] != "node_code_query") {
-  BASE = path.join(BASE, "..");
-}
-
-const LOGDIR = path.join(BASE, "logs/repl");
+var BASE = utils.getBaseDirectory();
 const SNIPPETDIR = path.join(BASE, "data/snippets.json");
 const INFODIR = path.join(BASE, "data/packageStats.json");
 const HISTORYDIR = path.join(BASE, "history-repl.json");
@@ -30,20 +21,34 @@ const VERSION = "1.0.0";
 const NAME = "NCQ";
 var installedPackages = [];
 var data;
-var taskMap;
 var options = {};
 var myRepl;
 var logger;
 
+/**
+ * Sort comparator that ranks installed packages above non-installed packages.
+ */
+function installedSort(a, b) {
+  if (
+    installedPackages.includes(a.packageName) &&
+    !installedPackages.includes(b.packageName)
+  ) {
+    return -1;
+  }
+  if (
+    !installedPackages.includes(a.packageName) &&
+    installedPackages.includes(b.packageName)
+  ) {
+    return 1;
+  }
+  //sort is stable so values maintain original order, by rank
+  return 0;
+}
 
 /**
  * REPL functions.
  */
 const state = {
-
-
-
-
   /**
    * Lists top 50 packages for a given task. By default prints from 0.
    */
@@ -54,26 +59,41 @@ const state = {
     var packages = data.getPackages(task);
 
     //format header
-    var header = [{value: "index", width: 10}, {value: "name"}, {value: "desciption", align: "left"}];
+    var header = [
+      { value: "index", width: 10 },
+      { value: "name" },
+      { value: "desciption", align: "left" },
+    ];
 
-    var subset = packages.slice(index, index+25);
+    var subset = packages.slice(index, index + 25);
 
     var rows = [];
-    for(var i = 0; i<subset.length; i++){
+    for (var i = 0; i < subset.length; i++) {
       var p = subset[i];
       var name = p.name;
       var description = p.description;
-      rows.push([(i+index).toString(), name, description]);
+      rows.push([(i + index).toString(), name, description]);
     }
 
     //do table using tty-table (will auto scale)
-    let ANSI = Table(header, rows, {headerAlign: "center"}).render()
+    let ANSI = Table(header, rows, { headerAlign: "center" }).render();
     console.log(ANSI);
 
     //print how many are not displayed
-    var rest =  packages.length-(subset.length+index);
-    if(rest > 0){
-      console.log("...and " + rest + " more packages. " + colors.green("Hint: Use packages(\"" + task + "\", " + (index+25) + ") to see more."));
+    var rest = packages.length - (subset.length + index);
+    if (rest > 0) {
+      console.log(
+        "...and " +
+          rest +
+          " more packages. " +
+          colors.green(
+            'Hint: Use packages("' +
+              task +
+              '", ' +
+              (index + 25) +
+              ") to see more."
+          )
+      );
     }
   },
 
@@ -85,18 +105,6 @@ const state = {
     if (!snippets || snippets.length < 1) {
       console.log("could not find any samples for this task");
     } else {
-      
-      function installedSort(a, b){
-        if(installedPackages.includes(a.packageName) && !installedPackages.includes(b.packageName)){
-          return -1;
-        }
-        if(!installedPackages.includes(a.packageName) && installedPackages.includes(b.packageName)){
-          return 1;
-        }
-        //sort is stable so values maintain original order, by rank
-        return 0;
-      }
-
       snippets.sort(installedSort);
 
       myRepl.inputStream.setSnippets(snippets);
@@ -108,7 +116,7 @@ const state = {
   /**
    * Get samples for a package name.
    */
-  packageSamples(string){
+  packageSamples(string) {
     var package = string.trim();
     var snippets = data.getPackageSnippets(package);
     if (!snippets || snippets.length < 1) {
@@ -186,9 +194,15 @@ const state = {
    */
   help() {
     console.log("========================================");
-    console.log("samples(String task)                 search for samples using a task");
-    console.log("packages(String task, int index?)    search for packages using a task, optional index to navigate results");
-    console.log("packageSamples(String package)       search for samples for a package");
+    console.log(
+      "samples(String task)                 search for samples using a task"
+    );
+    console.log(
+      "packages(String task, int index?)    search for packages using a task, optional index to navigate results"
+    );
+    console.log(
+      "packageSamples(String package)       search for samples for a package"
+    );
     console.log("install(String package)              install given package");
     console.log("uninstall(String package)            uninstall given package");
     console.log("");
@@ -227,20 +241,20 @@ async function main() {
   //loading event emitter
   var loadingProgress = new events.EventEmitter();
 
-  console.log('LOADING SNIPPETS');
+  console.log("LOADING SNIPPETS");
 
   //we tick 10 times
   var progress = 0;
-  loadingProgress.on("progress", function(){
+  loadingProgress.on("progress", function () {
     progress += 10;
     console.log(progress + "%...");
     //for now this is just really simple, we can do a fancy progress bar or something later
   });
 
-  loadingProgress.on("end", function(){
+  loadingProgress.on("end", function () {
     //newline
     console.log("");
-  })
+  });
 
   //load snippets
   data.loadInfo(INFODIR);
@@ -248,7 +262,6 @@ async function main() {
   data.loadSnippets(SNIPPETDIR, loadingProgress);
 
   tasks = Array.from(tasks.keys());
-
 
   //create input readable
   var pReadable = new PromptReadable({
@@ -263,44 +276,6 @@ async function main() {
       autosave: true,
     },
   });
-
-  /**
-   * Writable, clears prompt on write.
-   */
-  class PromptWritable extends stream.Writable{
-    constructor(promptReadable, options){
-      super(options);
-      this.isTTY = process.stdout.isTTY;
-      this.cleared = false;
-
-      this.promptReadable = promptReadable;
-    }
-
-    write(str){
-      var prompt = this.promptReadable.p;
-      var buffer;
-      if(prompt) prompt = prompt.prompt;
-      if(prompt){
-        if(!prompt.state.submitted){
-          buffer = prompt.state.buffer;
-          prompt.clear();
-          prompt.restore();
-        }
-      }
-
-      process.stdout.write(str);
-
-      if(prompt && !prompt.state.submitted){
-        prompt.renderNoClear();
-      }
-    }
-
-    _write(str, encoding, done){
-
-      process.stdout.write(str);
-      done();
-    }
-  }
 
   //create the output object for repl, passing the input object so we can get the prompt
   var pWritable = new PromptWritable(pReadable);

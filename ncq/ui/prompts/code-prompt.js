@@ -52,6 +52,14 @@ class CodePrompt extends SuggestionPrompt {
     this.state.header = headerString;
   }
 
+  /**
+   * Extend clear input to clear header too.
+   */
+  clearInput() {
+    this.state.header = "";
+    super.clearInput();
+  }
+
   cycle(i = 1) {
     //must have snippets
     if (!this.snippets || this.snippets.length < 1) return;

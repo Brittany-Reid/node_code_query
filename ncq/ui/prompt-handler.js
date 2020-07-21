@@ -17,6 +17,22 @@ class PromptHandler {
   constructor(promptClass, options = {}) {
     this.promptClass = promptClass;
     this.input = function () {};
+
+    this.defaultOptions = {
+      name: "",
+      prefix: "NCQ",
+      message: "",
+      separator: "> ",
+      limit: 4,
+      initial: "",
+      choices: [],
+      inputNoChoice: true,
+      history: {
+        store: new Store({ path: `${process.cwd()}/history.json` }),
+        autosave: true,
+      },
+    };
+
     this.handleOptions(options);
   }
 
@@ -55,22 +71,12 @@ class PromptHandler {
     return await this.prompt.run();
   }
 
+  /**
+   * Overwrites default options with new options.
+   */
   handleOptions(options) {
     //set defaults
-    this.options = {
-      name: "",
-      prefix: "NCQ",
-      message: "",
-      separator: "> ",
-      limit: 4,
-      initial: "",
-      choices: [],
-      inputNoChoice: true,
-      history: {
-        store: new Store({ path: `${process.cwd()}/history.json` }),
-        autosave: true,
-      },
-    };
+    this.options = this.defaultOptions;
 
     //overwrite with given options
     for (let key of Object.keys(options)) {
