@@ -1,62 +1,65 @@
 const PromptReadable = require("./ui/prompt-readable");
 const PromptWritable = require("./ui/prompt-writable");
-const DataHandler = require("./data-handler");
 const { footer } = require("./ui/footer");
 const { getLogger } = require("./logger");
-const utils = require("./utils");
+const CodeSearch = require("./service/code-search");
 
-const path = require("path");
-const Store = require("data-store");
+const CliProgress = require("cli-progress");
 const cprocess = require("child_process");
-var events = require("events");
+// var events = require("events");
+const Store = require("data-store");
 let Table = require("tty-table");
 const colors = require("ansi-colors");
 const repl = require("repl");
-
-var BASE = utils.getBaseDirectory();
-const SNIPPETDIR = path.join(BASE, "data/snippets.json");
-const INFODIR = path.join(BASE, "data/packageStats.json");
-const HISTORYDIR = path.join(BASE, "history-repl.json");
 const VERSION = "1.0.0";
 const NAME = "NCQ";
-var installedPackages = [];
-var data;
+var searcher;
 var options = {};
-var myRepl;
+var replInstance;
 var logger;
-
-/**
- * Sort comparator that ranks installed packages above non-installed packages.
- */
-function installedSort(a, b) {
-  if (
-    installedPackages.includes(a.packageName) &&
-    !installedPackages.includes(b.packageName)
-  ) {
-    return -1;
-  }
-  if (
-    !installedPackages.includes(a.packageName) &&
-    installedPackages.includes(b.packageName)
-  ) {
-    return 1;
-  }
-  //sort is stable so values maintain original order, by rank
-  return 0;
-}
 
 /**
  * REPL functions.
  */
 const state = {
   /**
+   * REPL Function to search for samples by task, then make cyclable.
+   * @param {String} task - Task to search by
+   */
+  samples(task) {
+    //get snippets
+    var snippets = searcher.snippetsByTask(task);
+    if (!snippets || snippets.length < 1) {
+      console.log("could not find any samples for this task");
+      return;
+    }
+
+    //set cyclable
+    replInstance.inputStream.setSnippets(snippets);
+    return;
+  },
+
+  /**
+   * Get samples for a package name.
+   * @param {String} packageName - Package name to search by
+   */
+  packageSamples(packageName) {
+    var snippets = searcher.snippetsByPackage(packageName);
+    if (!snippets || snippets.length < 1) {
+      console.error(NAME + ": could not find any samples for this package");
+      return;
+    }
+
+    //set cycleable
+    replInstance.inputStream.setSnippets(snippets);
+    return;
+  },
+
+  /**
    * Lists top 50 packages for a given task. By default prints from 0.
    */
-  packages(string, index = 0) {
-    var task = string.trim();
-
-    //search
-    var packages = data.getPackages(task);
+  packages(task, index = 0) {
+    var packages = searcher.packagesByTask(task);
 
     //format header
     var header = [
@@ -76,8 +79,8 @@ const state = {
     }
 
     //do table using tty-table (will auto scale)
-    let ANSI = Table(header, rows, { headerAlign: "center" }).render();
-    console.log(ANSI);
+    let tableANSI = Table(header, rows, { headerAlign: "center" }).render();
+    console.log(tableANSI);
 
     //print how many are not displayed
     var rest = packages.length - (subset.length + index);
@@ -98,94 +101,78 @@ const state = {
   },
 
   /**
-   * Get samples given a task.
-   */
-  samples(string) {
-    var snippets = data.getSnippetsFor(string);
-    if (!snippets || snippets.length < 1) {
-      console.log("could not find any samples for this task");
-    } else {
-      snippets.sort(installedSort);
-
-      myRepl.inputStream.setSnippets(snippets);
-    }
-    // set = snippets[string.trim()];
-    return;
-  },
-
-  /**
-   * Get samples for a package name.
-   */
-  packageSamples(string) {
-    var package = string.trim();
-    var snippets = data.getPackageSnippets(package);
-    if (!snippets || snippets.length < 1) {
-      console.log("could not find any samples for this package");
-    } else {
-      myRepl.inputStream.setSnippets(snippets);
-    }
-    return;
-  },
-
-  /**
    * Install passed package.
-   * TODO: Handle fail.
+   * @param {String} packageString - String list of package names
+   * @param {Object} output - Output option for execSync, by default 'inherit'.
    */
-  install(string, output = "inherit") {
-    //get packages
-    var packages = string.split(" ");
-    //commandline install
-    cprocess.execSync(
-      "npm install " +
-        packages.join(" ") +
-        " --save --production --no-optional",
-      {
-        stdio: output,
-      }
-    );
-    installedPackages = installedPackages.concat(packages);
-    if (myRepl) {
-      myRepl.inputStream.setMessage("[" + installedPackages.join(" ") + "]");
+  install(packageString, output = "inherit") {
+    //get package array
+    var packages = packageString.split(" ");
+    //cli install
+    try {
+      cprocess.execSync(
+        "npm install " +
+          packages.join(" ") +
+          " --save --production --no-optional",
+        {
+          stdio: output,
+        }
+      );
+    } catch (err) {
+      //catch error installing
+      console.log("Install failed with code " + err.status);
+      return;
     }
+
+    //update state
+    searcher.state.installedPackageNames = searcher.state.installedPackageNames.concat(
+      packages
+    );
+
+    //update repl
+    replInstance.inputStream.setMessage(
+      "[" + searcher.state.installedPackageNames.join(" ") + "]"
+    );
   },
 
   /**
    * Uninstall passed package.
+   * @param {String} packageString - String list of package names
+   * @param {Object} output - Output option for execSync, by default 'inherit'.
    */
-  uninstall(string, output = "inherit") {
+  uninstall(packageString, output = "inherit") {
     //get packages
-    var packages = string.split(" ");
-    //commandline uninstall
-    cprocess.execSync(
-      "npm uninstall " + packages.join(" ") + " --save --production",
-      {
-        stdio: output,
-      }
-    );
-    for (let i = 0; i < packages.length; i++) {
-      if (installedPackages.includes(packages[i])) {
-        var index = installedPackages.indexOf(packages[i]);
-        installedPackages.splice(index);
-      }
-    }
-    if (myRepl) {
-      myRepl.inputStream.setMessage(
-        "[" + installedPackages.join(" ").trim() + "]"
-      );
-    }
-  },
+    var packages = packageString.split(" ");
 
-  /**
-   * Exit REPL.
-   */
-  exit(string) {
-    process.exit(0);
+    //cli uninstall
+    try {
+      cprocess.execSync(
+        "npm uninstall " + packages.join(" ") + " --save --production",
+        {
+          stdio: output,
+        }
+      );
+    } catch (err) {
+      //catch error uninstalling
+      console.log("Uninstall failed with code " + err.status);
+      return;
+    }
+
+    //update installed packages
+    for (var packageName of packages) {
+      var index = searcher.state.installedPackageNames.indexOf(packageName);
+      if (index != -1) searcher.state.installedPackageNames.splice(index);
+    }
+
+    replInstance.inputStream.setMessage(
+      "[" + searcher.state.installedPackageNames.join(" ").trim() + "]"
+    );
   },
 
   /**
    * Print version.
    */
-  version(string) {
+  version() {
     console.log(`Node Query Library (NQL) version ${VERSION}`);
   },
 
@@ -207,18 +194,71 @@ const state = {
     console.log("uninstall(String package)            uninstall given package");
     console.log("");
   },
+
+  /**
+   * Exit REPL.
+   */
+  exit() {
+    process.exit(0);
+  },
 };
 
-function defineReplFunctions() {
-  Object.assign(myRepl.context, state);
+//run if called as main, not if required
+if (require.main == module) {
+  main();
+}
+
+async function main() {
+  //init
+  initialize();
+
+  //start repl
+  replInstance = repl.start(options);
+
+  //assign functions
+  Object.assign(replInstance.context, state);
+}
+
+/**
+ * Initialize application.
+ */
+function initialize() {
+  logger = getLogger(true);
+  
+  var ticks = 0;
+  var progressBar = new CliProgress.SingleBar({format: "LOADING: [{bar}]", barCompleteChar: '\u25AE', barIncompleteChar:'.'});
+  progressBar.on("NCQStartEvent", function(){
+    progressBar.start(100, 0);
+  });
+  progressBar.on("NCQUpdateEvent", function(value = 1){
+    ticks += value;
+    progressBar.update(ticks);
+  });
+  progressBar.on("NCQStopEvent", function(){
+    //if you forget this the process will hang
+    progressBar.update(100);
+    progressBar.stop();
+  });
+
+
+  //setup codesearch service
+  searcher = new CodeSearch();
+  //searcher.state.data.MAX = 100;
+  searcher.initialize(progressBar);
+
+  searcher.state.installedPackageNames = getInstalledPackages();
+
+  var tasks = searcher.state.data.getTaskSet();
+
+  initializeREPL(tasks);
 }
 
 /**
  * Process args for installed packages.
  */
-function processArgs() {
+function getInstalledPackages() {
   var args = process.argv.slice(2);
-  installedPackages = [];
+  var installedPackages = [];
 
   for (var pk of args) {
     //ignore passed options
@@ -226,53 +266,24 @@ function processArgs() {
       installedPackages.push(pk);
     }
   }
+
+  return installedPackages;
 }
-
-async function main() {
-  processArgs();
-
-  logger = getLogger(true);
-
-  //set up data handler
-  data = new DataHandler();
-  //load tasks
-  var tasks = data.loadTasks(path.join(BASE, "data/id,tasks.txt"));
-
-  //loading event emitter
-  var loadingProgress = new events.EventEmitter();
-
-  console.log("LOADING SNIPPETS");
-
-  //we tick 10 times
-  var progress = 0;
-  loadingProgress.on("progress", function () {
-    progress += 10;
-    console.log(progress + "%...");
-    //for now this is just really simple, we can do a fancy progress bar or something later
-  });
-
-  loadingProgress.on("end", function () {
-    //newline
-    console.log("");
-  });
-
-  //load snippets
-  data.loadInfo(INFODIR);
-  //data.MAX = 1000; //you can limit the number of loaded snippets if you want to do testing etc
-  data.loadSnippets(SNIPPETDIR, loadingProgress);
-
-  tasks = Array.from(tasks.keys());
-
-  //create input readable
+/**
+ * Setup REPL instance and options.
+ * @param {Array} tasks - Array of tasks to use for suggestions.
+ */
+function initializeREPL(tasks) {
+  //create input stream
   var pReadable = new PromptReadable({
     choices: tasks.slice(0, 10000).sort(),
     prefix: NAME,
-    message: "[" + installedPackages.join(" ") + "]",
+    message: "[" + searcher.state.installedPackageNames.join(" ") + "]",
     footer: footer,
     multiline: true,
     scroll: true,
     history: {
-      store: new Store({ path: HISTORYDIR }),
+      store: new Store({ path: searcher.state.HISTORY_DIR }),
       autosave: true,
     },
   });
@@ -288,14 +299,6 @@ async function main() {
     output: pWritable,
     breakEvalOnSigint: true,
   };
-
-  myRepl = repl.start(options);
-  defineReplFunctions();
-}
-
-//run if called as main, not if required
-if (require.main == module) {
-  main();
 }
 
 exports.state = state;

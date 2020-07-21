@@ -1,7 +1,7 @@
 require("mocha");
 var assert = require("assert");
 const path = require("path");
-const DataHandler = require("../ncq/data-handler");
+const DataHandler = require("../ncq/service/data-handler");
 const { getBaseDirectory } = require("../ncq/utils");
 
 const BASE = getBaseDirectory();

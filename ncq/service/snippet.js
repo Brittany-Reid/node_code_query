@@ -19,6 +19,13 @@ class Snippet {
     this.errors = undefined;
   }
 
+  lint(){
+    var linter = new LinterHandler();
+    var messages = linter.lint(this.code);
+    this.errors = LinterHandler.errors(messages);
+    return this.errors;
+  }
+
   /**
    * Calculate a rank value for snippet. For now let's just use stars.
    */
@@ -40,6 +47,15 @@ class Snippet {
         //calculate rank
         var rankA = a.rank();
         var rankB = b.rank();
+
+        if(typeof a.errors !== 'undefined' && b.errors !== 'undefined'){
+            if(a.errors < b.errors){
+                return -1;
+            }
+            if(a.errors > b.errors){
+                return 1;
+            }
+        }
 
         //rank undefined below defined
         if(!rankA && rankB){

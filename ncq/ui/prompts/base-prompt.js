@@ -11,8 +11,6 @@ const keypress = require("enquirer/lib/keypress");
 const utils = require("enquirer/lib/utils");
 const { getLogger } = require("../../logger");
 const ncp = require("copy-paste-win32fix");
-const { debug } = require("winston");
-const { default: chalk } = require("chalk");
 
 var logger = getLogger();
 
@@ -954,7 +952,7 @@ class BasePrompt extends AutoComplete {
     let promptLine = prompt + (input ? " " + input : "");
     let len = promptLine.length;
     let after = len < first.length ? first.slice(len + 1) : "";
-    logger.debug("sections: " + lines);
+    // logger.debug("sections: " + lines);
     return { header, prompt: first, after, rest: lines.slice(1), last };
   }
 

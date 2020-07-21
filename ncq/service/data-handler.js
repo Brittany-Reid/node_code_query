@@ -28,6 +28,13 @@ class DataHandler {
   }
 
   /**
+   * Returns set of tasks as an array.
+   */
+  getTaskSet() {
+    return Array.from(this.tasks.keys());
+  }
+
+  /**
    * Takes an array of ids and returns an array of snippet objects.
    */
   getSnippetsFromIds(ids = []) {
@@ -158,9 +165,6 @@ class DataHandler {
     //get snippets from ids
     var snippets = this.getSnippetsFromIds(ids);
 
-    //sort snippets
-    snippets = snippets.sort(Snippet.sort);
-
     return snippets;
   }
 
@@ -180,7 +184,7 @@ class DataHandler {
   /**
    * Loads in tasks from task file, returns task map.
    */
-  loadTasks(file_path) {
+  async loadTasks(file_path) {
     //read file into memory
     var file = fs.readFileSync(file_path, { encoding: "utf-8" });
     //get lines
@@ -203,7 +207,7 @@ class DataHandler {
         this.tasks.set(task, ids);
       }
     }
-
+    
     return this.tasks;
   }
 

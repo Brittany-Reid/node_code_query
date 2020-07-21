@@ -28,7 +28,6 @@ function getLogger(repl = false) {
   return logger;
 }
 
-
 /**
  * Setup logger.
  */

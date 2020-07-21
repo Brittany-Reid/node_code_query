@@ -207,6 +207,7 @@ class SuggestionPrompt extends BasePrompt {
       msg = color(msg);
       msg = chalkPipe("bg" + this.colors.contrast + ".bold")(msg);
     } else {
+      //inversing, so colour background
       let style = chalkPipe("bg" + this.colors.secondary);
       let color = this.highlight(this.input, style);
       msg = color(msg);

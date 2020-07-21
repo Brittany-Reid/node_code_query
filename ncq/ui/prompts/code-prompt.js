@@ -84,7 +84,7 @@ class CodePrompt extends SuggestionPrompt {
 
   setInput(input) {
     //remove carriage returns
-    this.input = input.replace(/\r\n/g, "\n");
+    input = input.replace(/\r\n/g, "\n");
     //remove tabs
     this.input = input.replace(/\t/g, "  ")
   }

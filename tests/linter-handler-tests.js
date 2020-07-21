@@ -1,6 +1,6 @@
 require("mocha");
 var assert = require("assert");
-const LinterHandler = require("../ncq/linter-handler");
+const LinterHandler = require("../ncq/service/linter-handler");
 
 /**
  * Test LinterHandler class.
