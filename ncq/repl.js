@@ -5,6 +5,7 @@ const { getLogger } = require("./logger");
 const CodeSearch = require("./service/code-search");
 
 const CliProgress = require("cli-progress");
+const ProgressMonitor = require("progress-monitor");
 const cprocess = require("child_process");
 // var events = require("events");
 const Store = require("data-store");
@@ -226,25 +227,32 @@ function initialize() {
   logger = getLogger(true);
   
   var ticks = 0;
+
+  var monitor = new ProgressMonitor(100);
+
   var progressBar = new CliProgress.SingleBar({format: "LOADING: [{bar}]", barCompleteChar: '\u25AE', barIncompleteChar:'.'});
-  progressBar.on("NCQStartEvent", function(){
+
+  monitor.on("start", function(){
     progressBar.start(100, 0);
   });
-  progressBar.on("NCQUpdateEvent", function(value = 1){
-    ticks += value;
-    progressBar.update(ticks);
+
+  var worked = 0;
+  monitor.on("work", function(value){
+    worked += value;
+    progressBar.update(worked);
   });
-  progressBar.on("NCQStopEvent", function(){
-    //if you forget this the process will hang
+
+  monitor.on("end", function(){
     progressBar.update(100);
     progressBar.stop();
-  });
+  })
+
 
 
   //setup codesearch service
   searcher = new CodeSearch();
   //searcher.state.data.MAX = 100;
-  searcher.initialize(progressBar);
+  searcher.initialize(monitor);
 
   searcher.state.installedPackageNames = getInstalledPackages();
 

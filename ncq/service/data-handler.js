@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const natural = require("natural");
 const stopword = require("stopword");
+const ProgressMonitor = require("progress-monitor");
 
 class DataHandler {
   constructor() {
@@ -184,14 +185,28 @@ class DataHandler {
   /**
    * Loads in tasks from task file, returns task map.
    */
-  async loadTasks(file_path) {
+  async loadTasks(file_path, monitor) {
+    if(monitor){
+      monitor = ProgressMonitor.adjustTotal(monitor, 100);
+      monitor.emit("start");
+    }
+
     //read file into memory
     var file = fs.readFileSync(file_path, { encoding: "utf-8" });
+
+    if(monitor) monitor.emit("work", 10);
+
     //get lines
     var lines = file.split("\n");
 
+    var interval = lines.length/91;
+
     //for each line
     for (let i = 0; i < lines.length; i++) {
+      if(i != 0 && i % Math.floor(interval) == 0){
+        if(monitor) monitor.emit("work", 1);
+      }
+
       const line = lines[i];
       var split = line.indexOf(", ");
       var id = line.substring(0, split);
@@ -207,7 +222,12 @@ class DataHandler {
         this.tasks.set(task, ids);
       }
     }
-    
+
+    if(monitor){
+      monitor.emit("work", 100);
+      monitor.emit("end");
+    }
+
     return this.tasks;
   }
 
@@ -278,27 +298,33 @@ class DataHandler {
    * The event emitter is optional, and handled elsewhere. DataHandler should not care about
    * UI, and be usable within different contexts (if we wanted to do a webapp).
    */
-  loadSnippets(dir, eventEmiter) {
+  loadSnippets(dir, monitor) {
     var count = 0;
     var packageNum = 0;
 
+    if(monitor){
+      monitor = ProgressMonitor.adjustTotal(monitor, 100);
+      monitor.emit("start");
+    }
+
     //read in file
     var data = fs.readFileSync(dir, { encoding: "utf-8" });
+
+    if(monitor) monitor.emit("work", 10);
 
     //parse
     data = JSON.parse(data);
 
     //we do the progress interval here, it wont be exact but it should average out
-    var interval = Math.round(data.length / 9);
+    var interval = Math.round(data.length / 91);
 
     //for each package
+    var i=0;
     for (var packData of data) {
-      //emit progress, accept 0 interval progress to report for the original file read as well
-      if (packageNum % interval == 0) {
-        if (eventEmiter) {
-          eventEmiter.emit("progress");
-        }
+      if(i != 0 && i % Math.floor(interval) == 0){
+        if(monitor) monitor.emit("work", 1);
       }
+      i++;
 
       //get package name
       var name = packData["package"];
@@ -356,21 +382,37 @@ class DataHandler {
       packageNum++;
     }
 
-    if (eventEmiter) {
-      eventEmiter.emit("end");
+    if(monitor){
+      monitor.emit("work", 100);
+      monitor.emit("end");
     }
+    
   }
 
-  loadInfo(dir) {
+  loadInfo(dir, monitor) {
     var id = 0;
+
+    if(monitor){
+      monitor = ProgressMonitor.adjustTotal(monitor, 100);
+      monitor.emit("start");
+    }
 
     //read in file
     var data = fs.readFileSync(dir, { encoding: "utf-8" });
 
+    if(monitor) monitor.emit("work", 10);
+
     data = JSON.parse(data);
 
+    var interval = data.length/91;
+
+    var i = 0;
     //for each package entry
     for (var pk of data) {
+      if(i != 0 && i % Math.floor(interval) == 0){
+        if(monitor) monitor.emit("work", 1);
+      }
+      i++;
       //create object from JSON
       var packageObject = new Package(pk, id);
 
@@ -399,6 +441,11 @@ class DataHandler {
 
       //increment id
       id++;
+    }
+
+    if(monitor){
+      monitor.emit("work", 100);
+      monitor.emit("end");
     }
 
     return this.packageToInfo;

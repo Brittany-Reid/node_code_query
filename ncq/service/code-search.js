@@ -5,6 +5,7 @@ const State = require("./state");
 
 var { EventEmitter } = require("events");
 const { start } = require("repl");
+const ProgressMonitor = require("progress-monitor");
 
 var logger = getLogger();
 
@@ -23,44 +24,41 @@ class CodeSearch {
 
   /**
    * Setup code search. Loads in files.
-   * @param {EventEmitter} progress - Event emitter for progress reporting.
+   * @param {ProgressMonitor} monitor - Event emitter for progress reporting.
    */
-  initialize(progress) {
+  initialize(monitor) {
     logger.info("Loading data");
 
-    progress.emit("NCQStartEvent");
+    var subMonitor1;
+    var subMonitor2;
+    var subMonitor3;
+
+    if(monitor){
+      monitor.emit("start");
+      subMonitor1 = monitor.split(11);
+      subMonitor2 = monitor.split(16);
+      subMonitor3 = monitor.split(73);
+    }
 
     var startTime = process.hrtime.bigint();
     //load tasks
-    this.state.data.loadTasks(this.state.TASK_DIR);
+    this.state.data.loadTasks(this.state.TASK_DIR, subMonitor1);
     var endTime = process.hrtime.bigint();
     logger.info("Tasks took: " + (endTime - startTime));
 
-    progress.emit("NCQUpdateEvent", 16);
-
     //load info
     startTime = process.hrtime.bigint();
-    this.state.data.loadInfo(this.state.INFO_DIR);
+    this.state.data.loadInfo(this.state.INFO_DIR, subMonitor2);
     endTime = process.hrtime.bigint();
     logger.info("Info took: " + (endTime - startTime));
 
-    progress.emit("NCQUpdateEvent", 11);
-
-    //load snippets
-    var emitter = new EventEmitter();
-    var tick = 0;
-    emitter.on("progress", function(){
-        tick++;
-        progress.emit("NCQUpdateEvent", 7);
-    })
-
 
     startTime = process.hrtime.bigint();
-    this.state.data.loadSnippets(this.state.SNIPPET_DIR, emitter);
+    this.state.data.loadSnippets(this.state.SNIPPET_DIR, subMonitor3);
     endTime = process.hrtime.bigint();
     logger.info("Snippets took: " + (endTime - startTime));
 
-    progress.emit("NCQStopEvent");
+    if(monitor) monitor.emit("end");
   }
 
   /**
