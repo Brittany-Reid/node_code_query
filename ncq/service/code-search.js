@@ -3,7 +3,7 @@ const { getLogger } = require("../logger");
 const Snippet = require("./snippet");
 const State = require("./state");
 
-var { EventEmitter } = require("events");
+const Evaluator = require("./evaluator");
 const { start } = require("repl");
 const ProgressMonitor = require("progress-monitor");
 
@@ -16,6 +16,9 @@ var logger = getLogger();
  */
 class CodeSearch {
   constructor() {
+
+    this.evaluator = new Evaluator();
+
     //list of installed package names
     this.installedPackages = [];
     this.state = new State();
@@ -97,8 +100,13 @@ class CodeSearch {
     task = task.trim();
     var snippets = this.state.data.getSnippetsFor(task);
 
+
+
     //sort snippets
     snippets = snippets.sort(Snippet.sort);
+
+    //linting! im not sorting by this atm but it does work!
+    //snippets = this.evaluator.errors(snippets);
 
     //preference installed
     snippets = snippets.sort(
