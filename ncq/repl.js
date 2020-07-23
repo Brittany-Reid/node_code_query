@@ -258,8 +258,8 @@ function initialize() {
 
   //setup codesearch service
   searcher = new CodeSearch();
-  searcher.state.data.MAX = 100;
-  //searcher.initialize(monitor);
+  //searcher.state.data.MAX = 100;
+  searcher.initialize(monitor);
 
   searcher.state.installedPackageNames = getInstalledPackages();
 
@@ -331,11 +331,7 @@ function editor() {
   //get code from repl context
   var code = replInstance.lines.join("\n");
 
-  //for now, print
-  console.log(code);
-
-  //cant use the prompt here, we'll need something else or a new process
-  //what if we saved the file then opened vim? could make the command here customizable
+  //open a new process for editing so we can do this sync (we could do a custom command for things like vim too!)
 
   //save file
   fs.writeFileSync("index.js", code);
@@ -360,11 +356,15 @@ function editor() {
     console.log(err.status)
   }
 
+  //without this ctrl+c is passed to parent, this really seems to fix a lot of child process issues!
+  process.stdin.setRawMode(false);
+
   console.log("// Loading and running new context, will print");
 
   //clear context
   this.clearBufferedCommand();
   this.resetContext();
+  Object.assign(replInstance.context, state); //bit of a hack to get our commands back, should i move them to the dot style? 
   //call default load
   replInstance.commands["load"].action.call(replInstance, "index.js")
 }

@@ -15,8 +15,6 @@ async function main() {
 
   var response = await prompt.run();
 
-  var response = "a";
-
   console.log("// Exiting editor and saving...");
 
   //write to file
