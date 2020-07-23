@@ -102,8 +102,11 @@ class NcqCmd extends Cmd {
     //change directory
     process.chdir(tmpDir);
 
-    fs.writeFileSync("package.json", "{\"license\": \"ISC\", \"description\": \"temporary repl\", \"repository\": \"null\"}");
-    fs.writeFileSync("package-lock.json", "{\"lockfileVersion\": 1}");
+    fs.writeFileSync(
+      "package.json",
+      '{"license": "ISC", "description": "temporary repl", "repository": "null"}'
+    );
+    fs.writeFileSync("package-lock.json", '{"lockfileVersion": 1}');
 
     // install packages within that directory
     cprocess.execSync(
@@ -120,12 +123,22 @@ class NcqCmd extends Cmd {
 
     //do repl
     var args = [];
-    if(OPTIONS.log){
+    if (OPTIONS.log) {
       args.push("--log");
     }
-    cprocess.execSync("node ../ncq/repl.js " + required.join(" ") + " " + args.join(" "), {
-      stdio: "inherit",
-    });
+
+    try {
+      cprocess.execSync(
+        "node ../ncq/repl.js " + required.join(" ") + " " + args.join(" "),
+        {
+          stdio: "inherit",
+        }
+      );
+    } catch (err) {
+      //catch error
+      console.log("\nREPL failed with code " + err.status);
+      return;
+    }
 
     //return to our directory
     process.chdir(BASE);

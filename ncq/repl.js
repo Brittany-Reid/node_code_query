@@ -5,13 +5,16 @@ const { getLogger } = require("./logger");
 const CodeSearch = require("./service/code-search");
 
 const CliProgress = require("cli-progress");
-const ProgressMonitor = require("progress-monitor");
 const cprocess = require("child_process");
-// var events = require("events");
+const fs = require("fs");
+const ProgressMonitor = require("progress-monitor");
 const Store = require("data-store");
 let Table = require("tty-table");
 const colors = require("ansi-colors");
 const repl = require("repl");
+const path = require("path");
+
+
 const VERSION = "1.0.0";
 const NAME = "NCQ";
 var searcher;
@@ -218,6 +221,8 @@ async function main() {
 
   //assign functions
   Object.assign(replInstance.context, state);
+
+  defineCommands();
 }
 
 /**
@@ -225,34 +230,36 @@ async function main() {
  */
 function initialize() {
   logger = getLogger(true);
-  
+
   var ticks = 0;
 
   var monitor = new ProgressMonitor(100);
 
-  var progressBar = new CliProgress.SingleBar({format: "LOADING: [{bar}]", barCompleteChar: '\u25AE', barIncompleteChar:'.'});
+  var progressBar = new CliProgress.SingleBar({
+    format: "LOADING: [{bar}]",
+    barCompleteChar: "\u25AE",
+    barIncompleteChar: ".",
+  });
 
-  monitor.on("start", function(){
+  monitor.on("start", function () {
     progressBar.start(100, 0);
   });
 
   var worked = 0;
-  monitor.on("work", function(value){
+  monitor.on("work", function (value) {
     worked += value;
     progressBar.update(worked);
   });
 
-  monitor.on("end", function(){
+  monitor.on("end", function () {
     progressBar.update(100);
     progressBar.stop();
-  })
-
-
+  });
 
   //setup codesearch service
   searcher = new CodeSearch();
-  //searcher.state.data.MAX = 100;
-  searcher.initialize(monitor);
+  searcher.state.data.MAX = 100;
+  //searcher.initialize(monitor);
 
   searcher.state.installedPackageNames = getInstalledPackages();
 
@@ -307,6 +314,59 @@ function initializeREPL(tasks) {
     output: pWritable,
     breakEvalOnSigint: true,
   };
+}
+
+function defineCommands() {
+  replInstance.defineCommand("editor", {
+    help: "Enter editor mode",
+    action: editor,
+  });
+}
+
+//for now just prints context
+function editor() {
+  //print instructions
+  console.log("// Entering editor mode");
+
+  //get code from repl context
+  var code = replInstance.lines.join("\n");
+
+  //for now, print
+  console.log(code);
+
+  //cant use the prompt here, we'll need something else or a new process
+  //what if we saved the file then opened vim? could make the command here customizable
+
+  //save file
+  fs.writeFileSync("index.js", code);
+
+  var appPath = path.join(
+    searcher.state.BASE_DIR,
+    "ncq/ui/default-editor-process.js"
+  );
+  var filePath = path.join(process.cwd(), "index.js");
+  var command = "node " + appPath + " " + filePath;
+
+  //https://stackoverflow.com/questions/25789064/node-js-readline-with-interactive-child-process-spawning
+  //not exactly related but a bit of info on setrawmode and why it avoids some weird bugs
+  process.stdin.setRawMode(true);
+
+  try{
+    cprocess.execSync(command, {
+      stdio: 'inherit',
+    });
+  }
+  catch(err){
+    console.log(err.status)
+  }
+
+  console.log("// Loading and running new context, will print");
+
+  //clear context
+  this.clearBufferedCommand();
+  this.resetContext();
+  //call default load
+  replInstance.commands["load"].action.call(replInstance, "index.js")
 }
 
 exports.state = state;

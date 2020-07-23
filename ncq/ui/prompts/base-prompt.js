@@ -53,6 +53,10 @@ class BasePrompt extends AutoComplete {
     this.scrollPos = 0;
     this.keybuffer = [];
 
+
+    //initial support, as a prefilled input
+    if(this.initial) this.input = this.initial;
+
     //logger.debug("New prompt init");
   }
 
