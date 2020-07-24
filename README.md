@@ -18,11 +18,8 @@ NCQ can be used to start node.js REPLs and find code snippets for given strings.
 
 1. Download and install Node.js and NPM (https://nodejs.org/en/).
 2. Clone this repository.
-3. Download the following .zip file:
-   https://zenodo.org/record/3923490/files/ncqData.zip?download=1
-   This file is too large to upload to Github. This is our data set of code snippets and library info.
+3. Download the following .zip file: https://zenodo.org/record/3923490/files/ncqData.zip. This is our data set of code snippets and library info. Note: this file is too large to upload to Github. 
 4. Unzip this file into the directory "data". 
-
 
 ## Example
 
