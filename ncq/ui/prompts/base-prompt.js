@@ -55,7 +55,11 @@ class BasePrompt extends AutoComplete {
 
 
     //initial support, as a prefilled input
-    if(this.initial) this.input = this.initial;
+    if(this.initial){
+      this.input = this.initial;
+      //reset initial otherwise default behaviour is to use this if no input
+      this.initial = undefined;
+    }
 
     //logger.debug("New prompt init");
   }
@@ -176,6 +180,9 @@ class BasePrompt extends AutoComplete {
     logger.debug("Done key: " + JSON.stringify(key) + "\n");
   }
 
+  /**
+   * The built in key handling is annoying, just do this instead.
+   */
   async handleKey(input, key) {
     //autocomplete
     var check = this.keys["autocomplete"];
@@ -745,13 +752,7 @@ class BasePrompt extends AutoComplete {
   render() {
     logger.debug("render");
 
-    // moved to choice rendering so it only occurs for visible!
-    // if(this.isSuggesting){
-    //   let color = this.highlight(this.input, style);
-    //   let visible = this.visible;
-    //   this.visible = visible.map((ch) => ({ ...ch, message: color(ch.message) }));
-    //   //this.choices = choices.map((ch) => ({ ...ch, message: color(ch.message) }));
-    // }
+    // moved highlighting to choice rendering so it only occurs for visible!
 
     //get state
     let { submitted, size } = this.state;
@@ -764,7 +765,7 @@ class BasePrompt extends AutoComplete {
     let message = this.msg();
 
     if (this.options.promptLine !== false) {
-      prompt = [prefix, message, separator, ""].join(" ");
+      prompt = [prefix, message, separator, ""].filter(Boolean).join(" ");
       this.state.prompt = prompt;
     }
 
@@ -805,7 +806,7 @@ class BasePrompt extends AutoComplete {
     let message = this.msg();
 
     if (this.options.promptLine !== false) {
-      prompt = [prefix, message, separator, ""].join(" ");
+      prompt = [prefix, message, separator, ""].filter(Boolean).join(" ");
       this.state.prompt = prompt;
     }
 
@@ -840,9 +841,21 @@ class BasePrompt extends AutoComplete {
     return super.footer();
   }
 
+  /**
+   * Fix timing issues by making this sync.
+   * Allow empty string values, now checks explcitly for undefined.
+   */
   element(name, choice, i) {
     let { options, state, symbols, timers } = this;
-    let value = options[name] || state[name] || symbols[name];
+    //let value = options[name] || state[name] || symbols[name];
+    //allow empty strings!
+    let value = options[name];
+    if(value === undefined){
+      value = state[name];
+    }
+    if(value === undefined){
+      value = symbols[name];
+    }
     let val = choice && choice[name] != null ? choice[name] : value;
     if (val === "") return val;
     let res = this.resolve(val, state, choice, i);
@@ -852,9 +865,12 @@ class BasePrompt extends AutoComplete {
     return res;
   }
 
+  /**
+   * Allows empty prefix, without falling back to symbols.
+   */
   prefix() {
     logger.debug("prefix");
-    let element = this.element("prefix") || this.symbols;
+    let element = this.element("prefix") //|| this.symbols; //element() already falls back to symbols
     let timer = this.timers && this.timers.prefix;
     let state = this.state;
     state.timer = timer;
@@ -924,6 +940,7 @@ class BasePrompt extends AutoComplete {
 
   /**
    * Overwrite sections to not rely on prompt, because the prompt may be hidden.
+   * Prompt can even be empty! Fixed this.
    * Handles header correctly.
    */
   sections() {
@@ -933,6 +950,11 @@ class BasePrompt extends AutoComplete {
     //find prompt index
     let buf = colors.unstyle(buffer);
     let idx = buf.indexOf(prompt);
+
+    //add a check for an empty prompt, indexOf returns 0 in this case, handle as -1
+    if(prompt === ""){
+      idx = -1;
+    }
 
     let header = colors.unstyle(this.state.header);
     //if there is a header and it doesnt have a newline

@@ -1,4 +1,3 @@
-// const colors = require("ansi-colors");
 const { getConfig } = require("../config");
 const { to_width, width_of } = require("to-width");
 const chalkPipe = require('chalk-pipe');
@@ -36,6 +35,7 @@ function getKey(key){
  * Generates a footer for our prompt, called from prompt so can use this. to access values.
  */
 function footer(){
+
     //get key bindings
     if(!config){
         config = getConfig();
@@ -48,18 +48,31 @@ function footer(){
     //set commands for footer
     //i want an empty array so we can leave elements empty by default
     var commands = Array(12);
-    commands[0] = "Suggest ";
-    if(this.snippets && this.snippets.length > 1){
-        commands[1] = "Previous ";
-        commands[2] = "Next ";
+    //non editor prompt, these are a traditional enter = submit prompt
+    if(this.constructor.name !== "EditorPrompt"){
+        commands[0] = "Suggest ";
+        if(this.snippets && this.snippets.length > 1){
+            commands[1] = "Previous ";
+            commands[2] = "Next ";
+        }
+        if(this.multiline){
+            commands[3] = "Newline ";
+        }
+        commands[4] = "Clear ";
+        commands[8] = "Copy ";
+        commands[9] = "Paste ";
+        commands[10] = "Help ";
     }
-    if(this.multiline){
-        commands[3] = "Newline ";
+    else{
+        //for now keep clear
+        commands[4] = "Clear ";
+
+        //keep copy and paste, though copy is an entire file copy
+        commands[8] = "Copy All";
+        commands[9] = "Paste ";
+        //editor prompt which is weird and requires 'saving'
+        commands[10] = "Save & Exit ";
     }
-    commands[4] = "Clear ";
-    commands[8] = "Copy ";
-    commands[9] = "Paste ";
-    commands[10] = "Help ";
     commands[11] = "Exit ";
 
 
