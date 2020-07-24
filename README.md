@@ -48,14 +48,17 @@ NCQ  >  _
 NCQ  >  repl
 ```
 
-As of now, this commands takes a little while to execute (1-2m). A progress bar will give you a rough estimate of waiting time. After that, the prompt will look like this:
+As of now, this commands takes a little while to execute (1-2m). A progress bar will give you a rough estimate of waiting time. 
+
+After that the screen will look like this:
 
 ![KEYS](/media/keys.png)
 
+The square brackets in the command prompt indicate that you successfully created a node repl, i.e., you can run any node.js code from the prompt now. However, you do *not* have any library installed!
 
-The square brackets indicate that you created a node repl, i.e., you can run any node.js code from the prompt now. However, you do *not* have any library installed!
+Please note that there is a (context-sensitive) menu of (parameterless) function keys in the bottom of the screen. You can use any of these functions with the tool. We describe some of these functions as we move along this tutorial.
 
-4. Type help() to see which functions you can use.
+4. Type help() in the command line or F12 (as per the menu of function keys) to see which commands you can use. 
 
 ```sh
 NCQ [] >  help() 
