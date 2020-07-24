@@ -16,16 +16,25 @@ NCQ can be used to start node.js REPLs and find code snippets for given strings.
 
 ## Setup
 
-1. Download and install Node.js and NPM (https://nodejs.org/en/)
+1. Download and install Node.js and NPM (https://nodejs.org/en/).
 2. Clone this repository.
-3. Download the code snippet and package information data set (https://doi.org/10.5281/zenodo.3923490) and unzip into the data directory. Our system requires an offline dataset that is too large to upload to Github.
-4. Run `npm install` in the repository directory to install dependencies.
+3. Download the following .zip file:
+   https://zenodo.org/record/3923490/files/ncqData.zip?download=1
+   This file is too large to upload to Github. This is our data set of code snippets and library info.
+4. Unzip this file into the directory "data". 
+
 
 ## Example
 
-Let us consider the user want to know how to read a file in node.js. Here is how NCQ can help:
+Let us consider the example where the developer--a user of our tool--wants to know how to read a file in node.js. Here is how NCQ can help:
 
-1. Start NPM using the `npm start` command within the repository directory. 
+1. Install/update project dependencies. Execute the following command from within the project directory:
+
+```sh
+$> npm install
+```
+
+2. Start NPM using the `npm start` command within the repository directory. 
 
 ```sh
 $> npm start
@@ -36,7 +45,7 @@ Your prompt will look like this:
 NCQ  >  _
 ```
 
-2. Type repl to create a virtual isolated environment where you can play with different examples.
+3. Type repl to create a virtual isolated environment where you can play with different examples.
 
 ```sh
 NCQ  >  repl
@@ -50,7 +59,7 @@ NCQ [] > _
 
 The square brackets indicate that you created a node repl, i.e., you can run any node.js code from the prompt now. However, you do *not* have any libraries installed!
 
-3. Type help() to see which functions you can use.
+4. Type help() to see which functions you can use.
 
 ```sh
 NCQ [] >  help() 
@@ -63,7 +72,7 @@ install(String package)              install given package
 uninstall(String package)            uninstall given package
 ```
 
-4. Type samples("file") and see what happens.
+5. Type samples("file") and see what happens.
 
 ```sh
 NCQ [] >  samples("file")
@@ -73,7 +82,7 @@ fs.readFileSync(new URL('file://hostname/p/a/t/h/file'));
 ```
 Several snippets are printed on screen. The first one shows that the module/library fs is used for that. So, we need to install that module and then create a variable to access that module. Let's do it.
 
-5. Install module "fs"
+6. Install module "fs"
 
 ```sh
 NCQ [] >  install("fs") 
@@ -87,7 +96,7 @@ NCQ [fs] >
 
 Note that "fs" now appears inside brackets!
 
-6. Access module fs from a variable with the same name.
+7. Access module fs from a variable with the same name.
 
 ```sh
 NCQ [fs] > fs = require("fs")
@@ -96,7 +105,7 @@ NCQ [fs] > _
 ```
 A list with all fs functions is printed on screen (omitted for space).
 
-7. Run the snippet. We used a common unix file for illustration.
+8. Run the snippet. We used a common unix file for illustration.
 
 ```sh
 NCQ [fs] >  file = fs.readFileSync(new URL('file:///etc/passwd')) 
