@@ -48,13 +48,13 @@ NCQ  >  _
 NCQ  >  repl
 ```
 
-Your prompt will look like this:
+As of now, this step takes a little while (1-2m). A progress bar will give you a rough estimate waiting time. After that, the prompt will look like this:
 
 ```sh
 NCQ [] > _
 ```
 
-The square brackets indicate that you created a node repl, i.e., you can run any node.js code from the prompt now. However, you do *not* have any libraries installed!
+The square brackets indicate that you created a node repl, i.e., you can run any node.js code from the prompt now. However, you do *not* have any library installed!
 
 4. Type help() to see which functions you can use.
 
