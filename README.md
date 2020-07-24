@@ -48,11 +48,10 @@ NCQ  >  _
 NCQ  >  repl
 ```
 
-As of now, this step takes a little while (1-2m). A progress bar will give you a rough estimate waiting time. After that, the prompt will look like this:
+As of now, this commands takes a little while to execute (1-2m). A progress bar will give you a rough estimate of waiting time. After that, the prompt will look like this:
 
-```sh
-NCQ [] > _
-```
+![KEYS](/media/keys.png)
+
 
 The square brackets indicate that you created a node repl, i.e., you can run any node.js code from the prompt now. However, you do *not* have any library installed!
 
