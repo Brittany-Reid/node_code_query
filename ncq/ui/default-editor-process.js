@@ -37,6 +37,7 @@ async function main() {
     multiline: true, //of course, multiline true
     limit: 4, //autocomplete already allows some padding between header/footer so just use this for now vs a min prompt size
     initial: contents, //prefill with file contents
+    scroll: true,
   });
 
   var response = await prompt.run();

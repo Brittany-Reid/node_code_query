@@ -182,6 +182,7 @@ var dflt = {
     paste: [defaultPaste, {name:"f10"}],
     copy: [defaultCopy, {name:"f9"}],
     clear: {name:"f5"},
+    editor: {name: "f8"},
     help: {name: "f11"},
     exit: {name: "f12"},
   },

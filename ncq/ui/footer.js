@@ -56,6 +56,9 @@ function footer(){
             commands[2] = "Next ";
         }
         if(this.multiline){
+            //multiline currently also checks for codePrompt, cli should never be multiline
+            //but if so we can do another constructor.name check
+            commands[7] = "Editor ";
             commands[3] = "Newline ";
         }
         commands[4] = "Clear ";

@@ -109,6 +109,13 @@ class CodePrompt extends SuggestionPrompt {
         }
       }
 
+      //open editor
+      var check = this.keys["editor"];
+      if (this.isKey(key, check)) {
+        this.input = ".editor";
+        return this.submit();
+      }
+
       //newline
       if (this.multiline) {
         var check = this.keys["newLine"];
