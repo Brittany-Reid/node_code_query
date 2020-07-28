@@ -8,6 +8,8 @@
     "url": "https://github.com/damorimRG/node_code_query.git"
   },
   "scripts": {
+    "install": "npm run setup",
+    "setup": "node ncq/setup",
     "start": "node ncq/ncq",
     "test": "mocha tests",
     "coverage": "nyc npm run test"
@@ -16,7 +18,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "adm-zip": "^0.4.16",
     "ansi-colors": "^4.1.1",
+    "axios": "^0.19.2",
     "chalk": "^4.1.0",
     "chalk-pipe": "^4.0.0",
     "cli-progress": "^3.8.2",

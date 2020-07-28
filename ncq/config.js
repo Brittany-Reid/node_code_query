@@ -191,6 +191,12 @@ var dflt = {
     contrastText: defaultContrastText,
     secondary: defaultSecondary,
   },
+  files:{
+    snippets: "data/snippets.json",
+    info: "data/packageStats.json",
+    tasks: "data/id,tasks.txt",
+    replHistory: "history-repl.json",
+  }
 };
 
 /**
@@ -258,6 +264,13 @@ function setupKeybindings() {
     config.set("keybindings", dflt.keybindings);
   } else {
     update("keybindings");
+  }
+
+  //do files
+  if(!config.has("files")){
+    config.set("files", dflt.files);
+  }else{
+    update("files");
   }
 }
 
