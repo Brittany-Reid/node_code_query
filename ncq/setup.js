@@ -1,10 +1,11 @@
 const { getConfig } = require("./config");
 const utils = require("./utils");
 const Snippet = require("./service/snippet");
+const Package = require("./service/package")
 
 const Zip = require("adm-zip");
 const axios = require("axios");
-// const FlexSearch = require("flexsearch");
+const FlexSearch = require("flexsearch");
 const fs = require("fs");
 const natural = require("natural");
 const path = require("path");
@@ -22,6 +23,7 @@ var language = stopword.en;
 
 /**
  * Setup file. Downloads dataset, loads up database etc.
+ * This requires the --max-old-space-size=3072 option on run (already setup for install/setup commands).
  */
 
 if (require.main == module) {
@@ -39,7 +41,7 @@ async function main() {
   getData();
 
   //setup database
-  //setupDatabase();
+  setupDatabase();
 }
 
 async function getData() {
@@ -116,154 +118,192 @@ async function download(url, dir) {
   });
 }
 
-// /**
-//  * Setup Database
-//  */
-// function setupDatabase() {
-//   //snippet db
-//   if (fs.existsSync(SNIPPET_DB_DIR)) {
-//     setupSnippets();
-//   }
+/**
+ * Setup Database
+ */
+function setupDatabase() {
+  //package info db
+  if (!fs.existsSync(PACKAGE_DB_DIR)) {
+    setupPackageInfo();
+  }
 
-//   // console.log("start read");
+  //snippet db
+  if (!fs.existsSync(SNIPPET_DB_DIR)) {
+    setupSnippets();
+  }
 
-//   // //read file
-//   // var data = fs.readFileSync(SNIPPET_DIR, { encoding: "utf-8" });
+  //test of load in and search
 
-//   // console.log("start parse");
+  // var packageInfo = new FlexSearch("memory", {
+  //   tokenize: "strict",
+  //   doc: {
+  //     id: "id",
+  //     field: ["Description", "Keywords"],
+  //   },
+  //   encode: encode,
+  // });
 
-//   // //parse
-//   // data = JSON.parse(data);
+  // var file = fs.readFileSync(PACKAGE_DB_DIR, {encoding: "utf-8"});
 
-//   // console.log("start index");
+  // packageInfo.import(file);
 
-//   // var i = 0;
-//   // for (var packData of data) {
-//   //   //get package name
-//   //   var name = packData["package"];
+  // //console.log(packageInfo.search({query: "read"}));
 
-//   //   if (i % 1000 == 0) {
-//   //     console.log(i);
-//   //   }
+  // var snippets = new FlexSearch("memory", {
+  //   tokenize: "strict",
+  //   doc: {
+  //     id: "Name",
+  //     field: ["description"],
+  //   },
+  //   encode: encode,
+  // });
 
-//   //   var snippets = packData["snippets"];
-//   //   for (var snippet of snippets) {
-//   //     //get snippet info
-//   //     var code = snippet["snippet"];
-//   //     var id = snippet["id"];
-//   //     var order = snippet["num"];
-//   //     var description = snippet["description"];
+  // file = fs.readFileSync(SNIPPET_DB_DIR, {encoding: "utf-8"});
 
-//   //     var snippetObject = {
-//   //       id: id,
-//   //       description: description,
-//   //       package: name,
-//   //       code: code,
-//   //       order: order,
-//   //     };
+  // snippets.import(file);
 
-//   //     if(id == 208){
-//   //       //index.add(snippetObject);
-//   //       console.log(index.info())
-//   //       // console.log(snippetObject);
-//   //       // console.log(index)
-//   //       index.add(snippetObject);
+  // console.log("done")
 
-//   //       console.log(index.info())
-//   //       // console.log(index.length)
-//   //       // console.log(index)
-//   //       // console.log(index.length)
-//   //       return;
-//   //     }else{
-//   //       index.add(snippetObject);
-//   //     }
+  // var result = snippets.search({query: "read"});
 
-//   //     //     //snippet map
-//   //     //     this.idTosnippets.set(id, snippetObject);
+  // var snipresult = [];
+  // for(var snip of result){
+  //   var pack = packageInfo.find(snip["package"]);
+  //   //console.log(pack)
+  //   //var pack = packageInfo.where({"Name": snip["package"]})[0];
+  //   var pobj;
+  //   if(pack){
+  //     pobj = new Package(pack);
+  //   }
+  //   var object = new Snippet(snip["snippet"], snip["id"], snip["package"], snip["num"], pobj );
+  //   snipresult.push(object);
+  // }
 
-//   //     //     //package to ids
-//   //     //     var packSnippets = this.packageToSnippet.get(name);
-//   //     //     //if doesnt already exist, init array
-//   //     //     if (!packSnippets) {
-//   //     //       packSnippets = [];
-//   //     //     }
-//   //     //     packSnippets.push(id);
-//   //     //     this.packageToSnippet.set(name, packSnippets);
-//   //   }
-//   //   i++;
-//   // }
+  // snipresult = snipresult.sort(Snippet.sort)
 
-//   // console.log("done " + i);
-//   // console.log(index.info())
+  // console.log(snipresult[0])
 
-//   // var snippets = index.search({ field: "description", query: "read" });
+  
 
-//   // console.log(snippets.length);
+  //console.log(snippets.search({query: "read"}));
+}
 
-//   // //console.log(index.search({ field: "description", query: "vot" }));
+function setupPackageInfo() {
+  console.log("Package Info Database does not exist. Creating...");
 
-//   // // var database = index.export();
+  var index = new FlexSearch("memory", {
+    tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
+    doc: {
+      id: "Name", //index by name for fast look up
+      field: ["Description", "Keywords"],
+    },
+    encode: encode,
+  });
 
-//   // // fs.writeFileSync(DB_DIR, database, { encoding: "utf-8" });
+  //read in file
+  var data = fs.readFileSync(INFO_DIR, { encoding: "utf-8" });
 
-//   // // console.log("done");
-// }
+  //parse as JSON
+  data = JSON.parse(data);
 
-// function setupSnippets(){
-//   //create index
-//   var index = new FlexSearch({
-//     tokenize: "strict",
-//     doc: {
-//       id: "id",
-//       field: ["description", "package"],
-//     },
-//     encode: encode,
-//   });
+  var i = 0;
+  for (var packData of data) {
+    var packageObject = {};
 
-//   var data = fs.readFileSync(SNIPPET_DIR, { encoding: "utf-8" });
+    //we don't use every field, but I picked out what could be useful in the future
+    packageObject["Name"] = packData["Name"];
+    packageObject["Description"] = packData["Description"];
+    packageObject["Repository Stars Count"] = packData["Repository Stars Count"];
+    packageObject["Keywords"] = packData["Keywords"];
+    packageObject["Licenses"] = packData["Licenses"];
+    packageObject["SourceRank"] = packData["SourceRank"];
+    packageObject["Repository Forks Count"] =
+      packData["Repository Forks Count"];
+    packageObject["Repository Contributors Count"] =
+      packData["Repository Contributors Count"];
+    packageObject["Latest Release Publish Timestamp"] =
+      packData["Latest Release Publish Timestamp"];
+    packageObject["Latest Release Number"] = packData["Latest Release Number"];
+    packageObject["Dependent Projects Count"] =
+      packData["Dependent Projects Count"];
+    packageObject["Dependent Repositories Count"] =
+      packData["Dependent Repositories Count"];
+    packageObject["Repository Fork?"] = packData["Repository Fork?"];
+    packageObject["Repository Created Timestamp"] =
+      packData["Repository Created Timestamp"];
+    packageObject["Repository Updated Timestamp"] =
+      packData["Repository Updated Timestamp"];
+    packageObject["Repository Issues enabled?"] =
+      packData["Repository Issues enabled?"];
+    packageObject["Repository Wiki enabled?"] =
+      packData["Repository Wiki enabled?"];
+    packageObject["Repository Pages enabled?"] =
+      packData["Repository Pages enabled?"];
 
-//   data = JSON.parse(data);
+    index.add(packageObject);
 
-//   var i = 0;
-//   for (var packData of data) {
-//     //get package name
-//     var name = packData["package"]; 
+    i++;
+  }
 
-//     var snippets = packData["snippets"];
-//     for (var snippet of snippets) {
-//       //get snippet info
-//       var code = snippet["snippet"];
-//       var id = snippet["id"];
-//       var order = snippet["num"];
-//       var description = snippet["description"];
+  var database = index.export();
 
-//       snippetObject = new Snippet(code, description, id, name, order);
+  fs.writeFileSync(PACKAGE_DB_DIR, database, { encoding: "utf-8" });
 
-//       index.add(snippetObject);
+  console.log("DONE!");
 
-//     }
-//     i++;
-//   }
+  console.log("Package info database was saved to " + PACKAGE_DB_DIR);
+}
 
-//   var database = index.export();
+function setupSnippets() {
+  console.log("Snippet Database does not exist. Creating...");
 
-//   fs.writeFileSync(SNIPPET_DB_DIR, database, { encoding: "utf-8" });
+  //create index
+  var index = new FlexSearch("memory", {
+    tokenize: "strict",
+    doc: {
+      id: "id",
+      field: ["description"],
+    },
+    encode: encode,
+  });
 
- 
-//   index.clear();
+  var data = fs.readFileSync(SNIPPET_DIR, { encoding: "utf-8" });
 
-//   index.import(database);
+  data = JSON.parse(data);
 
-//   console.log(index);
+  var i = 0;
+  for (var packData of data) {
+    var snippets = packData["snippets"];
+    for (var snippet of snippets) {
+      var snippetObject = {};
 
-//   //console.log(index.where({packageName: "1px"})[0]);
+      snippetObject["package"] = packData["package"];
+      snippetObject["description"] = snippet["description"];
+      snippetObject["snippet"] = snippet["snippet"];
+      snippetObject["num"] = snippet["num"];
+      snippetObject["id"] = snippet["id"];
 
-// }
+      index.add(snippetObject);
+    }
+
+    i++;
+  }
+
+  var database = index.export();
+
+  fs.writeFileSync(SNIPPET_DB_DIR, database, { encoding: "utf-8" });
+
+  console.log("DONE!");
+
+  console.log("Snippet database was saved to: " + SNIPPET_DB_DIR);
+}
 
 function encode(str) {
   var wordsArr = str.split(" ");
+  //remove stop words
   wordsArr = stopword.removeStopwords(wordsArr, this.language);
-  wordsArr.map((word) => {
+  //stem
+  wordsArr = wordsArr.map((word) => {
     const cleanWord = word.replace(/[^a-zA-Z ]/g, "");
     return natural.PorterStemmer.stem(word);
   });

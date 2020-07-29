@@ -37,3 +37,5 @@ data/ncqData.zip
 data/packageStats.json
 history-repl.json
 log2.txt
+data/packageDB.txt
+data/snippetDB.txt
