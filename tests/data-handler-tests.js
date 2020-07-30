@@ -1,93 +1,76 @@
 require("mocha");
+const { getConfig } = require("../ncq/config");
+
 var assert = require("assert");
 const path = require("path");
 const DataHandler = require("../ncq/service/data-handler");
 const { getBaseDirectory } = require("../ncq/utils");
 
-const BASE = getBaseDirectory();
-const SNIPPET_DIR = path.join(BASE, "data/snippets.json");
-const INFO_DIR = path.join(BASE, "data/packageStats.json");
-const TASK_PATH = path.join(BASE, "data/id,tasks.txt");
+var config = getConfig();
+const BASE_DIR = getBaseDirectory();
+const SNIPPET_DIR = path.join(BASE_DIR, config.get("files.snippets"));
+const SNIPPET_DB = path.join(BASE_DIR, config.get("files.snippetDB"));
+const INFO_DIR = path.join(BASE_DIR, config.get("files.info"));
+const INFO_DB = path.join(BASE_DIR, config.get("files.packageDB"));
+const TASK_DIR = path.join(BASE_DIR, config.get("files.tasks"));
 
 /**
  * Test DataHandler class. This can be time intensive, because we are loading from a file, so some tests have extended time out.
- * Feel free to adjust them if they timeout for you.
  */
 describe("DataHandler", function () {
   var data;
+
   /**
    * Runs once. Makes a global datahandler.
    */
   before(() => {
     data = new DataHandler();
-    data.MAX = 10000;
   });
 
   describe("functions", function () {
-    it("should load in package info", function () {
-      data.loadInfo(INFO_DIR);
-      assert(data.packageToInfo.size > 0);
-    }).timeout(0); //no timeout for load
-    it("should load in some snippets", function () {
-      data.loadSnippets(SNIPPET_DIR);
-
-      //has snippets
-      assert(data.idTosnippets.size > 0);
-      //has snippets for packages
-      assert(data.packageToSnippet.size > 0);
-      //has keywords in keyword map
-      assert(data.keyWordMap.size > 0);
-    }).timeout(0); //no timeout for load
-    it("should load in tasks", async function () {
-      data.loadTasks(TASK_PATH);
-      assert(data.tasks.size > 0);
-    }).timeout(0); //no timeout fr load
-    it("should make keyword array from string", async function () {
-      var keywords = await data.getKeywords("do a tasks");
-      //remove stopwords and stem
-      assert(keywords[0] == "task");
+    describe("load", function () {
+      it("should load in package info", function () {
+        data.loadPackages(INFO_DIR, INFO_DB);
+        //has packages
+        assert(data.idToPackage.size > 0);
+        assert(data.packageIndex !== undefined);
+        assert(data.nameToId.size > 0);
+      }).timeout(0); //no timeout for load
+      it("should load in some snippets", function () {
+        data.loadSnippets(SNIPPET_DIR, SNIPPET_DB);
+        //has snippets
+        assert(data.snippets.length > 0);
+        assert(data.snippetIndex !== undefined);
+      }).timeout(0); //no timeout for load
+      it("should load in tasks", async function () {
+        data.loadTasks(TASK_DIR);
+        assert(data.tasks.size > 0);
+      }).timeout(0); //no timeout for load
     });
-    it("should be able to search for task", function () {
-      var snippets = data.getSnippetsFor("read files");
-      assert(snippets.length > 0);
+    describe("retrieve", function () {
+      it("should be able to search snippets with task", function () {
+        var snippets = data.taskToSnippets("read files");
+        assert(snippets.length > 0);
+      });
+      it("should be able to search packages with task", function () {
+        var packages = data.taskToPackages("read files");
+        assert(packages.length > 0);
+      });
+      it("should be able to search snippets with package", function () {
+        var packages = data.packageToSnippets("acute");
+        assert(packages.length > 0);
+      });
+      it("should be able to get array of tasks", function () {
+        var tasks = data.getTaskArray();
+        assert(tasks.length > 0);
+      });
     });
-    it("should be able to handle an empty task", function () {
-      var snippets = data.getSnippetsFor("");
-      assert(snippets.length == 0);
-    });
-    it("should be able to search for task and return no results", function () {
-      var snippets = data.getSnippetsFor(
-        "nonsense task 123456 hello 654321 moo"
-      );
-      assert(snippets.length == 0);
-    });
-    it("results for file and files should be the same", function () {
-      var snippets = data.getSnippetsFor("file");
-      var snippets2 = data.getSnippetsFor("files");
-      assert(snippets.length == snippets2.length);
-    });
-    it("should get package snippets", function () {
-      //get first packagename to test with
-      var packageName = Array.from(data.packageToSnippet.keys())[0];
-
-      //get snippets for this package name
-      var snippets = data.getPackageSnippets(packageName);
-
-      //must have at least 1 snippet
-      assert(snippets.length > 0);
-    });
-    it("should get package names for task", function () {
-      var packages = data.getPackages("read files");
-      assert(packages.length > 0);
-    });
-    it("should get package names for task that is a suggestion", function () {
-      var ids = Array.from(data.idTosnippets.keys());
-
-      //add test task
-      data.tasks.set("test task", [ids[0]]);
-
-      var packages = data.getPackages("test task");
-      assert(packages.length > 0);
+    describe("utility", function () {
+      it("should make keyword array from string", async function () {
+        var keywords = await DataHandler.keywords("do a tasks");
+        //remove stopwords and stem
+        assert(keywords[0] == "task");
+      });
     });
   });
 });

@@ -263,7 +263,7 @@ function initialize() {
 
   searcher.state.installedPackageNames = getInstalledPackages();
 
-  var tasks = searcher.state.data.getTaskSet();
+  var tasks = searcher.state.data.getTaskArray();
 
   initializeREPL(tasks);
 }

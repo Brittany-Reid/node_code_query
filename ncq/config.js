@@ -193,7 +193,9 @@ var dflt = {
   },
   files:{
     snippets: "data/snippets.json",
+    snippetDB: "data/snippetDB.txt",
     info: "data/packageStats.json",
+    packageDB: "data/packageDB.txt",
     tasks: "data/id,tasks.txt",
     replHistory: "history-repl.json",
   }

@@ -1,13 +1,11 @@
+const DataHandler = require("./service/data-handler");
 const { getConfig } = require("./config");
 const utils = require("./utils");
-const Snippet = require("./service/snippet");
-const Package = require("./service/package")
 
 const Zip = require("adm-zip");
 const axios = require("axios");
 const FlexSearch = require("flexsearch");
 const fs = require("fs");
-const natural = require("natural");
 const path = require("path");
 const stopword = require("stopword");
 
@@ -131,61 +129,6 @@ function setupDatabase() {
   if (!fs.existsSync(SNIPPET_DB_DIR)) {
     setupSnippets();
   }
-
-  //test of load in and search
-
-  // var packageInfo = new FlexSearch("memory", {
-  //   tokenize: "strict",
-  //   doc: {
-  //     id: "id",
-  //     field: ["Description", "Keywords"],
-  //   },
-  //   encode: encode,
-  // });
-
-  // var file = fs.readFileSync(PACKAGE_DB_DIR, {encoding: "utf-8"});
-
-  // packageInfo.import(file);
-
-  // //console.log(packageInfo.search({query: "read"}));
-
-  // var snippets = new FlexSearch("memory", {
-  //   tokenize: "strict",
-  //   doc: {
-  //     id: "Name",
-  //     field: ["description"],
-  //   },
-  //   encode: encode,
-  // });
-
-  // file = fs.readFileSync(SNIPPET_DB_DIR, {encoding: "utf-8"});
-
-  // snippets.import(file);
-
-  // console.log("done")
-
-  // var result = snippets.search({query: "read"});
-
-  // var snipresult = [];
-  // for(var snip of result){
-  //   var pack = packageInfo.find(snip["package"]);
-  //   //console.log(pack)
-  //   //var pack = packageInfo.where({"Name": snip["package"]})[0];
-  //   var pobj;
-  //   if(pack){
-  //     pobj = new Package(pack);
-  //   }
-  //   var object = new Snippet(snip["snippet"], snip["id"], snip["package"], snip["num"], pobj );
-  //   snipresult.push(object);
-  // }
-
-  // snipresult = snipresult.sort(Snippet.sort)
-
-  // console.log(snipresult[0])
-
-  
-
-  //console.log(snippets.search({query: "read"}));
 }
 
 function setupPackageInfo() {
@@ -194,7 +137,7 @@ function setupPackageInfo() {
   var index = new FlexSearch("memory", {
     tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
     doc: {
-      id: "Name", //index by name for fast look up
+      id: "id", //index by name for fast look up
       field: ["Description", "Keywords"],
     },
     encode: encode,
@@ -211,34 +154,36 @@ function setupPackageInfo() {
     var packageObject = {};
 
     //we don't use every field, but I picked out what could be useful in the future
-    packageObject["Name"] = packData["Name"];
+    //packageObject["Name"] = packData["Name"];
+    packageObject["id"] = i;
     packageObject["Description"] = packData["Description"];
-    packageObject["Repository Stars Count"] = packData["Repository Stars Count"];
+    // packageObject["Repository Stars Count"] = packData["Repository Stars Count"];
     packageObject["Keywords"] = packData["Keywords"];
-    packageObject["Licenses"] = packData["Licenses"];
-    packageObject["SourceRank"] = packData["SourceRank"];
-    packageObject["Repository Forks Count"] =
-      packData["Repository Forks Count"];
-    packageObject["Repository Contributors Count"] =
-      packData["Repository Contributors Count"];
-    packageObject["Latest Release Publish Timestamp"] =
-      packData["Latest Release Publish Timestamp"];
-    packageObject["Latest Release Number"] = packData["Latest Release Number"];
-    packageObject["Dependent Projects Count"] =
-      packData["Dependent Projects Count"];
-    packageObject["Dependent Repositories Count"] =
-      packData["Dependent Repositories Count"];
-    packageObject["Repository Fork?"] = packData["Repository Fork?"];
-    packageObject["Repository Created Timestamp"] =
-      packData["Repository Created Timestamp"];
-    packageObject["Repository Updated Timestamp"] =
-      packData["Repository Updated Timestamp"];
-    packageObject["Repository Issues enabled?"] =
-      packData["Repository Issues enabled?"];
-    packageObject["Repository Wiki enabled?"] =
-      packData["Repository Wiki enabled?"];
-    packageObject["Repository Pages enabled?"] =
-      packData["Repository Pages enabled?"];
+    // packageObject["Licenses"] = packData["Licenses"];
+    // packageObject["SourceRank"] = packData["SourceRank"];
+    // packageObject["Repository Forks Count"] =
+    //   packData["Repository Forks Count"];
+    // packageObject["Repository Contributors Count"] =
+    //   packData["Repository Contributors Count"];
+    // packageObject["Latest Release Publish Timestamp"] =
+    //   packData["Latest Release Publish Timestamp"];
+    // packageObject["Latest Release Number"] = packData["Latest Release Number"];
+    // packageObject["Dependent Projects Count"] =
+    //   packData["Dependent Projects Count"];
+    // packageObject["Dependent Repositories Count"] =
+    //   packData["Dependent Repositories Count"];
+    // packageObject["Repository Fork?"] = packData["Repository Fork?"];
+    // packageObject["Repository Created Timestamp"] =
+    //   packData["Repository Created Timestamp"];
+    // packageObject["Repository Updated Timestamp"] =
+    //   packData["Repository Updated Timestamp"];
+    // packageObject["Repository Issues enabled?"] =
+    //   packData["Repository Issues enabled?"];
+    // packageObject["Repository Wiki enabled?"] =
+    //   packData["Repository Wiki enabled?"];
+    // packageObject["Repository Pages enabled?"] =
+    //   packData["Repository Pages enabled?"];
+
 
     index.add(packageObject);
 
@@ -279,8 +224,8 @@ function setupSnippets() {
 
       snippetObject["package"] = packData["package"];
       snippetObject["description"] = snippet["description"];
-      snippetObject["snippet"] = snippet["snippet"];
-      snippetObject["num"] = snippet["num"];
+      // snippetObject["snippet"] = snippet["snippet"];
+      // snippetObject["num"] = snippet["num"];
       snippetObject["id"] = snippet["id"];
 
       index.add(snippetObject);
@@ -299,13 +244,6 @@ function setupSnippets() {
 }
 
 function encode(str) {
-  var wordsArr = str.split(" ");
-  //remove stop words
-  wordsArr = stopword.removeStopwords(wordsArr, this.language);
-  //stem
-  wordsArr = wordsArr.map((word) => {
-    const cleanWord = word.replace(/[^a-zA-Z ]/g, "");
-    return natural.PorterStemmer.stem(word);
-  });
-  return wordsArr.join(" ").toLowerCase();
+  var words = DataHandler.keywords(str);
+  return words.join(" ");
 }

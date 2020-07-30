@@ -1,200 +1,207 @@
 const Snippet = require("./snippet");
 const Package = require("./package");
 
+const FlexSearch = require("flexsearch");
 const fs = require("fs");
 const path = require("path");
 const natural = require("natural");
 const stopword = require("stopword");
 const ProgressMonitor = require("progress-monitor");
 
+function encode(str) {
+  var words = DataHandler.keywords(str);
+  return words.join(" ");
+}
+
 class DataHandler {
   constructor() {
-    //max number of snippets to load, default value
-    this.MAX = -1;
+    //limit on snippets
+    this.limit = 0;
     //stopword language
     this.language = stopword.en;
     //regex for removing all non-alpha numeric characters
     this.NONALPHANUMREGX = /[^a-z0-9 ]+/g;
+
+    this.idToPackage = new Map(); //id to package object. ids are generated, not part of the dataset
+    this.nameToId = new Map();
+    this.snippets = []; //id to snippet object, ids are associated in the dataset
+
+    this.packageIndex;
+    this.snippetIndex;
+
     this.tasks = new Map();
-    //map of ids to code snippets
-    this.idTosnippets = new Map();
-    //map of package name to array of snippet ids
-    this.packageToSnippet = new Map();
-    //map of keywords to array of snippet ids
-    this.keyWordMap = new Map();
-    //map of package keywords to package name
-    this.packageKeywords = new Map();
-    //map of package name to packageInfo
-    this.packageToInfo = new Map();
   }
 
   /**
    * Returns set of tasks as an array.
    */
-  getTaskSet() {
+  getTaskArray() {
     return Array.from(this.tasks.keys());
   }
-
   /**
-   * Takes an array of ids and returns an array of snippet objects.
+   * Return array of `Snippet` objects that match a given package name.
+   * @param {String} packageName - The package to look for associated snippets.
    */
-  getSnippetsFromIds(ids = []) {
+  packageToSnippets(packageName){
+    var result = this.snippetIndex.where({"package": packageName});
+
     var snippets = [];
-    //get each id
-    for (var i = 0; i < ids.length; i++) {
-      var current = ids[i];
+    for(var r of result){
+      var id = r.id;
+      var object = this.snippets[id];
 
-      //handle duplicates, filter out those that are not first occurance
-      if (ids.indexOf(current) != i) continue;
-
-      var snippet = this.idTosnippets.get(current);
-
-      //add to array
-      snippets.push(snippet);
+      snippets.push(object);
     }
 
     return snippets;
   }
 
   /**
-   * Returns list of package names based on a task.
+   * Returns an array of `Package` objects that match a given task.
+   * @param {String} task - Task to search with.
    */
-  getPackages(task) {
-    var names = [];
+  taskToPackages(task){
+    var result = this.packageIndex.search({query: task, limit: this.limit});
 
-    //get keywords
-    var words = this.getKeywords(task);
-
-    //for each word
-    for (var word of words) {
-      var currentNames = this.packageKeywords.get(word);
-      if (currentNames) {
-        if (names.length < 1) {
-          names = currentNames;
-        } else {
-          //match all words
-          names = names.filter(function (e) {
-            if (currentNames.includes(e)) {
-              return true;
-            }
-          });
-        }
-      }
-    }
-
-    //look up task
-    var taskIds = this.tasks.get(task);
-    //if is a task suggestion
-    if (taskIds) {
-      //get snippets
-      for (var id of taskIds) {
-        var snippet = this.idTosnippets.get(id);
-        if (snippet) {
-          //get package name from snippet
-          var name = snippet.packageName;
-
-          //if not already in list of packages, add
-          if (!names.includes(name)) {
-            names.push(name);
-          }
-        }
-      }
-    }
-
-    //get package objects
     var packages = [];
-    for (var name of names) {
-      var pObject = this.packageToInfo.get(name);
-      packages.push(pObject);
-    }
+    for(var r of result){
+      var id = r.id;
+      var object = this.idToPackage.get(id);
 
-    //sort packages
-    packages = packages.sort(Package.sort);
+      packages.push(object);
+    }
 
     return packages;
   }
 
-  /**
-   * Return the set of snippets for a package.
-   */
-  getPackageSnippets(packageName) {
-    //get ids from name to id map
-    var ids = this.packageToSnippet.get(packageName);
+  taskToSnippets(task){
+    var result = this.snippetIndex.search({query: task, limit:this.limit});
 
-    //get snippets from ids
-    var snippets = this.getSnippetsFromIds(ids);
+    var snippets = [];
+    for(var r of result){
+      var id = r.id;
+      var object = this.snippets[id];
 
-    //sort snippets
-    snippets = snippets.sort(Snippet.sort);
+      snippets.push(object);
+    }
 
     return snippets;
   }
 
-  /**
-   * Returns a set of matching code snippets, given a task.
-   */
-  getSnippetsFor(task) {
-    var ids = [];
+  loadPackages(info_dir, db_dir, monitor) {
+    if(monitor){
+      monitor = ProgressMonitor.adjustTotal(monitor, 100);
+      monitor.emit("start");
+    }
+    var data = fs.readFileSync(info_dir, { encoding: "utf-8" });
 
-    var words = this.getKeywords(task);
+    //parse
+    data = JSON.parse(data);
 
-    //for each word
-    for (var word of words) {
-      //get associated ids
-      var wordIds = this.keyWordMap.get(word);
-      if (wordIds) {
-        //if first
-        if (ids.length < 1) {
-          ids = wordIds;
-        } else {
-          //if not, flter ids to those that match all words
-          ids = ids.filter(function (e) {
-            if (wordIds.includes(e)) {
-              return true;
-            }
-          });
-        }
+    var interval = Math.round(data.length / 91);
+    var i = 0;
+    for (var packData of data) {
+      if(i != 0 && i % Math.floor(interval) == 0){
+        if(monitor) monitor.emit("work", 1);
       }
+      var packageObject = new Package(packData, i);
+
+      var name = packData["Name"];
+      this.nameToId.set(name, i);
+
+      //add to map
+      this.idToPackage.set(i, packageObject);
+      i++;
     }
 
-    //look for task suggestion matches
-    var taskIds = this.tasks.get(task);
-    if (taskIds) {
-      ids = ids.concat(taskIds);
-    }
+    var database = fs.readFileSync(db_dir, { encoding: "utf-8" });
 
-    //get snippets from ids
-    var snippets = this.getSnippetsFromIds(ids);
+    this.packageIndex = new FlexSearch("memory", {
+      tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
+      doc: {
+        id: "id", //index by name for fast look up
+        field: ["Description", "Keywords"],
+      },
+      encode: encode,
+    });
 
-    return snippets;
+    this.packageIndex.import(database);
+
+    if(monitor) monitor.emit("end");
   }
 
-  /**
-   * Formats a task for us. Can return null *in the future, if we want to filter out some tasks.
-   */
-  processTask(task) {
-    //remove extra whitespace on ends
-    task = task.trim();
-    //find any blocks of whitespace and make sure they are only spaces
-    task = task.replace(/\s+/g, " ");
-    //normalize to lowercase
-    task = task.toLowerCase();
-    return task;
-  }
-
-  /**
-   * Loads in tasks from task file, returns task map.
-   */
-  async loadTasks(file_path, monitor) {
+  loadSnippets(snippet_dir, db_dir, monitor) {
     if(monitor){
       monitor = ProgressMonitor.adjustTotal(monitor, 100);
       monitor.emit("start");
     }
 
-    //read file into memory
-    var file = fs.readFileSync(file_path, { encoding: "utf-8" });
+    var data = fs.readFileSync(snippet_dir, { encoding: "utf-8" });
 
-    if(monitor) monitor.emit("work", 10);
+    //parse
+    data = JSON.parse(data);
+
+    var interval = Math.round(data.length / 91);
+
+    //for each package
+    var i = 0;
+    for (var packData of data) {
+
+      if(i != 0 && i % Math.floor(interval) == 0){
+        if(monitor) monitor.emit("work", 1);
+      }
+
+      //get package name
+      var name = packData["package"];
+
+      var snippets = packData["snippets"];
+      for (var snippet of snippets) {
+        //get snippet info
+        var code = snippet["snippet"];
+        var id = snippet["id"];
+
+        var order = snippet["num"];
+
+        var packageInfo = this.idToPackage.get(this.nameToId.get(name));
+
+        var snippetObject = new Snippet(code, id, name, order, packageInfo);
+
+        this.snippets[id] = snippetObject;
+      }
+
+      i++;
+    }
+
+
+    var database = fs.readFileSync(db_dir, { encoding: "utf-8" });
+    
+
+    this.snippetIndex = new FlexSearch("memory", {
+      tokenize: "strict",
+      doc: {
+        id: "id",
+        field: ["description"],
+      },
+      encode: encode,
+    });
+
+    this.snippetIndex.import(database);
+
+    if(monitor) monitor.emit("end");
+  }
+
+  /**
+   * 
+   * @param {String} dir 
+   * @param {ProgressMonitor} monitor 
+   */
+  loadTasks(dir, monitor) {
+    if(monitor){
+      monitor = ProgressMonitor.adjustTotal(monitor, 100);
+      monitor.emit("start");
+    }
+
+    var file = fs.readFileSync(dir, { encoding: "utf-8" });
 
     //get lines
     var lines = file.split("\n");
@@ -223,22 +230,18 @@ class DataHandler {
       }
     }
 
-    if(monitor){
-      monitor.emit("work", 100);
-      monitor.emit("end");
-    }
-
-    return this.tasks;
+    if(monitor) monitor.emit("end");
   }
 
   /**
    * Process string for keywords.
    */
-  process(string) {
+  static process(string) {
     //all lowercase
     var processed = string.toLowerCase();
 
-    //should remove markdown tables here TODO
+    //remove extra whitespace on ends
+    processed = processed.trim();
 
     //replace newlines with spaces
     processed = processed.replace(/\n/g, " ");
@@ -246,215 +249,49 @@ class DataHandler {
     //remove any non alphanum chars
     processed = processed.replace(this.NONALPHANUMREGX, "");
 
+    //find any blocks of whitespace and make sure they are only spaces
+    processed = processed.replace(/\s+/g, " ");
+
     return processed;
   }
 
-  /**
-   * Returns stemmed keywords.
-   */
-  stem(words) {
-    var stemmedWords = [];
+  static keywords(string) {
+    string = this.process(string);
 
-    for (var word of words) {
-      var stem = natural.PorterStemmer.stem(word);
-      stemmedWords.push(stem);
-    }
-
-    return stemmedWords;
-  }
-
-  /**
-   * Gets array of keywords from a given string.
-   */
-  getKeywords(string, npmKeywords) {
-    //process string
-    var text = this.process(string);
-    var words = text.split(" ");
-    //remove stopwords
+    var words = string.split(" ");
+    //remove stop words
     words = stopword.removeStopwords(words, this.language);
-    words = words.filter(function (e) {
-      if (e != "") return true;
-    });
-
-    //if we already have some keyword array, join here
-    if (npmKeywords) {
-      words = words.concat(npmKeywords);
-    }
-
     //stem
-    words = this.stem(words);
-
-    //remove duplicates
-    words = words.filter(function (e, i) {
-      //will be true only on first occurance
-      return words.indexOf(e) == i;
+    words = words.map((word) => {
+      const cleanWord = word.replace(/[^a-zA-Z ]/g, "");
+      return natural.PorterStemmer.stem(word);
     });
-
     return words;
   }
 
   /**
-   * Loads snippets, if an event emitter, will send events 10 times then at end.
-   * The event emitter is optional, and handled elsewhere. DataHandler should not care about
-   * UI, and be usable within different contexts (if we wanted to do a webapp).
+   * Formats a task for us. Can return null *in the future, if we want to filter out some tasks.
    */
-  loadSnippets(dir, monitor) {
-    var count = 0;
-    var packageNum = 0;
-
-    if(monitor){
-      monitor = ProgressMonitor.adjustTotal(monitor, 100);
-      monitor.emit("start");
-    }
-
-    //read in file
-    var data = fs.readFileSync(dir, { encoding: "utf-8" });
-
-    if(monitor) monitor.emit("work", 10);
-
-    //parse
-    data = JSON.parse(data);
-
-    //we do the progress interval here, it wont be exact but it should average out
-    var interval = Math.round(data.length / 91);
-
-    //for each package
-    var i=0;
-    for (var packData of data) {
-      if(i != 0 && i % Math.floor(interval) == 0){
-        if(monitor) monitor.emit("work", 1);
-      }
-      i++;
-
-      //get package name
-      var name = packData["package"];
-
-      var snippets = packData["snippets"];
-      for (var snippet of snippets) {
-        //exit if we hit max
-        if (count > this.MAX && this.MAX != -1) {
-          break;
-        }
-
-        //get snippet info
-        var code = snippet["snippet"];
-        var id = snippet["id"];
-        var order = snippet["num"];
-        var description = snippet["description"];
-
-        //get package info
-        var packageInfo = this.packageToInfo.get(name);
-
-        var snippetObject = new Snippet(code, id, name, order, packageInfo);
-
-        //snippet map
-        this.idTosnippets.set(id, snippetObject);
-
-        //package to ids
-        var packSnippets = this.packageToSnippet.get(name);
-        //if doesnt already exist, init array
-        if (!packSnippets) {
-          packSnippets = [];
-        }
-        packSnippets.push(id);
-        this.packageToSnippet.set(name, packSnippets);
-
-        //get keywords
-        var keywords = this.getKeywords(description);
-
-        //index keywords with ids
-        for (var word of keywords) {
-          var wordIds = this.keyWordMap.get(word);
-
-          //init if it doesnt exist
-          if (!wordIds) {
-            wordIds = [];
-          }
-
-          //add and set
-          wordIds.push(id);
-          this.keyWordMap.set(word, wordIds);
-        }
-
-        count++;
-      }
-
-      packageNum++;
-    }
-
-    if(monitor){
-      monitor.emit("work", 100);
-      monitor.emit("end");
-    }
-    
-  }
-
-  loadInfo(dir, monitor) {
-    var id = 0;
-
-    if(monitor){
-      monitor = ProgressMonitor.adjustTotal(monitor, 100);
-      monitor.emit("start");
-    }
-
-    //read in file
-    var data = fs.readFileSync(dir, { encoding: "utf-8" });
-
-    if(monitor) monitor.emit("work", 10);
-
-    data = JSON.parse(data);
-
-    var interval = data.length/91;
-
-    var i = 0;
-    //for each package entry
-    for (var pk of data) {
-      if(i != 0 && i % Math.floor(interval) == 0){
-        if(monitor) monitor.emit("work", 1);
-      }
-      i++;
-      //create object from JSON
-      var packageObject = new Package(pk, id);
-
-      //get name
-      var name = packageObject.name;
-
-      //add to map
-      this.packageToInfo.set(name, packageObject);
-
-      //get description
-      var description = packageObject.description;
-      //get npm keywords
-      var npmKeywords = packageObject.keywords;
-
-      //get keywords
-      var keywords = this.getKeywords(description, npmKeywords);
-
-      for (var word of keywords) {
-        var names = this.packageKeywords.get(word);
-        if (!names) {
-          names = [];
-        }
-        names.push(name);
-        this.packageKeywords.set(word, names);
-      }
-
-      //increment id
-      id++;
-    }
-
-    if(monitor){
-      monitor.emit("work", 100);
-      monitor.emit("end");
-    }
-
-    return this.packageToInfo;
+  processTask(task) {
+    //remove extra whitespace on ends
+    task = task.trim();
+    //find any blocks of whitespace and make sure they are only spaces
+    task = task.replace(/\s+/g, " ");
+    //normalize to lowercase
+    task = task.toLowerCase();
+    return task;
   }
 }
 
+
 // var data = new DataHandler();
-// data.loadInfo("data/packageStats.json");
-// data.loadSnippets("data/snippets.json");
-// console.log(data.idTosnippets.size);
+// data.loadPackages("data/packageStats.json", "data/packageDB.txt");
+// data.loadSnippets("data/snippets.json", "data/snippetDB.txt");
+// data.loadTasks("data/id,tasks.txt");
+
+
+// data.taskToPackages("read");
+// console.log(data.taskToSnippets("read").length);
+// data.packageToSnippets("3box-react-hooks");
 
 module.exports = DataHandler;

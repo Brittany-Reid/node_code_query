@@ -38,9 +38,9 @@ class CodeSearch {
 
     if(monitor){
       monitor.emit("start");
-      subMonitor1 = monitor.split(11);
-      subMonitor2 = monitor.split(16);
-      subMonitor3 = monitor.split(73);
+      subMonitor1 = monitor.split(22);
+      subMonitor2 = monitor.split(28);
+      subMonitor3 = monitor.split(50);
     }
 
     var startTime = process.hrtime.bigint();
@@ -51,13 +51,13 @@ class CodeSearch {
 
     //load info
     startTime = process.hrtime.bigint();
-    this.state.data.loadInfo(this.state.INFO_DIR, subMonitor2);
+    this.state.data.loadPackages(this.state.INFO_DIR, this.state.INFO_DB, subMonitor2);
     endTime = process.hrtime.bigint();
     logger.info("Info took: " + (endTime - startTime));
 
 
     startTime = process.hrtime.bigint();
-    this.state.data.loadSnippets(this.state.SNIPPET_DIR, subMonitor3);
+    this.state.data.loadSnippets(this.state.SNIPPET_DIR, this.state.SNIPPET_DB, subMonitor3);
     endTime = process.hrtime.bigint();
     logger.info("Snippets took: " + (endTime - startTime));
 
@@ -98,7 +98,7 @@ class CodeSearch {
    */
   snippetsByTask(task) {
     task = task.trim();
-    var snippets = this.state.data.getSnippetsFor(task);
+    var snippets = this.state.data.taskToSnippets(task);
 
 
 
@@ -122,7 +122,7 @@ class CodeSearch {
    */
   snippetsByPackage(packageName) {
     packageName = packageName.trim();
-    var snippets = this.state.data.getPackageSnippets(packageName);
+    var snippets = this.state.data.packageToSnippets(packageName);
     return snippets;
   }
 
@@ -131,7 +131,7 @@ class CodeSearch {
    */
   packagesByTask(task) {
       task = task.trim();
-      var packages = this.state.data.getPackages(task);
+      var packages = this.state.data.taskToPackages(task);
       return packages;
   }
 }
