@@ -174,6 +174,13 @@ class BasePrompt extends AutoComplete {
   async keypress(input, key = {}) {
     logger.debug("Pressed key: " + JSON.stringify(key) + "\n");
 
+    //intercept for escape, if suggesting
+    if(key.name == "escape"){
+      if(this.isSuggesting){
+        return this.toggle();
+      }
+    }
+
     await this.handleKey(input, key);
 
     //await super.keypress(input, key);
