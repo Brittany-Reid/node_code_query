@@ -117,12 +117,15 @@ class CodeSearch {
   }
 
   /**
-   * Returns a set of snippets belonging the given package.
-   * @param {String} packageName - Package name to search with.
+   * Returns a set of snippets belonging the given packages.
+   * @param {Array} packageNames - Package names to search with.
    */
-  snippetsByPackage(packageName) {
-    packageName = packageName.trim();
-    var snippets = this.state.data.packageToSnippets(packageName);
+  snippetsByPackages(packageNames) {
+    var snippets = [];
+    for(var p of packageNames){
+      var current = this.state.data.packageToSnippets(p);
+      if(current) snippets = snippets.concat(current);
+    }
     return snippets;
   }
 

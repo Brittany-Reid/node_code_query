@@ -344,6 +344,16 @@ class BasePrompt extends AutoComplete {
     this.render();
   }
 
+  //trying to debug why delete sometimes messes up
+  delete() {
+    let { cursor, input } = this.state;
+    logger.debug("DELETE, cursor: " + cursor);
+    if (cursor <= 0) return this.alert();
+    this.input = `${input}`.slice(0, cursor - 1) + `${input}`.slice(cursor);
+    this.moveCursor(-1);
+    this.render();
+  }
+
   /**
    * Format a string for insertion, making sure all characters are safe.
    * @param {String} string - String to format

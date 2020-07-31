@@ -30,7 +30,12 @@ const state = {
    * REPL Function to search for samples by task, then make cyclable.
    * @param {String} task - Task to search by
    */
-  samples(task) {
+  samplesByTask(task) {
+    if(!task){
+      console.log(NAME + ": Command samplesByTask() requires a task string, see help().");
+      return;
+    }
+
     //get snippets
     var snippets = searcher.snippetsByTask(task);
     if (!snippets || snippets.length < 1) {
@@ -44,13 +49,28 @@ const state = {
   },
 
   /**
-   * Get samples for a package name.
-   * @param {String} packageName - Package name to search by
+   * Get samples for a package name or multiple names.
+   * @param {String} packageName - Package name/s to search by
    */
-  packageSamples(packageName) {
-    var snippets = searcher.snippetsByPackage(packageName);
+  samples(packageName) {
+    var packages;
+
+    //get array of packages
+    if(packageName === undefined){
+      packages = searcher.state.installedPackageNames;
+    }
+    else{
+      packages = packageName.trim().split(" ");
+    }
+
+    if(packages.length < 1){
+      console.log(NAME + ": No packages installed. Install a package using install() or supply a package name as argument. See help() for more info.");
+      return;
+    }
+
+    var snippets = searcher.snippetsByPackages(packages);
     if (!snippets || snippets.length < 1) {
-      console.error(NAME + ": could not find any samples for this package");
+      console.error(NAME + ": could not find any samples for packages.");
       return;
     }
 
@@ -185,14 +205,15 @@ const state = {
    */
   help() {
     console.log("========================================");
-    console.log(
-      "samples(String task)                 search for samples using a task"
-    );
+    console.log(".editor                              open editor mode");
     console.log(
       "packages(String task, int index?)    search for packages using a task, optional index to navigate results"
     );
     console.log(
-      "packageSamples(String package)       search for samples for a package"
+      "samples(String packages?)             search for samples using package names, or with no arguments, your installed packages"
+    );
+    console.log(
+      "samplesByTask(String task)           search for samples using a task"
     );
     console.log("install(String package)              install given package");
     console.log("uninstall(String package)            uninstall given package");

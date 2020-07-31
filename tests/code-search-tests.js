@@ -22,7 +22,7 @@ describe("Code Search", function () {
             assert(snippets.length > 0);
         });
         it("should search for snippets by package", function(){
-            var snippets = codeSearch.snippetsByPackage("acute");
+            var snippets = codeSearch.snippetsByPackages(["acute"]);
             assert(snippets.length > 0);
         });
         it("should search for packages by task", function(){
