@@ -10,7 +10,7 @@ const { width } = require("enquirer/lib/utils");
 const keypress = require("enquirer/lib/keypress");
 const utils = require("enquirer/lib/utils");
 const { getLogger } = require("../../logger");
-const ncp = require("copy-paste-win32fix");
+const clipboardy = require('clipboardy');
 
 var logger = getLogger();
 
@@ -313,21 +313,60 @@ class BasePrompt extends AutoComplete {
    * Multiline paste.
    */
   paste() {
-    var cc = ncp.paste();
+    //get from clipboard
+    var toPaste;
+    try{
+      toPaste = clipboardy.readSync();
+    } catch(err){
+      //you will error if you try to paste a file or image
+      return;
+    }
 
-    // cc = "paste: " + JSON.stringify(cc);
+    //in case the package ever supports that, just make sure what is being pasted is a string, otherwise cancel
+    if(typeof toPaste !== "string") return;
 
-    cc = cc.replace(/\r\n/g, "\n");
+    //format
+    toPaste = this.formatForInsert(toPaste);
 
+    //get before and after
     var before = this.input.slice(0, this.cursor);
     var after = this.input.slice(this.cursor);
-    this.input = before + cc;
 
-    this.cursor = this.input.length;
+    //construct new input
+    var input = before + toPaste + after;
 
-    this.input += after;
+    //set
+    this.setInput(input);
+
+    //get cursor
+    this.cursor = (before + toPaste).length;
 
     this.render();
+  }
+
+  /**
+   * Format a string for insertion, making sure all characters are safe.
+   * @param {String} string - String to format
+   */
+  formatForInsert(string){
+    //remove carriage returns
+    string = string.replace(/\r\n/g, "\n");
+
+    //remove tabs
+    string = string.replace(/\t/g, "  ");
+  
+    return string;
+  }
+
+  /**
+   * Set some input within the prompt, formatting it before hand.
+   */
+  setInput(input) {
+
+    input = this.formatForInsert(input);
+
+    //remove tabs
+    this.input = input;
   }
 
   /**
@@ -335,7 +374,7 @@ class BasePrompt extends AutoComplete {
    */
   copy() {
     logger.debug("copied");
-    ncp.copy(this.input);
+    clipboardy.writeSync(this.input);
   }
 
   /**

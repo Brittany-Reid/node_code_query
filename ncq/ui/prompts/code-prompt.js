@@ -82,13 +82,6 @@ class CodePrompt extends SuggestionPrompt {
     this.render();
   }
 
-  setInput(input) {
-    //remove carriage returns
-    input = input.replace(/\r\n/g, "\n");
-    //remove tabs
-    this.input = input.replace(/\t/g, "  ")
-  }
-
   /**
    * Extend handleKeys for cycle.
    */
