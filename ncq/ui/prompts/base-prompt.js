@@ -883,8 +883,6 @@ class BasePrompt extends AutoComplete {
     //this.restore();
 
     //this.writeCursor();
-
-    this.choices = choices;
   }
 
   write(str) {
