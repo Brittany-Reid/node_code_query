@@ -36,7 +36,7 @@ async function main() {
   INFO_DIR = path.join(BASE_DIR, config.get("files.info"));
 
   //get datasets
-  getData();
+  await getData();
 
   //setup database
   setupDatabase();
