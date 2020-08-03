@@ -91,7 +91,7 @@ class CodePrompt extends SuggestionPrompt {
       //if we have snippets
       if (this.snippets && this.snippets.length > 0) {
         //snippet cycle
-        var check = this.keys["cycle"];
+        var check = this.keys["cycleNext"];
         if (this.isKey(key, check)) {
           return this.cycle(1);
         }

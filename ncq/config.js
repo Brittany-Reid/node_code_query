@@ -19,197 +19,186 @@ var defaultContrastText = "#000000"; //for text in a contrast box, https://githu
 var defaultSecondary = "purple"; //an additional contrast
 
 /**
- * Keybinding that triggers task suggestions.
+ * Default keybindings
  */
-var defaultAutocomplete = {
-  name: "tab",
-  meta: false,
-  shift: false,
-  option: false,
-  sequence: "\t",
-  raw: "\t",
-};
-
-
-/**
- * Keybinding that triggers code snippet cycling.
- */
-var defaultCycle = {
-  name: "1",
-  ctrl: false,
-  meta: true,
-  shift: false,
-  option: false,
-};
-
-/**
- * Keybinding that triggers a newline character in REPL.
- * Not all terminals can detect shift+enter.
- * You can also do down on last line.
- */
-var defaultNewLine = {
-  name: "return",
-  ctrl: false,
-  meta: false,
-  shift: true,
-  option: false,
-};
-
-/**
- * Moves the cursor up a line.
- */
-var defaultCursorUp = {
-  name: "up",
-  ctrl: false,
-  meta: false,
-  shift: false,
-  option: false,
-};
-
-/**
- * Moves the cursor down a line.
- */
-var defaultCursorDown = {
-  name: "down",
-  ctrl: false,
-  meta: false,
-  shift: false,
-  option: false,
-};
-
-/**
- * Navigates backwards in history to get the previous command.
- */
-var defaultHistoryUp = {
-  name: "up",
-  ctrl: true,
-  meta: false,
-  shift: false,
-  option: false,
-};
-
-/**
- * Navigates forward in history.
- */
-var defaultHistoryDown = {
-  name: "down",
-  ctrl: true,
-  meta: false,
-  shift: false,
-  option: false,
-};
-
-/**
- * Move to the end of the current line.
- */
-var defaultLineEnd = {
-  name: "right",
-  ctrl: true,
-  meta: false,
-  shift: false,
-  option: false,
-};
-
-/**
- * Move to the start of the current line.
- */
-var defaultLineStart = {
-  name: "left",
-  ctrl: true,
-  meta: false,
-  shift: false,
-  option: false,
-};
-
-/**
- * Special multiline paste.
- */
-var defaultPaste = {
-  name: "v",
-  ctrl: true,
-  meta: false,
-  shift: false,
-  option: false,
-};
-
-/**
- * Copy entire input to clipboard (even non-visble snippets scrolled off screen).
- */
-var defaultCopy = {
-  name: "s",
-  ctrl: true,
-  meta: false,
-  shift: false,
-  option: false,
+var defaultKeybindings = {
+  autocomplete: {
+    name: "tab",
+    meta: false,
+    shift: false,
+    option: false,
+    sequence: "\t",
+    raw: "\t",
+  },
+  cycleNext: {
+    name: "1",
+    ctrl: false,
+    meta: true,
+    shift: false,
+    option: false,
+  },
+  cyclePrev: {},
+  newLine: {
+    name: "return",
+    ctrl: false,
+    meta: false,
+    shift: true,
+    option: false,
+  },
+  cursorDown: {
+    name: "down",
+    ctrl: false,
+    meta: false,
+    shift: false,
+    option: false,
+  },
+  cursorUp: {
+    name: "up",
+    ctrl: false,
+    meta: false,
+    shift: false,
+    option: false,
+  },
+  lineEnd: {
+    name: "right",
+    ctrl: true,
+    meta: false,
+    shift: false,
+    option: false,
+  },
+  lineStart: {
+    name: "left",
+    ctrl: true,
+    meta: false,
+    shift: false,
+    option: false,
+  },
+  historyDown: {
+    name: "down",
+    ctrl: true,
+    meta: false,
+    shift: false,
+    option: false,
+  },
+  historyUp: {
+    name: "up",
+    ctrl: true,
+    meta: false,
+    shift: false,
+    option: false,
+  },
+  paste: {
+    name: "v",
+    ctrl: true,
+    meta: false,
+    shift: false,
+    option: false,
+  },
+  copy: {
+    name: "s",
+    ctrl: true,
+    meta: false,
+    shift: false,
+    option: false,
+  },
+  clear: {},
+  editor: {},
+  help: {},
+  exit: {},
 };
 
 /**
  * Mac specific keybindng overwrites.
  */
-var macDefaults = {
-  keybindings: {
-    cycle: {
+var macKeybindings = {
+    cycleNext: {
       name: "right",
       ctrl: false,
       meta: false,
       shift: true,
       option: false,
     },
-  },
-};
+  };
 
 /**
  * Linux specific keybindng overwrites.
  */
-var linuxDefaults = {
-  keybindings: {
-    cycle: defaultCycle,
-  },
+var linuxLKeybindings = {};
+
+
+var colors = {
+  contrast: defaultContrast,
+  contrastText: defaultContrastText,
+  secondary: defaultSecondary,
 };
 
-var dflt = {
-  keybindings: {
-    autocomplete: [defaultAutocomplete, {name: "f1"}],
-    cycle: [defaultCycle, {name: "f3"}],
-    cyclePrev: {name: "f2"},
-    newLine: [defaultNewLine, {name: "f4"}],
-    cursorDown: defaultCursorDown,
-    cursorUp: defaultCursorUp,
-    lineEnd: defaultLineEnd,
-    lineStart: defaultLineStart,
-    historyDown: defaultHistoryDown,
-    historyUp: defaultHistoryUp,
-    paste: [defaultPaste, {name:"f10"}],
-    copy: [defaultCopy, {name:"f9"}],
-    clear: {name:"f5"},
-    editor: {name: "f8"},
-    help: {name: "f11"},
-    exit: {name: "f12"},
-  },
-  colors: {
-    contrast: defaultContrast,
-    contrastText: defaultContrastText,
-    secondary: defaultSecondary,
-  },
-  files:{
-    snippets: "data/snippets.json",
-    snippetDB: "data/snippetDB.txt",
-    info: "data/packageStats.json",
-    packageDB: "data/packageDB.txt",
-    tasks: "data/id,tasks.txt",
-    replHistory: "history-repl.json",
-  }
+var files = {
+  snippets: "data/snippets.json",
+  snippetDB: "data/snippetDB.txt",
+  info: "data/packageStats.json",
+  packageDB: "data/packageDB.txt",
+  tasks: "data/id,tasks.txt",
+  replHistory: "history-repl.json",
 };
+
+var functionKeys = {
+  autocomplete: { name: "f1" },
+  cyclePrev: { name: "f2" },
+  cycleNext: { name: "f3" },
+  newLine: { name: "f4" },
+  clear: { name: "f5" },
+  editor: { name: "f6" },
+  copy: { name: "f7" },
+  paste: { name: "f8" },
+  help: { name: "f9" },
+  exit: { name: "f10" },
+}
+
+var defaultConfig = {};
+
+// var dflt = {
+//   keybindings: {
+//     autocomplete: [defaultAutocomplete, { name: "f1" }],
+//     cycleNext: [defaultCycle, { name: "f3" }],
+//     cyclePrev: { name: "f2" },
+//     newLine: [defaultNewLine, { name: "f4" }],
+//     cursorDown: defaultCursorDown,
+//     cursorUp: defaultCursorUp,
+//     lineEnd: defaultLineEnd,
+//     lineStart: defaultLineStart,
+//     historyDown: defaultHistoryDown,
+//     historyUp: defaultHistoryUp,
+//     paste: [defaultPaste, { name: "f10" }],
+//     copy: [defaultCopy, { name: "f9" }],
+//     clear: { name: "f5" },
+//     editor: { name: "f8" },
+//     help: { name: "f11" },
+//     exit: { name: "f12" },
+//   },
+//   colors: {
+//     contrast: defaultContrast,
+//     contrastText: defaultContrastText,
+//     secondary: defaultSecondary,
+//   },
+//   files: {
+//     snippets: "data/snippets.json",
+//     snippetDB: "data/snippetDB.txt",
+//     info: "data/packageStats.json",
+//     packageDB: "data/packageDB.txt",
+//     tasks: "data/id,tasks.txt",
+//     replHistory: "history-repl.json",
+//   },
+// };
 
 /**
  * Checks OS and reassigns default keys.
  */
 function handleOS() {
   if (process.platform == "darwin") {
-    var keys = macDefaults.keybindings;
+    var keys = macKeybindings;
     reassignKeys(keys);
   } else if (process.platform == "linux") {
-    var keys = linuxDefaults.keybindings;
+    var keys = linuxLKeybindings;
     reassignKeys(keys);
   }
 }
@@ -222,25 +211,48 @@ function reassignKeys(keySet) {
   for (var i = 0; i < keyNames.length; i++) {
     var name = keyNames[i];
     var key = keySet[name];
-    dflt.keybindings[name] = key;
+    defaultKeybindings[name] = key;
   }
 }
 
 /**
  * Updates config with defaults if any are missing.
  */
-function update(category){
-  var settings = dflt[category];
+function update(category) {
+  var settings = defaultConfig[category];
   var fields = Object.keys(settings);
 
-  for(var field of fields){
+  for (var field of fields) {
     var name = category + "." + field;
     var current = config.get(name);
-    
-    if(!current || current == {}){
+
+    if (!current || current == {}) {
       config.set(name, settings[field]);
     }
   }
+}
+
+function setupDefault(){
+  defaultConfig.keybindings = defaultKeybindings;
+  defaultConfig.colors = colors;
+  defaultConfig.files = files;
+
+  var keyNames = Object.keys(functionKeys);
+  for(var name of keyNames){
+    var binding = defaultConfig.keybindings[name];
+    if(!binding || !Object.keys(binding).length){
+      binding = functionKeys[name];
+    }
+    else if (typeof binding === "array"){
+      binding = [...binding, functionKeys[name]];
+    }
+    else{
+      binding = [binding, functionKeys[name]];
+    }
+
+    defaultConfig.keybindings[name] = binding;
+  }
+
 }
 
 /**
@@ -253,25 +265,28 @@ function setupKeybindings() {
   //overwrite defaults based on OS
   handleOS();
 
+  //setup defaults
+  setupDefault();
+
   //do colours
   if (!config.has("colors")) {
     //set all defaults
-    config.set("colors",  dflt.colors);
+    config.set("colors", defaultConfig.colors);
   } else {
     update("colors");
   }
 
   //do keybindings
   if (!config.has("keybindings")) {
-    config.set("keybindings", dflt.keybindings);
+    config.set("keybindings", defaultConfig.keybindings);
   } else {
     update("keybindings");
   }
 
   //do files
-  if(!config.has("files")){
-    config.set("files", dflt.files);
-  }else{
+  if (!config.has("files")) {
+    config.set("files", defaultConfig.files);
+  } else {
     update("files");
   }
 }
@@ -291,9 +306,14 @@ function getConfig() {
   return config;
 }
 
+function getFunctionKeys(){
+  return functionKeys;
+}
+
 function getDefault() {
-  return dflt;
+  return defaultConfig;
 }
 
 exports.getConfig = getConfig;
 exports.getDefault = getDefault;
+exports.getFunctionKeys = getFunctionKeys;
