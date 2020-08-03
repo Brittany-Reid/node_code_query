@@ -407,7 +407,7 @@ function editor() {
   //clear context
   this.clearBufferedCommand();
   this.resetContext();
-  Object.assign(replInstance.context, state); //bit of a hack to get our commands back, should i move them to the dot style?
+  // Object.assign(replInstance.context, state); //bit of a hack to get our commands back, should i move them to the dot style?
   //call default load
   replInstance.commands["load"].action.call(replInstance, "index.js");
 }
