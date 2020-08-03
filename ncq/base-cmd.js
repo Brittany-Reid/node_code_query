@@ -9,7 +9,7 @@ class Cmd {
     this.input = input;
     this.lastcmd = "";
     this.doc_leader = "";
-    this.doc_header = "Documented commands (type help(<topic>)):";
+    this.doc_header = "Documented commands (type help <topic>):";
     this.misc_header = "Miscellaneous help topics:";
     this.undoc_header = "Undocumented commands:";
     this.nohelp = "*** No help on ";
@@ -86,26 +86,25 @@ class Cmd {
     if (line == "") {
       return [null, null, line];
     }
-    var c = line.indexOf("(");
-    var cmd = line.substring(0, c);
-    //if no bracket accept argumentless
-    if(c == -1){
-      cmd = line;
-      return [cmd, "", line];
-    }
-    var args = line.substring(c+1);
 
-    var a = args.lastIndexOf(")");
-    args = args.substring(0, a);
 
-    if(args[0] == "\""){
-      args = args.substring(1);
+    var i = 0;
+    for (let index = 0; index < line.length; index++) {
+      let n = line.charCodeAt(index);
+      if (
+        !(n > 47 && n < 58) &&
+        !(n >= 65 && n < 91) &&
+        !(n >= 97 && n < 123) &&
+        !(n == 95)
+      ) {
+        break;
+      }
+      i++;
+      
     }
-    if(args[args.length-1] == "\""){
-      args = args.substring(0, args.length-1);
-    }
+    var cmd = line.substring(0, i);
+    var args = line.substring(i).trim();
 
-    args = args.trim();
     return [cmd, args, line];
   }
 
@@ -132,7 +131,7 @@ class Cmd {
 
   help_help(arg) {
     this.print(
-      'List available commands with "help()" or detailed help with "help(<cmd>)".'
+      'List available commands with "help" or detailed help with "help <cmd>".'
     );
   }
 
@@ -157,10 +156,10 @@ class Cmd {
         if (name.substring(0, 3) === "do_") {
           var cmd = name.substring(3);
           if (help[cmd]) {
-            cmds_doc.push(cmd+"()");
+            cmds_doc.push(cmd);
             delete help[cmd];
           } else {
-            cmds_undoc.push(cmd+ "()");
+            cmds_undoc.push(cmd);
           }
         }
       });

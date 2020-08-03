@@ -8,10 +8,6 @@
 
 NCQ can be used to start node.js REPLs and find code snippets for given strings. This gif quickly demonstrates the creation of a REPL, the search for functionality, and the execution of code snippets.
 
-<p align="center">
-<img src="https://media.giphy.com/media/YpYDeyS8ZZWz3E2l1J/giphy.gif">
-</p>
-
 <!--[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.-->
 
 ## Setup
@@ -19,8 +15,6 @@ NCQ can be used to start node.js REPLs and find code snippets for given strings.
 1. Download and install Node.js version 12.18.3 and NPM (https://nodejs.org/en/).
 2. Clone this repository.
 3. Run `npm install` in the repository directory. The setup script will automatically download our dataset from https://zenodo.org/record/3923490/files/ncqData.zip and extract it into the data folder. Then, it will setup the Database files for you. Note: these files is too large to upload to Github. 
-<!-- 3. Download the following .zip file: https://zenodo.org/record/3923490/files/ncqData.zip. This is our data set of code snippets and library info. Note: this file is too large to upload to Github. 
-4. Unzip this file into the directory "data".  -->
 
 ## Example
 
@@ -59,24 +53,30 @@ The square brackets in the command prompt indicate that you successfully created
 
 Please note that there is a (context-sensitive) menu of (parameterless) function keys in the bottom of the screen. You can use any of these functions with the tool. We describe some of these functions as we move along this tutorial.
 
-4. Type help() in the command line or F12 (as per the menu of function keys) to see which commands you can use. 
+4. Type `.help` in the command line or F12 (as per the menu of function keys) to see which commands you can use. 
 
 ```sh
-NCQ [] >  help() 
-help()
-========================================
-samples(String task)                 search for samples using a task 
-packages(String task)                search for packages using a task
-packageSamples(String package)       search for samples for a package
-install(String package)              install given package
-uninstall(String package)            uninstall given package
+NCQ [] >  .help
+.help
+.break           Sometimes you get stuck, this gets you out
+.clear           Break, and also clear the local context
+.editor          Enter editor mode
+.exit            Exit the repl
+.help            Print this help message
+.install         Install given package. (Usage: .install <package>)
+.load            Load JS from a file into the REPL session
+.packages        Search for packages using a task, optional index to navigate results. (Usage: .packages <task> , <index>)
+.samples         Search for samples using package names, or with no arguments, your installed packages. (Usage: .samples <package/s>)
+.samplesByTask   Search for samples using a task. (Usage: .samplesByTask <task>)
+.save            Save all evaluated commands in this REPL session to a file
+.version         Print REPL version
 ```
 
-5. Type samples("file") and see what happens.
+5. Type `.samples file` and see what happens.
 
 ```sh
-NCQ [] >  samples("file")
-samples("file")
+NCQ [] >  .samples file
+.samples file
 NCQ [] >  // ...
 fs.readFileSync(new URL('file://hostname/p/a/t/h/file'));
 ```
@@ -85,8 +85,8 @@ Several snippets are printed on screen. The first one shows that the module/libr
 6. Install module "fs"
 
 ```sh
-NCQ [] >  install("fs") 
-install("fs")
+NCQ [] >  .install fs 
+.install fs
 + fs@0.0.1-security
 added 1 package and audited 1 package in 0.675s
 found 0 vulnerabilities
@@ -115,35 +115,64 @@ file = fs.readFileSync(new URL('file:///etc/passwd'))
 Variable file stores a buffer with byte contents. Try printing that on screen now.
 
 
-### Commands
+## Commands
 
-#### repl("package1, package2...")
+### **CLI Commands:**
 
-![REPL](/media/repl().gif)
+### `repl <package>`
 
 Start a node.js REPL with the given packages installed.
 
+### **REPL Commands:**
+
 **Once the REPL is started you can use these commands:**
 
-#### packages("task", index? = 0)
+### `.packages <task>, <index?>`
 
-![PACKAGES](/media/packages().gif)
+Enter a task to search for packages. Prints a table of the 25 most starred packages and their descriptions. Optional index argument can be used to see more results. Starts at 0 by default. 
 
-Enter a task to search for packages. Prints a table of the 25 most starred packages and their descriptions. Optional index argument can be used to see more results. Starts at 0 by default.
+Example:
+```
+NCQ [] >  .packages read csv file, 0
 
-#### samples("packages")
+  ┌─────────┬───────────────────┬───────────────────────────────────────────────┐
+  │  index  │        name       │                   desciption                  │
+  ├─────────┼───────────────────┼───────────────────────────────────────────────┤
+  │    0    │ csv-to-collection │ reads a csv file and returns a collection of  │
+  │         │                   │ objects, using the first record's values...   │ 
+  └─────────┴───────────────────┴───────────────────────────────────────────────┘ 
+
+```
+
+### `.samples <package>`
 Search for samples by package name. If no package/s specified, the command will search for code snippets from installed packages. Code snippets will be inserted into your prompt, and cyclable using the cycle button.
 
-#### samplesByTask("task")
+```sh
+NCQ [] >  .samples csv-to-collection
+.samples csv-to-collection
+package: csv-to-collection, rank: 0, 1/2
+NCQ [] > // this csv:
+//
+// name,age
+// sally,5
+// billy,10
+
+// becomes...
+[
+  {name: "sally", age: "5"},
+  {name: "billy", age: "10"}
+]
+
+```
+
+### `.samplesByTask <task>`
 Enter a task to find code snippets. Code snippets will be inserted into your prompt, and cyclable using the cycle button (default <kbd>alt</kbd> + <kbd>1</kbd>) or according to your platform. For that see the session Keybindings.
 
-#### install("package")
-
-![INSTALL](/media/install().gif)
+### `.install <package>`
 
 Runs `npm install` for a given package.
 
-#### uninstall("package")
+### `.uninstall <package>`
 Runs `npm uninstall` for a given package.
 
 ### Keybindings
@@ -165,8 +194,6 @@ The following functinalities are mapped to these keys by default:
 | Copy current input | <kbd>ctrl</kbd> + <kbd>s</kbd> |
 
 Because of different terminal configurations, many of these keybindings can be modified in the config.json file generated on first run.
-
-For MacOs, delete the files `config.Js` and `config.json`, rename the file config-macos.Js to config.Js and go ahead with your projects.
 
 
 <!--

@@ -22,6 +22,8 @@ class CodePrompt extends SuggestionPrompt {
       this.doSnippet(0);
       this.cursor = this.input.length;
     }
+
+    this.helpCommand = ".help";
   }
 
   doSnippet(index) {

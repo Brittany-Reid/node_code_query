@@ -28,7 +28,7 @@ class NcqCmd extends Cmd {
       "No REPL. Create a node.js REPL with the repl() command to use this command: ";
     this.unknown = "Did not understand command: ";
     this.helpPrompt = "Write help to show the list of commands.";
-    this.replCmds = Object.keys(repl.state);
+    this.replCmds = [];
     this.counter = 0;
   }
 

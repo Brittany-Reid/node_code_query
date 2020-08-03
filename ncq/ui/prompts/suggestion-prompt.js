@@ -32,6 +32,8 @@ class SuggestionPrompt extends BasePrompt {
     this.styles.cancelled = this.styles.dark;
     this.styles.muted = this.styles.dark;
     this.styles.submitted = this.styles.primary;
+
+    this.helpCommand = "help";
   }
 
   /**
@@ -53,7 +55,7 @@ class SuggestionPrompt extends BasePrompt {
     //help
     var check = this.keys["help"];
     if (this.isKey(key, check)) {
-      this.input = "help()";
+      this.input = this.helpCommand;
       this.submit();
       return;
     }
