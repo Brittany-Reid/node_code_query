@@ -363,6 +363,7 @@ function editor() {
   );
   var filePath = path.join(process.cwd(), "index.js");
   var command = "node " + appPath + " " + filePath;
+  var lastMod = fs.statSync(filePath).mtime.toISOString();
 
   //https://stackoverflow.com/questions/25789064/node-js-readline-with-interactive-child-process-spawning
   //not exactly related but a bit of info on setrawmode and why it avoids some weird bugs
@@ -379,6 +380,11 @@ function editor() {
 
   //without this ctrl+c is passed to parent, this really seems to fix a lot of child process issues!
   process.stdin.setRawMode(false);
+
+  //if there was no modification, done
+  if(fs.statSync(filePath).mtime.toISOString() === lastMod){
+    return;
+  }
 
   console.log("// Loading and running new context, will print");
 
