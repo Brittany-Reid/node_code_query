@@ -11,6 +11,7 @@ class Package{
         this.name = info["Name"];
         this.description = info["Description"];
         this.stars = parseInt(info["Repository Stars Count"]);
+        if(!this.stars) this.stars = 0;
         this.keywords = info["Keywords"].split(",");
 
         this.rankValue = undefined;

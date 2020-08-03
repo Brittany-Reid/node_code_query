@@ -52,7 +52,7 @@ describe("NcqCmd", function () {
 
       ncqCmd.input.input = async function () {
         if (counter == 0) {
-          await send("exit()" ,ncqCmd.input.prompt);
+          await send("exit" ,ncqCmd.input.prompt);
         }
         counter++;
       };
@@ -61,25 +61,25 @@ describe("NcqCmd", function () {
 
       assert.strictEqual(output[0], ncqCmd.opening);
     });
-    it("should explain repl only commands", async function () {
-      var ncqCmd = new NcqCmd(new PromptHandler(Input, { show: false }), packages);
+    // it("should explain repl only commands", async function () {
+    //   var ncqCmd = new NcqCmd(new PromptHandler(Input, { show: false }), packages);
 
-      var counter = 0;
+    //   var counter = 0;
 
-      ncqCmd.input.input = async function () {
-        if (counter == 0) {
-          await send("samples()", ncqCmd.input.prompt);
-        }
-        if (counter == 1) {
-          await send("exit()", ncqCmd.input.prompt);
-        }
-        counter++;
-      };
+    //   ncqCmd.input.input = async function () {
+    //     if (counter == 0) {
+    //       await send("samples()", ncqCmd.input.prompt);
+    //     }
+    //     if (counter == 1) {
+    //       await send("exit", ncqCmd.input.prompt);
+    //     }
+    //     counter++;
+    //   };
 
-      await ncqCmd.run();
+    //   await ncqCmd.run();
 
-      assert.strictEqual(output[1], ncqCmd.replWarning + "samples()");
-    });
+    //   assert.strictEqual(output[1], ncqCmd.replWarning + "samples()");
+    // }); //no state anymore for now dont worry
     it("should print for unknown commands", async function () {
       var ncqCmd = new NcqCmd(new PromptHandler(Input, { show: false }), packages);
 
@@ -87,17 +87,17 @@ describe("NcqCmd", function () {
 
       ncqCmd.input.input = async function () {
         if (counter == 0) {
-          await send("unknown()", ncqCmd.input.prompt);
+          await send("unknown", ncqCmd.input.prompt);
         }
         if (counter == 1) {
-          await send("exit()", ncqCmd.input.prompt);
+          await send("exit", ncqCmd.input.prompt);
         }
         counter++;
       };
 
       await ncqCmd.run();
 
-      assert.strictEqual(output[1], ncqCmd.unknown + "unknown()");
+      assert.strictEqual(output[1], ncqCmd.unknown + "unknown");
     });
     it("should print help for repl", async function () {
       var ncqCmd = new NcqCmd(new PromptHandler(Input, { show: false }), packages);
@@ -106,10 +106,10 @@ describe("NcqCmd", function () {
 
       ncqCmd.input.input = async function () {
         if (counter == 0) {
-          await send("help(repl)", ncqCmd.input.prompt);
+          await send("help repl", ncqCmd.input.prompt);
         }
         if (counter == 1) {
-          await send("exit()", ncqCmd.input.prompt);
+          await send("exit", ncqCmd.input.prompt);
         }
         counter++;
       };

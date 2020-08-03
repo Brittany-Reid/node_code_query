@@ -6,6 +6,7 @@ const State = require("./state");
 const Evaluator = require("./evaluator");
 const { start } = require("repl");
 const ProgressMonitor = require("progress-monitor");
+const Package = require("./package");
 
 var logger = getLogger();
 
@@ -135,6 +136,10 @@ class CodeSearch {
   packagesByTask(task) {
       task = task.trim();
       var packages = this.state.data.taskToPackages(task);
+
+      //sort
+      packages = packages.sort(Package.sort);
+
       return packages;
   }
 }

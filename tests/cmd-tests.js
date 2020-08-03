@@ -44,26 +44,7 @@ describe("Cmd", function () {
   });
 
   describe("functions", function () {
-    it("should run help()", async function () {
-      var myCmd = new Cmd(new PromptHandler(Input, { show: false }));
-
-      var counter = 0;
-
-      myCmd.input.input = async function () {
-        if (counter == 0) {
-          await send("help()", myCmd.input.prompt);
-        }
-        if (counter == 1) {
-          await send("exit()", myCmd.input.prompt);
-        }
-        counter++;
-      };
-
-      await myCmd.run();
-
-      assert.strictEqual(output[1], "Documented commands (type help(<topic>)):");
-    });
-    it("should also accept no brackets for argumentless", async function () {
+    it("should run help", async function () {
       var myCmd = new Cmd(new PromptHandler(Input, { show: false }));
 
       var counter = 0;
@@ -73,14 +54,14 @@ describe("Cmd", function () {
           await send("help", myCmd.input.prompt);
         }
         if (counter == 1) {
-          await send("exit()", myCmd.input.prompt);
+          await send("exit", myCmd.input.prompt);
         }
         counter++;
       };
 
       await myCmd.run();
 
-      assert.strictEqual(output[1], "Documented commands (type help(<topic>)):");
+      assert.strictEqual(output[1], "Documented commands (type help <topic>):");
     });
     it("should print help for exit", async function () {
       var myCmd = new Cmd(new PromptHandler(Input, { show: false }));
@@ -89,10 +70,10 @@ describe("Cmd", function () {
 
       myCmd.input.input = async function () {
         if (counter == 0) {
-          await send("help(\"exit\")", myCmd.input.prompt);
+          await send("help exit", myCmd.input.prompt);
         }
         if (counter == 1) {
-          await send("exit()", myCmd.input.prompt);
+          await send("exit", myCmd.input.prompt);
         }
         counter++;
       };
@@ -111,10 +92,10 @@ describe("Cmd", function () {
 
       myCmd.input.input = async function () {
         if (counter == 0) {
-          await send("help(\"help\")", myCmd.input.prompt);
+          await send("help help", myCmd.input.prompt);
         }
         if (counter == 1) {
-          await send("exit()", myCmd.input.prompt);
+          await send("exit", myCmd.input.prompt);
         }
         counter++;
       };
@@ -123,7 +104,7 @@ describe("Cmd", function () {
 
       assert.strictEqual(
         output[0],
-        'List available commands with "help()" or detailed help with "help(<cmd>)".'
+        'List available commands with "help" or detailed help with "help <cmd>".'
       );
     });
     it("should handle unknown syntax", async function () {
@@ -141,7 +122,7 @@ describe("Cmd", function () {
           myCmd.input.prompt.submit();
         }
         if (counter == 1) {
-          await send("exit()", myCmd.input.prompt);
+          await send("exit", myCmd.input.prompt);
         }
         counter++;
       };
@@ -163,15 +144,13 @@ describe("Cmd", function () {
           await myCmd.input.prompt.keypress("e");
           await myCmd.input.prompt.keypress("l");
           await myCmd.input.prompt.keypress("p");
-          await myCmd.input.prompt.keypress("(");
-          await myCmd.input.prompt.keypress(")");
           myCmd.input.prompt.submit();
         }
         if (counter == 1) {
           myCmd.input.prompt.submit();
         }
         if (counter == 2) {
-          await send("exit()", myCmd.input.prompt);
+          await send("exit", myCmd.input.prompt);
         }
         counter++;
       };
@@ -189,44 +168,20 @@ describe("Cmd", function () {
 
       myCmd.input.input = async function () {
         if (counter == 0) {
-          await send("aa()", myCmd.input.prompt);
+          await send("aa", myCmd.input.prompt);
         }
         if (counter == 1) {
           myCmd.input.prompt.submit();
         }
         if (counter == 2) {
-          await send("exit()", myCmd.input.prompt);
+          await send("exit", myCmd.input.prompt);
         }
         counter++;
       };
 
       await myCmd.run();
 
-      assert.strictEqual(output[0], "*** Unknown syntax: aa()");
-    });
-    it("should handle unkown command", async function () {
-      var myCmd = new Cmd(
-        new PromptHandler(Input, { show: false, history: {} })
-      );
-
-      var counter = 0;
-
-      myCmd.input.input = async function () {
-        if (counter == 0) {
-          await send("()", myCmd.input.prompt);
-        }
-        if (counter == 1) {
-          myCmd.input.prompt.submit();
-        }
-        if (counter == 2) {
-          await send("exit()", myCmd.input.prompt);
-        }
-        counter++;
-      };
-
-      await myCmd.run();
-
-      assert.strictEqual(output[0], "*** Unknown syntax: ()");
+      assert.strictEqual(output[0], "*** Unknown syntax: aa");
     });
     it("should handle unknown help command", async function () {
       var myCmd = new Cmd(
@@ -237,10 +192,10 @@ describe("Cmd", function () {
 
       myCmd.input.input = async function () {
         if (counter == 0) {
-          await send('help("unknown")', myCmd.input.prompt);
+          await send('help unknown', myCmd.input.prompt);
         }
         if (counter == 1) {
-          await send("exit()", myCmd.input.prompt);
+          await send("exit", myCmd.input.prompt);
         }
         counter++;
       };
@@ -292,10 +247,10 @@ describe("Cmd", function () {
       var counter = 0;
       myCmd.input.input = async function () {
         if (counter == 0) {
-          await send("help()", myCmd.input.prompt);
+          await send("help", myCmd.input.prompt);
         }
         if (counter == 1) {
-          await send("exit()", myCmd.input.prompt);
+          await send("exit", myCmd.input.prompt);
         }
         counter++;
       };
@@ -303,7 +258,7 @@ describe("Cmd", function () {
       await myCmd.run();
 
       assert.strictEqual(output[5], "Undocumented commands:");
-      assert.strictEqual(output[7], "test()");
+      assert.strictEqual(output[7], "test");
     });
   });
 

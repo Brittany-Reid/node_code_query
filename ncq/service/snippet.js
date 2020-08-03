@@ -34,6 +34,9 @@ class Snippet {
         if(this.packageInfo){
             this.rankValue = this.packageInfo.stars;
         }
+        else{
+            this.rankValue = 0;
+        }
     }
 
     return this.rankValue;
