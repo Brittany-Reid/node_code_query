@@ -111,7 +111,7 @@ class CodeSearch {
 
     //preference installed
     snippets = snippets.sort(
-      this.preferInstalled(this.state.installedPackageNames)
+      this.preferInstalled(Array.from(this.state.installedPackageNames))
     );
 
     return snippets;

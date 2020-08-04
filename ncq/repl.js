@@ -84,12 +84,12 @@ function initialize() {
  */
 function getInstalledPackages() {
   var args = process.argv.slice(2);
-  var installedPackages = [];
+  var installedPackages = new Set();
 
   for (var pk of args) {
     //ignore passed options
     if (!pk.trim().startsWith("--")) {
-      installedPackages.push(pk);
+      installedPackages.add(pk);
     }
   }
 
@@ -104,7 +104,7 @@ function initializeREPL(tasks) {
   var pReadable = new PromptReadable({
     choices: tasks.slice(0, 10000).sort(),
     prefix: NAME,
-    message: "[" + searcher.state.installedPackageNames.join(" ") + "]",
+    message: "[" + Array.from(searcher.state.installedPackageNames).join(" ") + "]",
     footer: footer,
     multiline: true,
     scroll: true,
@@ -310,13 +310,15 @@ function install(packageString, output = "inherit") {
   }
 
   //update state
-  searcher.state.installedPackageNames = searcher.state.installedPackageNames.concat(
-    packages
-  );
+  for(var p of packages){
+    searcher.state.installedPackageNames.add(p);
+  }
+
+  var packageArray = Array.from(searcher.state.installedPackageNames);
 
   //update repl
   replInstance.inputStream.setMessage(
-    "[" + searcher.state.installedPackageNames.join(" ") + "]"
+    "[" + packageArray.join(" ") + "]"
   );
 }
 
@@ -345,12 +347,13 @@ function uninstall(packageString, output = "inherit") {
 
   //update installed packages
   for (var packageName of packages) {
-    var index = searcher.state.installedPackageNames.indexOf(packageName);
-    if (index != -1) searcher.state.installedPackageNames.splice(index);
+    if(searcher.state.installedPackageNames.has(packageName)){
+      searcher.state.installedPackageNames.delete(packageName);
+    }
   }
 
   replInstance.inputStream.setMessage(
-    "[" + searcher.state.installedPackageNames.join(" ").trim() + "]"
+    "[" + Array.from(searcher.state.installedPackageNames).join(" ").trim() + "]"
   );
 }
 
