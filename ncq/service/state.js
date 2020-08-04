@@ -19,7 +19,7 @@ class State {
     this.HISTORY_DIR = path.join(this.BASE_DIR, config.get("files.replHistory"));
 
     //array of installed packages by name
-    this.installedPackageNames = [];
+    this.installedPackageNames = new Set();
     //data handler object
     this.data = undefined;
   }
