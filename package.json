@@ -11,9 +11,10 @@
     "node": "<=12.18.3"
   },
   "scripts": {
+    "nargs": "node --max-old-space-size=4096",
     "install": "npm run setup",
-    "setup": "node ncq/setup",
-    "start": "node ncq/ncq",
+    "setup": "npm run nargs ncq/setup",
+    "start": "npm run nargs ncq/ncq",
     "test": "mocha tests",
     "coverage": "nyc npm run test"
   },

@@ -54,8 +54,11 @@ async function getData() {
 async function downloadData(dir) {
   console.error("ERROR: Dataset missing: " + dir);
 
-  //download
-  await download(DATA_URL, TMP_DIR);
+  //if zip already exists from a faileds setup dont redownload
+  if(!fs.existsSync(TMP_DIR)){
+    //download
+    await download(DATA_URL, TMP_DIR);
+  }
 
   //extract to data
   console.log(
@@ -83,7 +86,7 @@ async function download(url, dir) {
         console.log(err);
         reject(err);
       })
-      .on("end", () => {
+      .on("finish", () => {
         resolve();
       });
 

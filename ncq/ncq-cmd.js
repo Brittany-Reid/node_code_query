@@ -127,9 +127,15 @@ class NcqCmd extends Cmd {
       args.push("--log");
     }
 
+    //pass current process arguments
+    var nodeOptions = "";
+    if(process.execArgv){
+      nodeOptions = process.execArgv.join(" ") + " ";
+    }
+
     try {
       cprocess.execSync(
-        "node ../ncq/repl.js " + required.join(" ") + " " + args.join(" "),
+        "node " + nodeOptions + "../ncq/repl.js " + required.join(" ") + " " + args.join(" "),
         {
           stdio: "inherit",
         }
