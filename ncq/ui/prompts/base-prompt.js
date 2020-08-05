@@ -938,6 +938,15 @@ class BasePrompt extends AutoComplete {
     logger.debug("render end");
   }
 
+  // header() {
+  //   var header = this.options["header"];
+  //   var result;
+  //   if (typeof header === 'function') {
+  //     result = header.call();
+  //   }
+  //   return "a";
+  // }
+
   renderNoClear() {
     let { submitted, size } = this.state;
 
@@ -1096,7 +1105,11 @@ class BasePrompt extends AutoComplete {
       idx = -1;
     }
 
-    let header = colors.unstyle(this.state.header);
+    let header = this.state.header;
+    if(typeof header === "function"){
+      header = header.call(this);
+    }
+    header = colors.unstyle(header);
     //if there is a header and it doesnt have a newline
     if (header && !header.endsWith("\n")) {
       header += "\n";

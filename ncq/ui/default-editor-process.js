@@ -11,6 +11,8 @@ const chalkPipe = require("chalk-pipe");
 var config;
 var colors;
 
+var filename;
+
 //run if called as main, not if required
 if (require.main == module) {
   main();
@@ -22,7 +24,7 @@ async function main() {
 
   //path of file
   var filePath = args[2];
-  var filename = path.basename(filePath);
+  filename = path.basename(filePath);
 
   var contents = fs.readFileSync(filePath, { encoding: "utf-8" });
 
@@ -32,7 +34,7 @@ async function main() {
     prefix: "",
     message: "",
     separator: "",
-    header: header(filename), //header is static
+    header: header, //header
     footer: footer, //footer can change so use function
     multiline: true, //of course, multiline true
     limit: 4, //autocomplete already allows some padding between header/footer so just use this for now vs a min prompt size
@@ -51,7 +53,7 @@ async function main() {
 /**
  * Returns header
  */
-function header(filename) {
+function header() {
   if (!config) {
     config = getConfig();
     colors = config.get("colors");
