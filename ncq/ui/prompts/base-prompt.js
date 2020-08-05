@@ -246,6 +246,20 @@ class BasePrompt extends AutoComplete {
       return this.cancel();
     }
 
+    //deleteline
+    if(this.options.multiline){
+      var check = this.keys["deleteLine"];
+      if (this.isKey(key, check)) {
+        return this.deleteLine();
+      }
+    }
+
+      //delete word
+    var check = this.keys["deleteWord"];
+    if (this.isKey(key, check)) {
+      return this.deleteWord();
+    }
+
     //otherwise,
     this.skeypress(input, key);
   }
@@ -264,6 +278,80 @@ class BasePrompt extends AutoComplete {
     if (typeof fn === "function") {
       return await fn.call(this, input, key);
     }
+  }
+
+  deleteLine(){
+    //get lines
+    var lines = this.input.split("\n");
+
+    //get coords
+    var coords = this.getCoords(lines, this.cursor);
+    var y = coords[0];
+    var x = coords[1];
+
+    var i = this.cursor - x;
+
+    this.cursor = Math.max(this.cursor - (x+1), 0);
+
+    logger.debug([this.input.substring(0, i), this.input.substring(i+lines[y].length)]);
+
+    var start = this.input.substring(0, i);
+    var end =  this.input.substring(i+lines[y].length);
+    //for lines with a newline cut off the newline
+    if(end.startsWith("\n")){
+      end = end.substring(1);
+    }
+
+    this.input = start + end;
+
+    this.render();
+  }
+
+  deleteWord(){
+    var before = this.input.substring(0, this.cursor);
+    var after = this.input.substring(this.cursor);
+
+    //go through chars
+    var type;
+    for(var i = before.length-1; i>=0; i--){
+      var char = before[i];
+      //match type, like vscode! so you can delete function() as [function, ()]
+      if(!type){
+        if(!char.match(/\s/g)){
+          if(char.match(/\w/g)){
+            type = "alphanum";
+          }
+          else{
+            type = "other"
+          }
+        }
+      }
+      //if we have a type, end on non type
+      else{
+        
+        //whitespace, end
+        if(char.match(/\s/g)){
+          break;
+        }
+
+        //find non alphanum after deleteing alphanum
+        if(type === "alphanum" && !char.match(/\w/g)){
+          break;
+        }
+
+        //find alphanum after deleting non alpha
+        if(type === "other" && char.match(/\w/g)){
+          break;    
+        }
+
+      }
+
+      before = before.substring(0, i);
+    }
+    this.cursor = before.length;
+    this.input = before + after;
+
+    this.render();
   }
 
   clearInput() {
@@ -790,8 +878,6 @@ class BasePrompt extends AutoComplete {
     }
 
     this.line = l;
-
-    logger.debug(this.renderedLines);
 
     var final = this.renderedLines.join("\n");
 

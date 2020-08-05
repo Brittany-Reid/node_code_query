@@ -72,6 +72,7 @@ function footer() {
     commands[9] = "Exit ";
   } else {
     //keep copy and paste, though copy is an entire file copy
+    commands[5] = "Delete Line ";
     commands[6] = "Copy All";
     commands[7] = "Paste ";
     commands[8] = "Save & Exit ";
@@ -135,6 +136,7 @@ function footer() {
   if (width >= 1) {
     content += chalkPipe("bg" + colors.contrast)(" ".repeat(width));
   }
+
 
   return content;
 }

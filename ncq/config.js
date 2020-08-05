@@ -101,6 +101,20 @@ var defaultKeybindings = {
     shift: false,
     option: false,
   },
+  deleteWord: {
+    ctrl: true,
+    meta: false,
+    shift: false,
+    option: false,
+    raw: "\u0017", //^w or ctrl+backspace
+  },
+  deleteLine:{
+      ctrl: true,
+      meta: false,
+      shift: false,
+      option: false,
+      raw: "\u0015", //^u or ctrl+u
+  },
   clear: {},
   editor: {},
   help: {},
@@ -148,6 +162,7 @@ var functionKeys = {
   newLine: { name: "f4" },
   clear: { name: "f5" },
   editor: { name: "f6" },
+  deleteLine: { name: "f6" },
   copy: { name: "f7" },
   paste: { name: "f8" },
   help: { name: "f9" },

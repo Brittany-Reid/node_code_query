@@ -15,7 +15,7 @@
     "install": "npm run setup",
     "setup": "npm run nargs ncq/setup",
     "start": "npm run nargs ncq/ncq",
-    "debug" : "npm run nargs ncq/ncq -- --log",
+    "debug": "npm run nargs ncq/ncq -- --log",
     "test": "mocha tests",
     "coverage": "nyc npm run test"
   },
