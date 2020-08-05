@@ -566,7 +566,7 @@ class BasePrompt extends AutoComplete {
     this.filtered = [];
     for (var i = 0; i < choices.length; i++) {
       var ch = choices[i];
-      if (ch.message.toLowerCase().startsWith(str)) {
+      if (ch.message.toLowerCase().includes(str)) {
         this.filtered.push(ch);
       }
     }

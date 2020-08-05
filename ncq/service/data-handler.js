@@ -20,7 +20,9 @@ class DataHandler {
     //stopword language
     this.language = stopword.en;
     //regex for removing all non-alpha numeric characters
-    this.NONALPHANUMREGX = /[^a-z0-9 ]+/g;
+    this.NONALPHANUMREGX = /[^a-zA-Z0-9 ]+/g;
+    //regex for task chars
+    this.TASKPUNCT = /[,-]+/g;
 
     this.idToPackage = new Map(); //id to package object. ids are generated, not part of the dataset
     this.nameToId = new Map();
@@ -42,11 +44,11 @@ class DataHandler {
    * Return array of `Snippet` objects that match a given package name.
    * @param {String} packageName - The package to look for associated snippets.
    */
-  packageToSnippets(packageName){
-    var result = this.snippetIndex.where({"package": packageName});
+  packageToSnippets(packageName) {
+    var result = this.snippetIndex.where({ package: packageName });
 
     var snippets = [];
-    for(var r of result){
+    for (var r of result) {
       var id = r.id;
       var object = this.snippets[id];
 
@@ -60,11 +62,11 @@ class DataHandler {
    * Returns an array of `Package` objects that match a given task.
    * @param {String} task - Task to search with.
    */
-  taskToPackages(task){
-    var result = this.packageIndex.search({query: task, limit: this.limit});
+  taskToPackages(task) {
+    var result = this.packageIndex.search({ query: task, limit: this.limit });
 
     var packages = [];
-    for(var r of result){
+    for (var r of result) {
       var id = r.id;
       var object = this.idToPackage.get(id);
 
@@ -74,11 +76,11 @@ class DataHandler {
     return packages;
   }
 
-  taskToSnippets(task){
-    var result = this.snippetIndex.search({query: task, limit:this.limit});
+  taskToSnippets(task) {
+    var result = this.snippetIndex.search({ query: task, limit: this.limit });
 
     var snippets = [];
-    for(var r of result){
+    for (var r of result) {
       var id = r.id;
       var object = this.snippets[id];
 
@@ -89,7 +91,7 @@ class DataHandler {
   }
 
   loadPackages(info_dir, db_dir, monitor) {
-    if(monitor){
+    if (monitor) {
       monitor = ProgressMonitor.adjustTotal(monitor, 100);
       monitor.emit("start");
     }
@@ -101,8 +103,8 @@ class DataHandler {
     var interval = Math.round(data.length / 91);
     var i = 0;
     for (var packData of data) {
-      if(i != 0 && i % Math.floor(interval) == 0){
-        if(monitor) monitor.emit("work", 1);
+      if (i != 0 && i % Math.floor(interval) == 0) {
+        if (monitor) monitor.emit("work", 1);
       }
       var packageObject = new Package(packData, i);
 
@@ -127,11 +129,11 @@ class DataHandler {
 
     this.packageIndex.import(database);
 
-    if(monitor) monitor.emit("end");
+    if (monitor) monitor.emit("end");
   }
 
   loadSnippets(snippet_dir, db_dir, monitor) {
-    if(monitor){
+    if (monitor) {
       monitor = ProgressMonitor.adjustTotal(monitor, 100);
       monitor.emit("start");
     }
@@ -146,9 +148,8 @@ class DataHandler {
     //for each package
     var i = 0;
     for (var packData of data) {
-
-      if(i != 0 && i % Math.floor(interval) == 0){
-        if(monitor) monitor.emit("work", 1);
+      if (i != 0 && i % Math.floor(interval) == 0) {
+        if (monitor) monitor.emit("work", 1);
       }
 
       //get package name
@@ -172,9 +173,7 @@ class DataHandler {
       i++;
     }
 
-
     var database = fs.readFileSync(db_dir, { encoding: "utf-8" });
-    
 
     this.snippetIndex = new FlexSearch("memory", {
       tokenize: "strict",
@@ -187,16 +186,16 @@ class DataHandler {
 
     this.snippetIndex.import(database);
 
-    if(monitor) monitor.emit("end");
+    if (monitor) monitor.emit("end");
   }
 
   /**
-   * 
-   * @param {String} dir 
-   * @param {ProgressMonitor} monitor 
+   *
+   * @param {String} dir
+   * @param {ProgressMonitor} monitor
    */
   loadTasks(dir, monitor) {
-    if(monitor){
+    if (monitor) {
       monitor = ProgressMonitor.adjustTotal(monitor, 100);
       monitor.emit("start");
     }
@@ -206,12 +205,12 @@ class DataHandler {
     //get lines
     var lines = file.split("\n");
 
-    var interval = lines.length/91;
+    var interval = lines.length / 91;
 
     //for each line
     for (let i = 0; i < lines.length; i++) {
-      if(i != 0 && i % Math.floor(interval) == 0){
-        if(monitor) monitor.emit("work", 1);
+      if (i != 0 && i % Math.floor(interval) == 0) {
+        if (monitor) monitor.emit("work", 1);
       }
 
       const line = lines[i];
@@ -230,7 +229,7 @@ class DataHandler {
       }
     }
 
-    if(monitor) monitor.emit("end");
+    if (monitor) monitor.emit("end");
   }
 
   /**
@@ -273,22 +272,29 @@ class DataHandler {
    * Formats a task for us. Can return null *in the future, if we want to filter out some tasks.
    */
   processTask(task) {
-    //remove extra whitespace on ends
-    task = task.trim();
-    //find any blocks of whitespace and make sure they are only spaces
-    task = task.replace(/\s+/g, " ");
     //normalize to lowercase
     task = task.toLowerCase();
+    //remove extra whitespace on ends
+    task = task.trim();
+
+    //replace punctuation with space
+    task = task.replace(this.TASKPUNCT, " ");
+    //find any blocks of whitespace and make sure they are only spaces
+    task = task.replace(/\s+/g, " ");
+
+    //alphanum only
+    if (task.match(this.NONALPHANUMREGX)) {
+      return;
+    }
+
     return task;
   }
 }
-
 
 // var data = new DataHandler();
 // data.loadPackages("data/packageStats.json", "data/packageDB.txt");
 // data.loadSnippets("data/snippets.json", "data/snippetDB.txt");
 // data.loadTasks("data/id,tasks.txt");
-
 
 // data.taskToPackages("read");
 // console.log(data.taskToSnippets("read").length);
