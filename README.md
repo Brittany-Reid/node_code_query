@@ -4,14 +4,15 @@
 [![Downloads Stats][npm-downloads]][npm-url]
 
 # Node Code Query (NCQ)
-> Node.js is a JS runtime focused on development of server-side and console applications. A big asset of Node.js is the set of libraries offered by 
+
+Node.js is a JS runtime focused on development of server-side and console applications. A big asset of Node.js is the set of libraries offered by 
 its package manager, [NPM](https://www.npmjs.com/). Today, NPM lists over 1M packages on its database. It is likely that a developer will find a library that implements the functions she needs. The problem with that, however, is that deciding which package to use and quickly understanding these packages can be daunting.
 
 NCQ is tool to help Node.js developers 1) find and 2) try Node packages. 
 
 NCQ enables users to write queries for packages and their samples in English. It provides a virtual environment that enables users to try different samples in isolation. The combination of 1) search (for packages and their samples) and 2) virtualization is what makes NCQ distinct.
 
-[![NCQ Demo](https://www.youtube.com/watch?v=C1PZ2g96eVo&t=43s/0.jpg)](https://www.youtube.com/watch?v=C1PZ2g96eVo&t=43s "NCQ Demo")
+[![15m NCQ Demo](https://img.youtube.com/vi/C1PZ2g96eVo/0.jpg)](https://www.youtube.com/watch?v=C1PZ2g96eVo&t=43s/0.jpg)
 
 
 NCQ can be used to start node.js REPLs and find code snippets for given strings. This gif quickly demonstrates the creation of a REPL, the search for functionality, and the execution of code snippets.
