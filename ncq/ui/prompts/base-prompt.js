@@ -859,6 +859,9 @@ class BasePrompt extends AutoComplete {
         }).split("\n")[0];
       }
 
+      //workaround for bug https://github.com/chalk/wrap-ansi/issues/43
+      lastLine += "\u001b[0m";
+
       //add a single space between if available
       if (this.renderedLines.length < rows) {
         this.renderedLines.push("");

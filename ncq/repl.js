@@ -10,7 +10,7 @@ const fs = require("fs");
 const ProgressMonitor = require("progress-monitor");
 const Store = require("data-store");
 let Table = require("tty-table");
-const colors = require("ansi-colors");
+const chalk = require("chalk");
 const repl = require("repl");
 const path = require("path");
 
@@ -187,6 +187,11 @@ function packages(string) {
   if(!index) index = 0;
 
   var packages = searcher.packagesByTask(task);
+  //no packages
+  if(!packages || packages.length < 1){
+    console.log("No packages found!");
+    return;
+  }
 
   //format header
   var header = [
@@ -216,7 +221,7 @@ function packages(string) {
       "...and " +
         rest +
         " more packages. " +
-        colors.green(
+        chalk.green(
           'Hint: Use .packages ' +
             task +
             ', ' +
