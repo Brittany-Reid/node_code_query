@@ -8,7 +8,7 @@
 Node.js is a JS runtime focused on development of server-side and console applications. A big asset of Node.js is the set of libraries offered by 
 its package manager, [NPM](https://www.npmjs.com/). Today, NPM lists over 1M packages on its database. It is likely that a developer will find a library that implements the functions she needs. The problem with that, however, is that deciding which package to use and quickly understanding these packages can be daunting.
 
-NCQ is tool to help Node.js developers 1) find and 2) try Node packages. 
+NCQ is a tool to help Node.js developers 1) locate packages for her needs and 2) let them installing, uninstalling, and trying those packages *as they locate them*. 
 
 NCQ enables users to write queries for packages and their samples in English. It provides a virtual environment that enables users to try different samples in isolation. The combination of 1) search (for packages and their samples) and 2) virtualization is what makes NCQ distinct.
 
@@ -124,6 +124,8 @@ file = fs.readFileSync(new URL('file:///etc/passwd'))
 Variable file stores a buffer with byte contents. Try printing that on screen now.
 
 
+<!--- 
+put this in a different page. I think it is too much to digest here. --Marcelo
 ## Commands
 
 ### **CLI Commands:**
@@ -203,7 +205,7 @@ The following functinalities are mapped to these keys by default:
 | Copy current input | <kbd>ctrl</kbd> + <kbd>s</kbd> |
 
 Because of different terminal configurations, many of these keybindings can be modified in the config.json file generated on first run.
-
+-->
 
 <!--
 ## Testing
