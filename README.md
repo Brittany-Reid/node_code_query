@@ -59,7 +59,7 @@ Your prompt will look like this:
 NCQ  >  _
 ```
 
-3. Type repl to create a virtual isolated environment where you can play with different examples.
+2. Type repl to create a virtual isolated environment where you can play with different examples.
 
 ```sh
 NCQ  >  repl
@@ -75,7 +75,7 @@ The square brackets in the command prompt indicate that you successfully created
 
 Please note that there is a (context-sensitive) menu of (parameterless) function keys in the bottom of the screen. You can use any of these functions with the tool. We describe some of these functions as we move along this tutorial.
 
-4. Type `.help` in the command line or F12 (as per the menu of function keys) to see which commands you can use. 
+3. Type `.help` in the command line or F12 (as per the menu of function keys) to see which commands you can use. 
 
 ```sh
 NCQ [] >  .help
@@ -94,7 +94,7 @@ NCQ [] >  .help
 .version         Print REPL version
 ```
 
-5. Type `.samples file` and see what happens.
+4. Type `.samples file` and see what happens.
 
 ```sh
 NCQ [] >  .samples file
@@ -104,7 +104,7 @@ fs.readFileSync(new URL('file://hostname/p/a/t/h/file'));
 ```
 Several snippets are printed on screen. The first one shows that the module/library fs is used for that. So, we need to install that module and then create a variable to access that module. Let's do it.
 
-6. Install module "fs"
+5. Install module "fs"
 
 ```sh
 NCQ [] >  .install fs 
@@ -118,7 +118,7 @@ NCQ [fs] >
 
 Note that "fs" now appears inside brackets!
 
-7. Access module fs from a variable with the same name.
+6. Access module fs from a variable with the same name.
 
 ```sh
 NCQ [fs] > fs = require("fs")
@@ -127,7 +127,7 @@ NCQ [fs] > _
 ```
 A list with all fs functions is printed on screen (omitted for space).
 
-8. Run the snippet. We used a common unix file for illustration.
+7. Run the snippet. We used a common unix file for illustration.
 
 ```sh
 NCQ [fs] >  file = fs.readFileSync(new URL('file:///etc/passwd')) 
