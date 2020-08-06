@@ -209,6 +209,8 @@ class DataHandler {
 
     var interval = lines.length / 91;
 
+    var taskMap2 = new Map();
+
     //for each line
     for (let i = 0; i < lines.length; i++) {
       if (i != 0 && i % Math.floor(interval) == 0) {
@@ -220,31 +222,71 @@ class DataHandler {
       var task = parts[0];
       var ids = parts.slice(1);
 
-      //already processed!
-      //task = this.processTask(task);
+      if(task.split(" ").length < 3) continue;
 
-      //if the task was valid
-      // if (task) {
-      //   var ids = this.tasks.get(task);
-      //   if (!ids) {
-      //     ids = [];
+      // var tokens = task.split(" ");
+      // tokens = tokens.filter((element) => {
+      //   if(element != "use" && element != "get" && element != "set" && element != "access" && element != "create" && element != "specify" && element != "add" && element != "generate" && element != "support"){
+      //     return true;
       //   }
-      //   ids.push(id);
-      //   this.tasks.set(task, ids);
+      // })
+      // tokens = DataHandler.keywords(tokens.join(" "));
+      // tokens = new Set(tokens);
+      // if(tokens.size > 1){
+      //   tokens = Array.from(tokens);
+      //   tokens = tokens.sort();
+      //   tokens = tokens.join(" ");
+      //   var entry = taskMap2.get(tokens);
+      //   if(!entry){
+      //     entry = [task, ...ids];
+      //     taskMap2.set(tokens, entry);
+      //   }
+      //   else{
+      //     var t = entry[0];
+      //     if(task.length < t.length){
+      //       entry[0] = task;
+      //     }
+      //     entry = entry.concat(ids);
+      //     taskMap2.set(tokens, entry);
+      //   }
       // }
 
       this.tasks.set(task, ids);
     }
 
+    // var tokens = Array.from(taskMap2.keys());
+    // var toWrite = "";
+    // for(var t of tokens){
+    //   var line = taskMap2.get(t);
+    //   toWrite += line.join(", ") + "\n";
+    // }
+    
+    // var taskMap = new Map();
     // var tasks = Array.from(this.tasks.keys());
     // var toWrite = "";
     // for(var t of tasks){
     //   var ids = this.tasks.get(t);
     //   var packages = this.taskToPackages(t);
-    //   if(packages.length > 1){
-    //     var line = t + ", " + ids.join(", ");
-    //     toWrite += line + "\n";
+    //   var line = t + ", " + ids.join(", ");
+
+    //   taskMap.set(line, packages.length);
+    // }
+
+    // var tasks = Array.from(taskMap.keys());
+    // function s(a, b){
+    //   var a = taskMap.get(a);
+    //   var b = taskMap.get(b);
+
+    //   return b-a;
+    // }
+    // tasks = tasks.sort(s);
+
+    // var i = 0;
+    // for(var t of tasks){
+    //   if(i < 10000){
+    //     toWrite += t + "\n";
     //   }
+    //   i++;
     // }
 
     // fs.writeFileSync("task,id.txt", toWrite, {encoding: "utf-8"})
