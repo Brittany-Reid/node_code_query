@@ -28,7 +28,7 @@ Install the latest LTS version of Node/NPM.<br>*Hint: Use nvm to install node/np
 1. Clone this repository.
 
 ```sh
-$> git clone <[this repo](https://github.com/damorimRG/node_code_query)>
+$> git clone <NCQ-repository-url>
 ```
 
 2. Change to the corresponding directory.
@@ -44,7 +44,7 @@ $> cd node_code_query
 $> npm install
 ```
 
-## Example
+## Illustrative Example
 
 Let us consider the example where the developer wants to read a file (e.g., "/etc/passwd") and print its contents on screen. Here is how NCQ can help:
 
