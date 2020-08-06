@@ -19,23 +19,36 @@ NCQ can be used to start node.js REPLs and find code snippets for given strings.
 
 <!--[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.-->
 
-## Setup
+## Pre-requisites
 
-1. Download and install Node.js version 12.18.3 and NPM (https://nodejs.org/en/).
-2. Clone this repository.
-3. Run `npm install` in the repository directory. The setup script will automatically download our dataset from https://zenodo.org/record/3923490/files/ncqData.zip and extract it into the data folder. Then, it will setup the Database files for you. Note: these files is too large to upload to Github. 
+- Install the latest LTS version of Node/NPM. *Hint: Use [nvm](https://github.com/nvm-sh/nvm) to install node/npm. Install the tool. Then, run the command $> nvm install --lts*
 
-## Example
+## Installation
 
-Let us consider the example where the developer--a user of our tool--wants to know how to read a file in node.js. Here is how NCQ can help:
+1. Clone this repository.
 
-1. Install/update project dependencies. Execute the following command from within the project directory:
+```sh
+$> git clone <URL of this repo>
+```
+
+2. Change to the corresponding directory.
+
+
+```sh
+$> cd node_code_query
+```
+
+3. Install the module. This step will take a while (around 5m) as, in addition to NCQ dependencies, it downloads a snapshot of the NPM data and creates a local database (for efficiency).
 
 ```sh
 $> npm install
 ```
 
-2. Start NPM using the `npm start` command within the repository directory. 
+## Example
+
+Let us consider the example where the developer wants to read a file (e.g., "/etc/passwd") and print its contents on screen. Here is how NCQ can help:
+
+1. Start NPM using the `npm start` command within the repository directory. 
 
 ```sh
 $> npm start
