@@ -44,16 +44,10 @@ class CodeSearch {
       subMonitor3 = monitor.split(50);
     }
 
-    var startTime = process.hrtime.bigint();
-    //load tasks
-    this.state.data.loadTasks(this.state.TASK_DIR, subMonitor1);
-    var endTime = process.hrtime.bigint();
-    logger.info("Tasks took: " + (endTime - startTime));
-
     //load info
-    startTime = process.hrtime.bigint();
+    var startTime = process.hrtime.bigint();
     this.state.data.loadPackages(this.state.INFO_DIR, this.state.INFO_DB, subMonitor2);
-    endTime = process.hrtime.bigint();
+    var endTime = process.hrtime.bigint();
     logger.info("Info took: " + (endTime - startTime));
 
 
@@ -61,6 +55,12 @@ class CodeSearch {
     this.state.data.loadSnippets(this.state.SNIPPET_DIR, this.state.SNIPPET_DB, subMonitor3);
     endTime = process.hrtime.bigint();
     logger.info("Snippets took: " + (endTime - startTime));
+
+    startTime = process.hrtime.bigint();
+    //load tasks
+    this.state.data.loadTasks(this.state.TASK_DIR, subMonitor1);
+    endTime = process.hrtime.bigint();
+    logger.info("Tasks took: " + (endTime - startTime));
 
     if(monitor) monitor.emit("end");
   }

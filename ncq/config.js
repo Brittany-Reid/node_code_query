@@ -151,7 +151,7 @@ var files = {
   snippetDB: "data/snippetDB.txt",
   info: "data/packageStats.json",
   packageDB: "data/packageDB.txt",
-  tasks: "data/id,tasks.txt",
+  tasks: "data/task,id.txt",
   replHistory: "history-repl.json",
 };
 

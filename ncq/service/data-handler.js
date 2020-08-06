@@ -67,10 +67,12 @@ class DataHandler {
 
     var packages = [];
     for (var r of result) {
-      var id = r.id;
-      var object = this.idToPackage.get(id);
-
-      packages.push(object);
+      if(r){
+        var id = r.id;
+        var object = this.idToPackage.get(id);
+  
+        packages.push(object);
+      }
     }
 
     return packages;
@@ -214,20 +216,39 @@ class DataHandler {
       }
 
       const line = lines[i];
-      var split = line.indexOf(", ");
-      var id = line.substring(0, split);
-      var task = line.substring(split + 2);
-      task = this.processTask(task);
+      var parts = line.split(", ");
+      var task = parts[0];
+      var ids = parts.slice(1);
+
+      //already processed!
+      //task = this.processTask(task);
+
       //if the task was valid
-      if (task) {
-        var ids = this.tasks.get(task);
-        if (!ids) {
-          ids = [];
-        }
-        ids.push(id);
-        this.tasks.set(task, ids);
-      }
+      // if (task) {
+      //   var ids = this.tasks.get(task);
+      //   if (!ids) {
+      //     ids = [];
+      //   }
+      //   ids.push(id);
+      //   this.tasks.set(task, ids);
+      // }
+
+      this.tasks.set(task, ids);
     }
+
+    // var tasks = Array.from(this.tasks.keys());
+    // var toWrite = "";
+    // for(var t of tasks){
+    //   var ids = this.tasks.get(t);
+    //   var packages = this.taskToPackages(t);
+    //   if(packages.length > 1){
+    //     var line = t + ", " + ids.join(", ");
+    //     toWrite += line + "\n";
+    //   }
+    // }
+
+    // fs.writeFileSync("task,id.txt", toWrite, {encoding: "utf-8"})
+
 
     if (monitor) monitor.emit("end");
   }
