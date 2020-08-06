@@ -53,11 +53,9 @@ Let us consider the example where the developer wants to read a file (e.g., "/et
 ```sh
 $> npm start
 ```
-Your prompt will look like this:
+Your screen should look like this:
 
-```sh
-NCQ  >  _
-```
+![KEYS](/media/ncq_norepl.png)
 
 2. Type repl to create a virtual isolated environment where you can play with different examples.
 
