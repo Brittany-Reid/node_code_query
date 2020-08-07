@@ -19,7 +19,7 @@ NCQ enables users to write queries for packages and their samples in English. It
 
 ## Pre-requisites
 
-Install the latest LTS version of Node/NPM.<br>*Hint: Use nvm to install node/npm. Install [nvm](https://github.com/nvm-sh/nvm). Then, run the command $> nvm install --lts*
+Latest LTS version of Node/NPM.<br>*Hint: Use nvm to install node/npm. Install [nvm](https://github.com/nvm-sh/nvm). Then, run the command $> nvm install --lts*
 
 ## Installation
 
@@ -42,11 +42,19 @@ $> cd node_code_query
 $> npm install
 ```
 
+You should see:
+```sh
+> node_code_query@1.0.0 install /home/damorim/projects/node_code_query
+> npm run setup
+...
+found 0 vulnerabilities
+```
+
 ## Illustrative Example
 
-Let us consider the example where the developer wants to read a file (e.g., "/etc/passwd") and print its contents on screen. Here is how NCQ can help:
+Let us consider the scenario where the developer wants to read a file (e.g., "/etc/passwd") and print its contents on screen. Here is how NCQ can help:
 
-1. Start NPM using the `npm start` command within the repository directory. 
+1. Start NPM by running the command `npm start` from within the repository directory.
 
 ```sh
 $> npm start
@@ -60,7 +68,7 @@ Your screen should look like this:
 ```sh
 NCQ  >  repl
 ```
-After that the screen will look like this:
+Your screen should look like this:
 
 ![KEYS](/media/keys.png)
 
