@@ -42,7 +42,7 @@ class CodePrompt extends SuggestionPrompt {
 
     var headerString = packageLabel + packageName;
 
-    headerString += ", " + "rank: " + rank;
+    headerString += ", " + "stars: " + rank;
 
     headerString += ", " + (this.snippetIndex+1) + "/" + this.snippets.length;
 

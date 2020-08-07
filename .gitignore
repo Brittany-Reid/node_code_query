@@ -39,3 +39,5 @@ history-repl.json
 log2.txt
 data/packageDB.txt
 data/snippetDB.txt
+tmpTest/package-lock.json
+tmpTest/package.json

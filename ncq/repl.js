@@ -20,6 +20,9 @@ var searcher;
 var options = {};
 var replInstance;
 var logger;
+var silent = false;
+var processArgs = process.argv;
+var replExit;
 
 //run if called as main, not if required
 if (require.main == module) {
@@ -27,45 +30,58 @@ if (require.main == module) {
 }
 
 async function main() {
-  //init
-  initialize();
 
-  //start repl
-  replInstance = repl.start(options);
+  initializeState();
 
-  defineCommands();
+  var options = initializeREPL();
+  // //init
+  // options = initialize();
+
+  var r = startREPL(options);
 }
 
 /**
  * Initialize application.
+ * @param {Boolean} output - output true or false
+ * @param {Array} args - supply args in place of process arguments, for testing
  */
-function initialize() {
+function initializeState(output = false, args) {
+  //global silent
+  silent = output;
+  if(args !== undefined){
+    processArgs = args;
+  }
+
   logger = getLogger(true);
 
   var ticks = 0;
 
-  var monitor = new ProgressMonitor(100);
+  var monitor;
+  
+  if(!silent){
+    monitor = new ProgressMonitor(100);
 
-  var progressBar = new CliProgress.SingleBar({
-    format: "LOADING: [{bar}]",
-    barCompleteChar: "\u25AE",
-    barIncompleteChar: ".",
-  });
+    var progressBar = new CliProgress.SingleBar({
+      format: "LOADING: [{bar}]",
+      barCompleteChar: "\u25AE",
+      barIncompleteChar: ".",
+    });
 
-  monitor.on("start", function () {
-    progressBar.start(100, 0);
-  });
+    monitor.on("start", function () {
+      progressBar.start(100, 0);
+    });
 
-  var worked = 0;
-  monitor.on("work", function (value) {
-    worked += value;
-    progressBar.update(worked);
-  });
+    var worked = 0;
+    monitor.on("work", function (value) {
+      worked += value;
+      progressBar.update(worked);
+    });
 
-  monitor.on("end", function () {
-    progressBar.update(100);
-    progressBar.stop();
-  });
+    monitor.on("end", function () {
+      progressBar.update(100);
+      progressBar.stop();
+    });
+  }
 
   //setup codesearch service
   searcher = new CodeSearch();
@@ -74,16 +90,27 @@ function initialize() {
 
   searcher.state.installedPackageNames = getInstalledPackages();
 
-  var tasks = searcher.state.data.getTaskArray();
+  return options;
+}
 
-  initializeREPL(tasks);
+/**
+ * Starts a REPL after options have been initialized.
+ */
+function startREPL(options){
+  //start repl
+  replInstance = repl.start(options);
+
+  //set commands
+  defineCommands();
+
+  return replInstance;
 }
 
 /**
  * Process args for installed packages.
  */
 function getInstalledPackages() {
-  var args = process.argv.slice(2);
+  var args = processArgs.slice(2);
   var installedPackages = new Set();
 
   for (var pk of args) {
@@ -99,7 +126,9 @@ function getInstalledPackages() {
  * Setup REPL instance and options.
  * @param {Array} tasks - Array of tasks to use for suggestions.
  */
-function initializeREPL(tasks) {
+function initializeREPL() {
+  var tasks =  searcher.state.data.getTaskArray();
+
   //create input stream
   var pReadable = new PromptReadable({
     choices: tasks.slice(0, 10000).sort(),
@@ -112,6 +141,7 @@ function initializeREPL(tasks) {
       store: new Store({ path: searcher.state.HISTORY_DIR }),
       autosave: true,
     },
+    show: !silent,
   });
 
   //create the output object for repl, passing the input object so we can get the prompt
@@ -125,14 +155,22 @@ function initializeREPL(tasks) {
     output: pWritable,
     breakEvalOnSigint: true,
   };
+
+  return options;
 }
 
 function defineCommands() {
+  if(!replExit) replExit = replInstance.commands["exit"];
+
 
   replInstance.defineCommand("exit", {
     help: "Exit the repl",
     action: function(){
-      process.exit(0);
+      //call regular close
+      replExit.action.call(replInstance);
+      //dont exit process because this is dumb and stops repl exit event and tests
+      //instead just stop reading from the prompt readable
+      replInstance.input.destroy();
     },
   });
 
@@ -195,9 +233,10 @@ function packages(string) {
 
   //format header
   var header = [
-    { value: "index", width: 10 },
-    { value: "name" },
+    { value: "index", width: 11, align: "left"},
+    { value: "name", align: "left" },
     { value: "desciption", align: "left" },
+    {value: "stars", width: 11, align: "left"},
   ];
 
   var subset = packages.slice(index, index + 25);
@@ -207,7 +246,8 @@ function packages(string) {
     var p = subset[i];
     var name = p.name;
     var description = p.description;
-    rows.push([(i + index).toString(), name, description]);
+    var stars = p.stars.toString();
+    rows.push([(i + index).toString(), name, description, stars]);
   }
 
   //do table using tty-table (will auto scale)
@@ -240,8 +280,8 @@ function samples(packageName) {
   var packages;
 
   //get array of packages
-  if (packageName === undefined) {
-    packages = searcher.state.installedPackageNames;
+  if (!packageName) {
+    packages = Array.from(searcher.state.installedPackageNames);
   } else {
     packages = packageName.trim().split(" ");
   }
@@ -256,7 +296,7 @@ function samples(packageName) {
 
   var snippets = searcher.snippetsByPackages(packages);
   if (!snippets || snippets.length < 1) {
-    console.error(NAME + ": could not find any samples for packages.");
+    console.error(NAME + ": could not find any samples for packages " + packages.join(" "));
     return;
   }
 
@@ -296,6 +336,9 @@ function samplesByTask(task) {
  * @param {Object} output - Output option for execSync, by default 'inherit'.
  */
 function install(packageString, output = "inherit") {
+
+  if(silent) output = undefined;
+
   //get package array
   var packages = packageString.split(" ");
   //cli install
@@ -419,3 +462,7 @@ function editor() {
   //call default load
   replInstance.commands["load"].action.call(replInstance, "index.js");
 }
+
+exports.initializeState = initializeState;
+exports.initializeREPL = initializeREPL;
+exports.startREPL = startREPL;
