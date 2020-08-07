@@ -61,9 +61,9 @@ $> npm start
 ```
 Your screen should look like this:
 
-![KEYS](/media/ncq_norepl.png)
+<img src="/media/ncq_norepl.png" alt="keys no repl" width="650"/>
 
-2. Type repl to create a virtual environment where you can play with different examples.<br>*Another option is to press F1 (to show contextual suggestions), choose option repl, and press ENTER twice*
+2. Type repl to create an environment where you can play with different examples. The name REPL refers to "Read Eval Print Loop". <br>*Another option is to press F1 (to show suggestions), choose option repl, and press ENTER twice*
 
 ```sh
 NCQ  >  repl
@@ -97,20 +97,23 @@ NCQ [] >  .help
 ```
 -->
 
-3. Type `.packages read text file` and read alternative packages.<br>*Hint: press F1 after .packages to choose a task from a pre-defined list. There is auto-complete. The advantage of that approach is that you know there will be associated packages.*
+3. Type `.packages read text file` and read alternative packages.<br>*Hint: press F1 after .packages to choose a task from a pre-defined list. There is an auto-complete feature to guide the user to sentences similar to the one she is typing. The advantage of that approach is that you know there will be an associated packages for the task you choose.*
 
 ```sh
 NCQ [] >  .packages read text file
+...
+// a table of package options with descriptions (taken from NPM)
+...
 ```
 
-4. (Sneak peek) Look for samples for the package you selected. Let us say, you selected package file-reader.<br>*Hint: Cycle through the alternative samples with F2/F3 function keys.*
+4. Before the user commmits to a certain package, she wants to search for possible choices. This step shows how to obtain samples for the package selected in the previous step. Let us say, the user selected package file-reader.<br>*Hint: Cycle through the alternative samples with F2/F3 function keys.*
 
 ```sh
 NCQ [] >  .samples file-reader
 ...
 ```
 
-Note that when you press ENTER an exception is raised. The reaons is that the module/package was *not* installed.
+Note that when you press ENTER an exception is raised. The reason is that the module/package was *not* installed yet. So, at this point, you can see (the samples) but you can't run.
 
 5. Install module file-reader
 
@@ -120,16 +123,41 @@ NCQ > .install file-reader
 NCQ [file-reader] > _
 ```
 
-The packages installed on your environment appears within brackets.
+The text within brackets shows the packages installed on your environment.
 
-6. Select the snippet you want and open the NCQ editor to modify the index.js file.
+6. Select the snippet you want
 
 ```sh
 NCQ [file-reader] >  .samples 
 ...
 ```
+Let us consider the user selected the following sample (simplified):
 
-After you selected your sample, press F6 to open the very simple NCQ editor. This editor modifies the file index.js. Make any modifications you want on that file. Presse F9 to save the file and return to the REPL. The code from index.js will be automatically loaded into the REPL.
+```sh
+var read = require('file-reader');
+read('*.js');
+```
+
+It shows various objects on output, one for each `.js` file found in the current directory. As there is only one (index.js), it prints a single object.
+
+7. Open the NCQ editor (F6) and modify the index.js file. 
+
+Modify the file to '/etc/passwd':
+
+```sh
+var read = require('file-reader');
+blob = read('/etc/passwd')
+```
+
+Type F9 (Save & Exit) and check the object printed on screen. Inspect the object fields to locate where the data is store. You will see that the chain of field accesses `blob.passwd.contents` will produce a byte Buffer, which can be translated to a string with a call to method `toString()`. Type F6 again and change the file index.js as follows:
+
+```sh
+var read = require('file-reader');
+str = read('/etc/passwd').passwd.contents.toString()
+console.log(str)
+```
+
+Press F9 to save the file and return to the REPL. The code from index.js will be automatically loaded into the REPL and you should see the same contents as a that obtained with `$> cat /etc/passwd` on the shell.
 
 7. Load the file from index.js. In fact, if you want you can use a different editor to change that file (from outside the REPL) and the reload the file in the REPL.
 
