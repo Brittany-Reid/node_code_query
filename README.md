@@ -57,7 +57,7 @@ Your screen should look like this:
 
 ![KEYS](/media/ncq_norepl.png)
 
-2. Type repl to create a virtual isolated environment where you can play with different examples.<br>*Another option is to press F1 (to show contextual suggestions), choose option repl, and press ENTER twice*
+2. Type repl to create a virtual environment where you can play with different examples.<br>*Another option is to press F1 (to show contextual suggestions), choose option repl, and press ENTER twice*
 
 ```sh
 NCQ  >  repl
@@ -70,6 +70,7 @@ The square brackets in the command prompt indicate that you successfully created
 
 Please note that there is a (context-sensitive) menu of (parameterless) function keys in the bottom of the screen. You can use any of these functions with the tool. We describe some of these functions as we move along this tutorial.
 
+<!--
 3. Type `.help` in the command line or F12 (as per the menu of function keys) to see which commands you can use. 
 
 ```sh
@@ -88,48 +89,48 @@ NCQ [] >  .help
 .save            Save all evaluated commands in this REPL session to a file
 .version         Print REPL version
 ```
+-->
 
-4. Type `.samples file` and see what happens.
-
-```sh
-NCQ [] >  .samples file
-.samples file
-NCQ [] >  // ...
-fs.readFileSync(new URL('file://hostname/p/a/t/h/file'));
-```
-Several snippets are printed on screen. The first one shows that the module/library fs is used for that. So, we need to install that module and then create a variable to access that module. Let's do it.
-
-5. Install module "fs"
+3. Type `.packages read text file` and read alternative packages.<br>*Hint: press F1 after .packages to choose a task from a pre-defined list. There is auto-complete. The advantage of that approach is that you know there will be associated packages.*
 
 ```sh
-NCQ [] >  .install fs 
-.install fs
-+ fs@0.0.1-security
-added 1 package and audited 1 package in 0.675s
-found 0 vulnerabilities
-
-NCQ [fs] > 
+NCQ [] >  .packages read text file
 ```
 
-Note that "fs" now appears inside brackets!
-
-6. Access module fs from a variable with the same name.
+4. (Sneak peek) Look for samples for the package you selected. Let us say, you selected package file-reader.<br>*Hint: Cycle through the alternative samples with F2/F3 function keys.*
 
 ```sh
-NCQ [fs] > fs = require("fs")
+NCQ [] >  .samples file-reader
 ...
-NCQ [fs] > _
 ```
-A list with all fs functions is printed on screen (omitted for space).
 
-7. Run the snippet. We used a common unix file for illustration.
+Note that when you press ENTER an exception is raised. The reaons is that the module/package was *not* installed.
+
+5. Install module file-reader
 
 ```sh
-NCQ [fs] >  file = fs.readFileSync(new URL('file:///etc/passwd')) 
-file = fs.readFileSync(new URL('file:///etc/passwd'))
-<Buffer 72 6f 6f 74 3a 78 3a 30 3a 30 3a 72 6f 6f 74 3a 2f 72 6f 6f 74 3a 2f 62 69 6e 2f 62 61 73 68 0a 64 61 65 6d 6f 6e 3a 78 3a 31 3a 31 3a 64 61 65 6d 6f ... 3250 more bytes>
+NCQ > .install file-reader
+...
+NCQ [file-reader] > _
 ```
-Variable file stores a buffer with byte contents. Try printing that on screen now.
+
+The packages installed on your environment appears within brackets.
+
+6. Select the snippet you want and open the NCQ editor to modify the index.js file.
+
+```sh
+NCQ [file-reader] >  .samples 
+...
+```
+
+After you selected your sample, press F6 to open the very simple NCQ editor. This editor modifies the file index.js. Make any modifications you want on that file. Presse F9 to save the file and return to the REPL. The code from index.js will be automatically loaded into the REPL.
+
+7. Load the file from index.js. In fact, if you want you can use a different editor to change that file (from outside the REPL) and the reload the file in the REPL.
+
+```sh
+NCQ [file-reader] >  .load index.js
+...
+```
 
 
 <!--- 
