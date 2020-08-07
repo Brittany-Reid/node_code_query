@@ -12,10 +12,8 @@ NCQ is a tool to help Node.js developers 1) locate packages for her needs and 2)
 
 NCQ enables users to write queries for packages and their samples in English. It provides a virtual environment for users to try different samples in isolation. The combination of 1) search (for packages and their samples) and 2) virtualization is what makes NCQ distinct.
 
+15m Youtube Demo Video:<br>
 [![15m NCQ Demo](https://img.youtube.com/vi/C1PZ2g96eVo/0.jpg)](https://www.youtube.com/watch?v=C1PZ2g96eVo&t=43s/0.jpg)
-
-
-NCQ can be used to start node.js REPLs and find code snippets for given strings. This gif quickly demonstrates the creation of a REPL, the search for functionality, and the execution of code snippets.
 
 <!--[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.-->
 
