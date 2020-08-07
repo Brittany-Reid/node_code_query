@@ -57,14 +57,11 @@ Your screen should look like this:
 
 ![KEYS](/media/ncq_norepl.png)
 
-2. Type repl to create a virtual isolated environment where you can play with different examples.
+2. Type repl to create a virtual isolated environment where you can play with different examples.<br>*Another option is to press F1 (to show contextual suggestions), choose option repl, and press ENTER twice*
 
 ```sh
 NCQ  >  repl
 ```
-
-As of now, this commands takes a little while to execute (1-2m). A progress bar will give you a rough estimate of waiting time. 
-
 After that the screen will look like this:
 
 ![KEYS](/media/keys.png)
