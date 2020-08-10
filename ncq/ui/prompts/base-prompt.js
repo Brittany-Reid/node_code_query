@@ -782,7 +782,7 @@ class BasePrompt extends AutoComplete {
     this.columns = this.width;
     //space for scroll bar
     if (this.scroll) {
-      this.columns -= 1;
+      this.columns -= 2;
     }
     var cursor = this.cursor + width_of(this.state.prompt);
 
