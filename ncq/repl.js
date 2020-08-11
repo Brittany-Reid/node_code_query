@@ -13,6 +13,8 @@ let Table = require("tty-table");
 const chalk = require("chalk");
 const repl = require("repl");
 const path = require("path");
+const ESTraverse = require("estraverse");
+const codeAnalysis = require("./service/code-analysis");
 
 const VERSION = "1.0.0";
 const NAME = "NCQ";
@@ -23,6 +25,7 @@ var logger;
 var silent = false;
 var processArgs = process.argv;
 var replExit;
+var replEval;
 
 //run if called as main, not if required
 if (require.main == module) {
@@ -30,12 +33,9 @@ if (require.main == module) {
 }
 
 async function main() {
-
   initializeState();
 
   var options = initializeREPL();
-  // //init
-  // options = initialize();
 
   var r = startREPL(options);
 }
@@ -48,7 +48,7 @@ async function main() {
 function initializeState(output = false, args) {
   //global silent
   silent = output;
-  if(args !== undefined){
+  if (args !== undefined) {
     processArgs = args;
   }
 
@@ -57,8 +57,8 @@ function initializeState(output = false, args) {
   var ticks = 0;
 
   var monitor;
-  
-  if(!silent){
+
+  if (!silent) {
     monitor = new ProgressMonitor(100);
 
     var progressBar = new CliProgress.SingleBar({
@@ -96,9 +96,15 @@ function initializeState(output = false, args) {
 /**
  * Starts a REPL after options have been initialized.
  */
-function startREPL(options){
+function startREPL(options) {
   //start repl
   replInstance = repl.start(options);
+
+  //get default repl eval function
+  replEval = replInstance.eval;
+
+  // //replace with our function that calls the default
+  // replInstance.eval = eval;
 
   //set commands
   defineCommands();
@@ -127,13 +133,16 @@ function getInstalledPackages() {
  * @param {Array} tasks - Array of tasks to use for suggestions.
  */
 function initializeREPL() {
-  var tasks =  searcher.state.data.getTaskArray();
+
+  logger.warn("Initialized REPL with packages " + Array.from(searcher.state.installedPackageNames));
+  var tasks = searcher.state.data.getTaskArray();
 
   //create input stream
   var pReadable = new PromptReadable({
     choices: tasks.slice(0, 10000).sort(),
     prefix: NAME,
-    message: "[" + Array.from(searcher.state.installedPackageNames).join(" ") + "]",
+    message:
+      "[" + Array.from(searcher.state.installedPackageNames).join(" ") + "]",
     footer: footer,
     multiline: true,
     scroll: true,
@@ -160,12 +169,11 @@ function initializeREPL() {
 }
 
 function defineCommands() {
-  if(!replExit) replExit = replInstance.commands["exit"];
-
+  if (!replExit) replExit = replInstance.commands["exit"];
 
   replInstance.defineCommand("exit", {
     help: "Exit the repl",
-    action: function(){
+    action: function () {
       //call regular close
       replExit.action.call(replInstance);
       //dont exit process because this is dumb and stops repl exit event and tests
@@ -212,6 +220,40 @@ function defineCommands() {
   });
 }
 
+// /**
+//  * Replacement evaluation function that allows us to do things before or after the default eval.
+//  * We grab the default eval when we create a repl.
+//  */
+// function eval(code, context, file, cb) {
+//   //playing with this but i think i need to fix how we prompt (not using a readable but overwrite displayprompt)
+//   // var ast = searcher.state.parser.parse(code);
+//   // if (ast) {
+//   //   var requires = codeAnalysis.getRequireStatements(ast);
+//   //   if (requires.length > 0) {
+//   //     console.log(
+//   //       "Would you like to install the packages " + requires.join(", ") + "?"
+//   //     );
+//   //     const { Confirm } = require("enquirer");
+//   //     const prompt = new Confirm({
+//   //       name: "question",
+//   //       message: "Install?",
+//   //     });
+
+//   //     prompt
+//   //       .run()
+//   //       .then((answer) => {
+//   //         console.log("Answer:", answer);
+//   //         replEval(code, context, file, cb)
+//   //       })
+//   //       .catch(console.error);
+//   //   }
+
+//   //   return;
+//   // }
+
+//   replEval(code, context, file, cb);
+// }
+
 /**
  * Lists top 50 packages for a given task. By default prints from 0.
  */
@@ -219,24 +261,24 @@ function packages(string) {
   var parts = string.split(",");
   var task = parts[0];
   var index;
-  if(parts[1]){
-    index = parseInt(parts[1])
+  if (parts[1]) {
+    index = parseInt(parts[1]);
   }
-  if(!index) index = 0;
+  if (!index) index = 0;
 
   var packages = searcher.packagesByTask(task);
   //no packages
-  if(!packages || packages.length < 1){
+  if (!packages || packages.length < 1) {
     console.log("No packages found!");
     return;
   }
 
   //format header
   var header = [
-    { value: "index", width: 11, align: "left"},
+    { value: "index", width: 11, align: "left" },
     { value: "name", align: "left" },
     { value: "desciption", align: "left" },
-    {value: "stars", width: 11, align: "left"},
+    { value: "stars", width: 11, align: "left" },
   ];
 
   var subset = packages.slice(index, index + 25);
@@ -262,11 +304,7 @@ function packages(string) {
         rest +
         " more packages. " +
         chalk.green(
-          'Hint: Use .packages ' +
-            task +
-            ', ' +
-            (index + 25) +
-            " to see more."
+          "Hint: Use .packages " + task + ", " + (index + 25) + " to see more."
         )
     );
   }
@@ -296,7 +334,9 @@ function samples(packageName) {
 
   var snippets = searcher.snippetsByPackages(packages);
   if (!snippets || snippets.length < 1) {
-    console.error(NAME + ": could not find any samples for packages " + packages.join(" "));
+    console.error(
+      NAME + ": could not find any samples for packages " + packages.join(" ")
+    );
     return;
   }
 
@@ -336,8 +376,7 @@ function samplesByTask(task) {
  * @param {Object} output - Output option for execSync, by default 'inherit'.
  */
 function install(packageString, output = "inherit") {
-
-  if(silent) output = undefined;
+  if (silent) output = undefined;
 
   //get package array
   var packages = packageString.split(" ");
@@ -358,16 +397,14 @@ function install(packageString, output = "inherit") {
   }
 
   //update state
-  for(var p of packages){
+  for (var p of packages) {
     searcher.state.installedPackageNames.add(p);
   }
 
   var packageArray = Array.from(searcher.state.installedPackageNames);
 
   //update repl
-  replInstance.inputStream.setMessage(
-    "[" + packageArray.join(" ") + "]"
-  );
+  replInstance.inputStream.setMessage("[" + packageArray.join(" ") + "]");
 }
 
 /**
@@ -395,13 +432,15 @@ function uninstall(packageString, output = "inherit") {
 
   //update installed packages
   for (var packageName of packages) {
-    if(searcher.state.installedPackageNames.has(packageName)){
+    if (searcher.state.installedPackageNames.has(packageName)) {
       searcher.state.installedPackageNames.delete(packageName);
     }
   }
 
   replInstance.inputStream.setMessage(
-    "[" + Array.from(searcher.state.installedPackageNames).join(" ").trim() + "]"
+    "[" +
+      Array.from(searcher.state.installedPackageNames).join(" ").trim() +
+      "]"
   );
 }
 

@@ -8,7 +8,7 @@ const { start } = require("repl");
 const ProgressMonitor = require("progress-monitor");
 const Package = require("./package");
 
-var logger = getLogger();
+var logger;
 
 /**
  * CodeSearch service interfaces with the repl and data.
@@ -24,6 +24,8 @@ class CodeSearch {
     this.installedPackages = [];
     this.state = new State();
     this.state.data = new DataHandler();
+
+    if(!logger) logger = getLogger();
   }
 
   /**

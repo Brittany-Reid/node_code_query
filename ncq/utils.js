@@ -14,6 +14,9 @@ function options(args){
       if(arg === "--log"){
           opts.log = true;
       }
+      if(arg === "--usage"){
+        opts.usage = true;
+      }
   }
 
     return opts;

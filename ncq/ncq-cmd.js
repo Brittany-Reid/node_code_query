@@ -126,6 +126,9 @@ class NcqCmd extends Cmd {
     if (OPTIONS.log) {
       args.push("--log");
     }
+    if(OPTIONS.usage){
+      args.push("--usage")
+    }
 
     //pass current process arguments
     var nodeOptions = "";

@@ -16,6 +16,7 @@
     "setup": "npm run nargs ncq/setup",
     "start": "npm run nargs ncq/ncq",
     "debug": "npm run nargs ncq/ncq -- --log",
+    "analytics": "npm run nargs ncq/ncq -- --usage",
     "test": "mocha tests",
     "coverage": "nyc npm run test"
   },
@@ -33,6 +34,8 @@
     "data-store": "^4.0.3",
     "enquirer": "^2.3.6",
     "eslint": "^7.6.0",
+    "espree": "^7.2.0",
+    "estraverse": "^5.2.0",
     "flexsearch": "^0.6.32",
     "fs-extra": "^9.0.1",
     "natural": "^2.1.3",

@@ -14,6 +14,7 @@ const LOGDIR = path.join(BASE, "logs/main");
 const REPLLOGDIR = path.join(BASE, "logs/repl");
 const OPTIONS = utils.options(process.argv);
 var log = OPTIONS.log;
+var usage = OPTIONS.usage;
 var logger;
 var isRepl = false;
 
@@ -35,7 +36,7 @@ function setupLogger(repl = false) {
   logger = winston.createLogger();
 
   var dir = LOGDIR;
-  if(isRepl){
+  if (isRepl) {
     dir = REPLLOGDIR;
   }
 
@@ -50,7 +51,7 @@ function setupLogger(repl = false) {
 
   //if --log is set as arg
   if (log == true) {
-    if (fs.existsSync(dir)) {
+    if (!fs.existsSync(dir)) {
       //make dir if it doesnt exist
       fse.mkdirSync(dir, { recursive: true });
     }
@@ -74,6 +75,27 @@ function setupLogger(repl = false) {
           "/run" + Math.floor(Date.now() / 1000) + ".log"
         ),
         level: "info",
+      })
+    );
+  }
+  if (usage == true) {
+    if (!fs.existsSync(dir)) {
+      //make dir if it doesnt exist
+      fse.mkdirSync(dir, { recursive: true });
+    }
+
+    //usage for analysing, use warning so it wont interfere
+    logger.add(
+      new winston.transports.File({
+        filename: path.join(
+          dir,
+          "/usage" + Math.floor(Date.now() / 1000) + ".log"
+        ),
+        level: "warn",
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.simple(),
+        ),
       })
     );
   }

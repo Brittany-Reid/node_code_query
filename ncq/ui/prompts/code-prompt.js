@@ -4,6 +4,9 @@ const utils = require("enquirer/lib/utils");
 const { to_width, width_of } = require("to-width");
 const colors = require("ansi-colors");
 const chalkPipe = require("chalk-pipe");
+const { getLogger } = require("../../logger");
+
+var logger;
 
 /**
  * Extension of Suggestion Prompt for use in the REPL.
@@ -23,6 +26,8 @@ class CodePrompt extends SuggestionPrompt {
       this.cursor = this.input.length;
     }
 
+    if(!logger) logger = getLogger();
+
     this.helpCommand = ".help";
   }
 
@@ -32,6 +37,8 @@ class CodePrompt extends SuggestionPrompt {
     this.setInput(code.trim());
 
     this.snippetInfoBar(snippet.packageName, snippet.rank());
+
+    logger.warn("Got snippet: {" + JSON.stringify(code) + "} from package " + snippet.packageName);
   }
 
   /**
@@ -66,6 +73,8 @@ class CodePrompt extends SuggestionPrompt {
     //must have snippets
     if (!this.snippets || this.snippets.length < 1) return;
 
+    logger.warn("Cycled index by " + i);
+
     //cycle array
     this.snippetIndex += i;
     if (this.snippetIndex > (this.snippets.length - 1)) {
@@ -76,6 +85,7 @@ class CodePrompt extends SuggestionPrompt {
     }
     //insert
     this.doSnippet(this.snippetIndex);
+    
 
     //move cursor
     this.cursor = this.input.length;

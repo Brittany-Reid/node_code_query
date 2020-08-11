@@ -12,7 +12,7 @@ const utils = require("enquirer/lib/utils");
 const { getLogger } = require("../../logger");
 const clipboardy = require('clipboardy');
 
-var logger = getLogger();
+var logger;
 
 /**
  * Extended Enquirer AutoComplete.
@@ -60,6 +60,8 @@ class BasePrompt extends AutoComplete {
       //reset initial otherwise default behaviour is to use this if no input
       this.initial = undefined;
     }
+
+    if(!logger) logger = getLogger();
 
     //logger.debug("New prompt init");
   }
@@ -364,6 +366,9 @@ class BasePrompt extends AutoComplete {
    * Toggle suggestions.
    */
   async toggle() {
+    logger.warn("Toggle suggestions");
+
+
     //if we have no choices, return
     //for some reason this.choices doesnt match this.options right away
     if (!this.options.choices || this.options.choices.length < 1) return;
@@ -1196,10 +1201,14 @@ class BasePrompt extends AutoComplete {
         this.isSuggesting = false;
         this.index = -1;
         this.suggestionStart = -1;
+
+        logger.warn("Selected task: " + this.selected.value);
         await this.render();
         return;
       }
     }
+
+    logger.warn("Submitted: " + JSON.stringify(this.input));
 
     //use default from input line
     return Prompt.prototype.submit.call(this);
