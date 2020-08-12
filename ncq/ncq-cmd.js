@@ -129,6 +129,9 @@ class NcqCmd extends Cmd {
     if(OPTIONS.usage){
       args.push("--usage")
     }
+    if(OPTIONS.searchless){
+      args.push("--searchless")
+    }
 
     //pass current process arguments
     var nodeOptions = "";

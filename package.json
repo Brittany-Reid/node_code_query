@@ -17,6 +17,7 @@
     "start": "npm run nargs ncq/ncq",
     "debug": "npm run nargs ncq/ncq -- --log",
     "analytics": "npm run nargs ncq/ncq -- --usage",
+    "searchless": "npm run nargs ncq/ncq -- --usage --searchless",
     "test": "mocha tests",
     "coverage": "nyc npm run test"
   },

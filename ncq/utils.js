@@ -17,6 +17,9 @@ function options(args){
       if(arg === "--usage"){
         opts.usage = true;
       }
+      if(arg === "--searchless"){
+        opts.searchless = true;
+      }
   }
 
     return opts;

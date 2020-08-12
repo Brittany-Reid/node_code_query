@@ -3,6 +3,7 @@ const PromptWritable = require("./ui/prompt-writable");
 const { footer } = require("./ui/footer");
 const { getLogger } = require("./logger");
 const CodeSearch = require("./service/code-search");
+const utils = require("./utils");
 
 const CliProgress = require("cli-progress");
 const cprocess = require("child_process");
@@ -15,7 +16,9 @@ const repl = require("repl");
 const path = require("path");
 const ESTraverse = require("estraverse");
 const codeAnalysis = require("./service/code-analysis");
+const { fa } = require("stopword");
 
+const OPTS = utils.options(process.argv);
 const VERSION = "1.0.0";
 const NAME = "NCQ";
 var searcher;
@@ -52,12 +55,12 @@ function initializeState(output = false, args) {
     processArgs = args;
   }
 
+  //setup logger
   logger = getLogger(true);
 
+  //progress for loading
   var ticks = 0;
-
   var monitor;
-
   if (!silent) {
     monitor = new ProgressMonitor(100);
 
@@ -86,7 +89,9 @@ function initializeState(output = false, args) {
   //setup codesearch service
   searcher = new CodeSearch();
   //searcher.state.data.MAX = 100;
-  searcher.initialize(monitor);
+  if (!OPTS.searchless) {
+    searcher.initialize(monitor);
+  }
 
   searcher.state.installedPackageNames = getInstalledPackages();
 
@@ -102,6 +107,7 @@ function startREPL(options) {
 
   //get default repl eval function
   replEval = replInstance.eval;
+  //replInstance.eval = eval;
 
   // //replace with our function that calls the default
   // replInstance.eval = eval;
@@ -133,8 +139,10 @@ function getInstalledPackages() {
  * @param {Array} tasks - Array of tasks to use for suggestions.
  */
 function initializeREPL() {
-
-  logger.warn("Initialized REPL with packages " + Array.from(searcher.state.installedPackageNames));
+  logger.warn(
+    "Initialized REPL with packages " +
+      Array.from(searcher.state.installedPackageNames)
+  );
   var tasks = searcher.state.data.getTaskArray();
 
   //create input stream
@@ -187,23 +195,6 @@ function defineCommands() {
     action: editor,
   });
 
-  replInstance.defineCommand("packages", {
-    help:
-      "Search for packages using a task, optional index to navigate results. (Usage: .packages <task> , <index>)",
-    action: packages,
-  });
-
-  replInstance.defineCommand("samples", {
-    help:
-      "Search for samples using package names, or with no arguments, your installed packages. (Usage: .samples <package/s>)",
-    action: samples,
-  });
-
-  replInstance.defineCommand("samplesByTask", {
-    help: "Search for samples using a task. (Usage: .samplesByTask <task>)",
-    action: samplesByTask,
-  });
-
   replInstance.defineCommand("version", {
     help: "Print REPL version",
     action: version,
@@ -218,6 +209,26 @@ function defineCommands() {
     help: "Uninstall given package. (Usage: .uninstall <package>)",
     action: uninstall,
   });
+
+  //search commands
+  if (!OPTS.searchless) {
+    replInstance.defineCommand("packages", {
+      help:
+        "Search for packages using a task, optional index to navigate results. (Usage: .packages <task> , <index>)",
+      action: packages,
+    });
+
+    replInstance.defineCommand("samples", {
+      help:
+        "Search for samples using package names, or with no arguments, your installed packages. (Usage: .samples <package/s>)",
+      action: samples,
+    });
+
+    replInstance.defineCommand("samplesByTask", {
+      help: "Search for samples using a task. (Usage: .samplesByTask <task>)",
+      action: samplesByTask,
+    });
+  }
 }
 
 // /**
@@ -225,31 +236,36 @@ function defineCommands() {
 //  * We grab the default eval when we create a repl.
 //  */
 // function eval(code, context, file, cb) {
+
 //   //playing with this but i think i need to fix how we prompt (not using a readable but overwrite displayprompt)
-//   // var ast = searcher.state.parser.parse(code);
-//   // if (ast) {
-//   //   var requires = codeAnalysis.getRequireStatements(ast);
-//   //   if (requires.length > 0) {
-//   //     console.log(
-//   //       "Would you like to install the packages " + requires.join(", ") + "?"
-//   //     );
-//   //     const { Confirm } = require("enquirer");
-//   //     const prompt = new Confirm({
-//   //       name: "question",
-//   //       message: "Install?",
-//   //     });
+//   //display prompt is just the text, it looks like u need to do it our way
+//   //made pause function set a value in the readable stream that makes read()s not open a new prompt
+//   //that way we can do async stuff like here, now we can prompt without getting a second prompt
+//   var ast = searcher.state.parser.parse(code);
+//   if (ast) {
+//     var requires = codeAnalysis.getRequireStatements(ast);
+//     if (requires.length > 0) {
+//       console.log(
+//         "Would you like to install the packages " + requires.join(", ") + "?"
+//       );
+//       const { Confirm } = require("enquirer");
+//       const prompt = new Confirm({
+//         name: "question",
+//         message: "Install?",
+//       });
+//       this.input.pause();
+//       prompt
+//         .run()
+//         .then((answer) => {
+//           console.log("Answer:", answer);
+//           this.input.resume();
+//           replEval(code, context, file, cb);
+//         })
+//         .catch(console.error);
+//     }
 
-//   //     prompt
-//   //       .run()
-//   //       .then((answer) => {
-//   //         console.log("Answer:", answer);
-//   //         replEval(code, context, file, cb)
-//   //       })
-//   //       .catch(console.error);
-//   //   }
-
-//   //   return;
-//   // }
+//     return;
+//   }
 
 //   replEval(code, context, file, cb);
 // }
