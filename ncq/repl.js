@@ -2,7 +2,7 @@ const PromptReadable = require("./ui/prompt-readable");
 const PromptWritable = require("./ui/prompt-writable");
 const { footer } = require("./ui/footer");
 const { getLogger } = require("./logger");
-const CodeSearch = require("./service/code-search");
+const NCQ = require("./core/ncq");
 const utils = require("./utils");
 
 const CliProgress = require("cli-progress");
@@ -15,13 +15,13 @@ const chalk = require("chalk");
 const repl = require("repl");
 const path = require("path");
 const ESTraverse = require("estraverse");
-const codeAnalysis = require("./service/code-analysis");
+const codeAnalysis = require("./core/code-analysis");
 const { fa } = require("stopword");
 
 const OPTS = utils.options(process.argv);
 const VERSION = "1.0.0";
 const NAME = "NCQ";
-var searcher;
+var ncqService;
 var options = {};
 var replInstance;
 var logger;
@@ -87,13 +87,13 @@ function initializeState(output = false, args) {
   }
 
   //setup codesearch service
-  searcher = new CodeSearch();
-  //searcher.state.data.MAX = 100;
+  ncqService = new NCQ();
+  //ncqService.state.data.MAX = 100;
   if (!OPTS.searchless) {
-    searcher.initialize(monitor);
+    ncqService.initialize(monitor);
   }
 
-  searcher.state.installedPackageNames = getInstalledPackages();
+  ncqService.state.installedPackageNames = getInstalledPackages();
 
   return options;
 }
@@ -141,21 +141,21 @@ function getInstalledPackages() {
 function initializeREPL() {
   logger.warn(
     "Initialized REPL with packages " +
-      Array.from(searcher.state.installedPackageNames)
+      Array.from(ncqService.state.installedPackageNames)
   );
-  var tasks = searcher.state.data.getTaskArray();
+  var tasks = ncqService.state.data.getTaskArray();
 
   //create input stream
   var pReadable = new PromptReadable({
     choices: tasks.slice(0, 10000).sort(),
     prefix: NAME,
     message:
-      "[" + Array.from(searcher.state.installedPackageNames).join(" ") + "]",
+      "[" + Array.from(ncqService.state.installedPackageNames).join(" ") + "]",
     footer: footer,
     multiline: true,
     scroll: true,
     history: {
-      store: new Store({ path: searcher.state.HISTORY_DIR }),
+      store: new Store({ path: ncqService.state.HISTORY_DIR }),
       autosave: true,
     },
     show: !silent,
@@ -241,7 +241,7 @@ function defineCommands() {
 //   //display prompt is just the text, it looks like u need to do it our way
 //   //made pause function set a value in the readable stream that makes read()s not open a new prompt
 //   //that way we can do async stuff like here, now we can prompt without getting a second prompt
-//   var ast = searcher.state.parser.parse(code);
+//   var ast = ncqService.state.parser.parse(code);
 //   if (ast) {
 //     var requires = codeAnalysis.getRequireStatements(ast);
 //     if (requires.length > 0) {
@@ -282,7 +282,7 @@ function packages(string) {
   }
   if (!index) index = 0;
 
-  var packages = searcher.packagesByTask(task);
+  var packages = ncqService.packagesByTask(task);
   //no packages
   if (!packages || packages.length < 1) {
     console.log("No packages found!");
@@ -335,7 +335,7 @@ function samples(packageName) {
 
   //get array of packages
   if (!packageName) {
-    packages = Array.from(searcher.state.installedPackageNames);
+    packages = Array.from(ncqService.state.installedPackageNames);
   } else {
     packages = packageName.trim().split(" ");
   }
@@ -348,7 +348,7 @@ function samples(packageName) {
     return;
   }
 
-  var snippets = searcher.snippetsByPackages(packages);
+  var snippets = ncqService.snippetsByPackages(packages);
   if (!snippets || snippets.length < 1) {
     console.error(
       NAME + ": could not find any samples for packages " + packages.join(" ")
@@ -375,7 +375,7 @@ function samplesByTask(task) {
   }
 
   //get snippets
-  var snippets = searcher.snippetsByTask(task);
+  var snippets = ncqService.snippetsByTask(task);
   if (!snippets || snippets.length < 1) {
     console.log("could not find any samples for this task");
     return;
@@ -414,10 +414,10 @@ function install(packageString, output = "inherit") {
 
   //update state
   for (var p of packages) {
-    searcher.state.installedPackageNames.add(p);
+    ncqService.state.installedPackageNames.add(p);
   }
 
-  var packageArray = Array.from(searcher.state.installedPackageNames);
+  var packageArray = Array.from(ncqService.state.installedPackageNames);
 
   //update repl
   replInstance.inputStream.setMessage("[" + packageArray.join(" ") + "]");
@@ -448,14 +448,14 @@ function uninstall(packageString, output = "inherit") {
 
   //update installed packages
   for (var packageName of packages) {
-    if (searcher.state.installedPackageNames.has(packageName)) {
-      searcher.state.installedPackageNames.delete(packageName);
+    if (ncqService.state.installedPackageNames.has(packageName)) {
+      ncqService.state.installedPackageNames.delete(packageName);
     }
   }
 
   replInstance.inputStream.setMessage(
     "[" +
-      Array.from(searcher.state.installedPackageNames).join(" ").trim() +
+      Array.from(ncqService.state.installedPackageNames).join(" ").trim() +
       "]"
   );
 }
@@ -481,7 +481,7 @@ function editor() {
   fs.writeFileSync("index.js", code);
 
   var appPath = path.join(
-    searcher.state.BASE_DIR,
+    ncqService.state.BASE_DIR,
     "ncq/ui/default-editor-process.js"
   );
   var filePath = path.join(process.cwd(), "index.js");

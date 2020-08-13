@@ -11,11 +11,11 @@ const Package = require("./package");
 var logger;
 
 /**
- * CodeSearch service interfaces with the repl and data.
+ * NCQ service interfaces with the repl and data.
  * Consider that the repl is simply an implementation of this tool and that the actual functionality
  * could be implemented with any interface (say, a web app).
  */
-class CodeSearch {
+class NCQ {
   constructor() {
 
     this.evaluator = new Evaluator();
@@ -146,4 +146,4 @@ class CodeSearch {
   }
 }
 
-module.exports = CodeSearch;
+module.exports = NCQ;

@@ -1,13 +1,12 @@
+const Cmd = require("./base-cmd");
+const utils = require("../utils");
+
 const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 const fse = require("fs-extra");
 const cprocess = require("child_process");
-const winston = require("winston");
-const Cmd = require("./base-cmd");
-const ncq = require("./ncq");
-const repl = require("./repl");
-const utils = require("./utils");
+const { TransformationRule } = require("natural");
 
 var BASE;
 var OPTIONS;
@@ -94,9 +93,20 @@ class NcqCmd extends Cmd {
     //make temporary folder
     this.counter++;
     var tmpDir = path.join(BASE, "tmp" + this.counter);
-    if (fs.existsSync(tmpDir)) {
-      rimraf.sync(tmpDir);
+    //if not logging usage temporary folder works as expected, can be overwrtten
+    if(!OPTIONS.usage){
+      if (fs.existsSync(tmpDir)) {
+        rimraf.sync(tmpDir);
+      }
     }
+    else{
+      //otherwise, find a nonexistant tmpN
+      while(fs.existsSync(tmpDir)){
+        this.counter++;
+        var tmpDir = path.join(BASE, "tmp" + this.counter);
+      }
+    }
+
     fs.mkdirSync(tmpDir);
 
     //change directory
@@ -126,22 +136,27 @@ class NcqCmd extends Cmd {
     if (OPTIONS.log) {
       args.push("--log");
     }
-    if(OPTIONS.usage){
-      args.push("--usage")
+    if (OPTIONS.usage) {
+      args.push("--usage");
     }
-    if(OPTIONS.searchless){
-      args.push("--searchless")
+    if (OPTIONS.searchless) {
+      args.push("--searchless");
     }
 
     //pass current process arguments
     var nodeOptions = "";
-    if(process.execArgv){
+    if (process.execArgv) {
       nodeOptions = process.execArgv.join(" ") + " ";
     }
 
     try {
       cprocess.execSync(
-        "node " + nodeOptions + "../ncq/repl.js " + required.join(" ") + " " + args.join(" "),
+        "node " +
+          nodeOptions +
+          "../ncq/repl.js " +
+          required.join(" ") +
+          " " +
+          args.join(" "),
         {
           stdio: "inherit",
         }
@@ -155,8 +170,11 @@ class NcqCmd extends Cmd {
     //return to our directory
     process.chdir(BASE);
 
-    //delete the temporary folder
-    rimraf.sync(tmpDir);
+    //retain folder if recording usage
+    if (!OPTIONS.usage) {
+      //delete the temporary folder
+      rimraf.sync(tmpDir);
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-const DataHandler = require("./service/data-handler");
+const DataHandler = require("./core/data-handler");
 const { getConfig } = require("./config");
 const utils = require("./utils");
 

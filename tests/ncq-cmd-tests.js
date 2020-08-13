@@ -1,6 +1,6 @@
 require("mocha");
 var assert = require("assert");
-const NcqCmd = require("../ncq/ncq-cmd");
+const NcqCmd = require("../ncq/cli/ncq-cmd");
 const PromptHandler = require("../ncq/ui/prompt-handler");
 const sinon = require("sinon");
 const { Input } = require("enquirer");

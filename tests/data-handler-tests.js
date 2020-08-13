@@ -3,7 +3,7 @@ const { getConfig } = require("../ncq/config");
 
 var assert = require("assert");
 const path = require("path");
-const DataHandler = require("../ncq/service/data-handler");
+const DataHandler = require("../ncq/core/data-handler");
 const { getBaseDirectory } = require("../ncq/utils");
 
 var config = getConfig();
