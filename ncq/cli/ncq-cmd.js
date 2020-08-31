@@ -22,9 +22,9 @@ class NcqCmd extends Cmd {
     OPTIONS = utils.options(process.argv);
 
     this.opening =
-      "Welcome to NCQ Command Line Interface. Type help() for more information.";
+      "Welcome to NCQ Command Line Interface. Type help for more information.";
     this.replWarning =
-      "No REPL. Create a node.js REPL with the repl() command to use this command: ";
+      "No REPL. Create a node.js REPL with the repl command to use this command: ";
     this.unknown = "Did not understand command: ";
     this.helpPrompt = "Write help to show the list of commands.";
     this.replCmds = [];
