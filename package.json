@@ -19,7 +19,8 @@
     "analytics": "npm run nargs ncq/main -- --usage",
     "searchless": "npm run nargs ncq/main -- --usage --searchless",
     "test": "mocha tests",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "info": "mocha tests/info"
   },
   "keywords": [],
   "author": "",
