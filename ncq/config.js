@@ -132,6 +132,20 @@ var macKeybindings = {
       shift: true,
       option: false,
     },
+    historyDown: {
+      name: "down",
+      ctrl: false,
+      meta: false,
+      shift: false,
+      option: true,
+    },
+    historyUp: {
+      name: "up",
+      ctrl: false,
+      meta: false,
+      shift: false,
+      option: true,
+    },
   };
 
 /**
