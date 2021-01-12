@@ -4,6 +4,11 @@
 [![Downloads Stats][npm-downloads]][npm-url]
 
 # Node Code Query (NCQ)
+<p align="center">
+  
+<img src="https://raw.githubusercontent.com/damorimRG/node_code_query/master/media/demo-full.gif" alt="demo"/>
+
+</p>
 
 Node.js is a JS runtime focused on development of server-side and console applications. A strong aspect of Node.js is the set of libraries offered by 
 its package manager, [NPM](https://www.npmjs.com/). Today, NPM lists over 1M packages on its database. It is likely that a developer will find a library that implements the functions she needs. The problem with that, however, is that deciding which package to use and quickly understanding these packages can be daunting for a developer, specially a novice developer on Node.js.
@@ -12,8 +17,8 @@ NCQ is a tool to help Node.js developers 1) locate packages for her needs and 2)
 
 NCQ enables users to write queries for packages and their samples in English. It provides a virtual environment for users to try different samples in isolation. The combination of 1) search (for packages and their samples) and 2) virtualization is what makes NCQ distinct.
 
-15m Youtube Demo Video:<br>
-[![15m NCQ Demo](https://img.youtube.com/vi/C1PZ2g96eVo/0.jpg)](https://www.youtube.com/watch?v=C1PZ2g96eVo&t=43s/0.jpg)
+<!--15m Youtube Demo Video:<br>
+[![15m NCQ Demo](https://img.youtube.com/vi/C1PZ2g96eVo/0.jpg)](https://www.youtube.com/watch?v=C1PZ2g96eVo&t=43s/0.jpg)-->
 
 <!--[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.-->
 
