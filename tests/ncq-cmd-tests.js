@@ -97,7 +97,7 @@ describe("NcqCmd", function () {
 
       await ncqCmd.run();
 
-      assert.strictEqual(output[1], ncqCmd.unknown + "unknown");
+      assert.strictEqual(output[1], `${ncqCmd.unknown} unknown`);
     });
     it("should print help for repl", async function () {
       var ncqCmd = new NcqCmd(new PromptHandler(Input, { show: false }), packages);

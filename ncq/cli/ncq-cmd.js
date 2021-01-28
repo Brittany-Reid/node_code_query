@@ -24,8 +24,8 @@ class NcqCmd extends Cmd {
     this.opening =
       "Welcome to NCQ Command Line Interface. Type help for more information.";
     this.replWarning =
-      "No REPL. Create a node.js REPL with the repl command to use this command: ";
-    this.unknown = "Did not understand command: ";
+      "No REPL. Create a node.js REPL with the repl command to use this command:";
+    this.unknown = "Did not understand command:";
     this.helpPrompt = "Write help to show the list of commands.";
     this.replCmds = [];
     this.counter = 0;
@@ -44,15 +44,18 @@ class NcqCmd extends Cmd {
    */
   default(inp) {
     //if command is a repl command, give user help for how to start repl
+    // Cant understand what this peace of code is doing in here
+    // replCmds array seems to be always empty, so IF statment neve evaluates TRUE
     var cmd = inp.substring(0, inp.indexOf("("));
     if (this.replCmds.includes(cmd)) {
-      console.log(this.replWarning + inp);
+      console.log(`${this.replWarning} ${inp}`);
       console.log(this.helpPrompt);
       return;
     }
+    
 
     //otherwise, don't understand command
-    console.log(this.unknown + inp);
+    console.log(`${this.unknown} ${inp}`);
     console.log(this.helpPrompt);
   }
 
@@ -81,18 +84,23 @@ class NcqCmd extends Cmd {
   }
 
   do_repl(inp) {
+
+    const emptyStr = "";
+    const singleSpaceStr = " ";
+    const dirPrefix = "tmp";
+
     //if packages
     var required = [];
-    if (inp.trim() != "") {
+    if (inp.trim() != emptyStr) {
       //print packages
       console.log(inp);
       //get list of packages
-      required = inp.split(" ");
+      required = inp.split(singleSpaceStr);
     }
 
     //make temporary folder
     this.counter++;
-    var tmpDir = path.join(BASE, "tmp" + this.counter);
+    var tmpDir = path.join(BASE, dirPrefix + this.counter);
     //if not logging usage temporary folder works as expected, can be overwrtten
     if(!OPTIONS.usage){
       if (fs.existsSync(tmpDir)) {
@@ -103,7 +111,7 @@ class NcqCmd extends Cmd {
       //otherwise, find a nonexistant tmpN
       while(fs.existsSync(tmpDir)){
         this.counter++;
-        var tmpDir = path.join(BASE, "tmp" + this.counter);
+        var tmpDir = path.join(BASE, dirPrefix + this.counter);
       }
     }
 
@@ -120,9 +128,7 @@ class NcqCmd extends Cmd {
 
     // install packages within that directory
     cprocess.execSync(
-      "npm install " +
-        required.join(" ") +
-        " --save --production --no-optional",
+      `npm install ${required.join(singleSpaceStr)} --save --production --no-optional`,
       {
         stdio: [process.stdin, process.stdout, process.stdout],
       }
@@ -144,26 +150,22 @@ class NcqCmd extends Cmd {
     }
 
     //pass current process arguments
-    var nodeOptions = "";
+    
+    var nodeOptions = emptyStr;
+
     if (process.execArgv) {
-      nodeOptions = process.execArgv.join(" ") + " ";
+      nodeOptions = process.execArgv.join(singleSpaceStr);
     }
 
     try {
       cprocess.execSync(
-        "node " +
-          nodeOptions +
-          "../ncq/repl.js " +
-          required.join(" ") +
-          " " +
-          args.join(" "),
-        {
+        `node ${nodeOptions} ../ncq/repl.js ${required.join(singleSpaceStr)} ${args.join(singleSpaceStr)}`,
+        { 
           stdio: "inherit",
         }
       );
     } catch (err) {
-      //catch error
-      console.log("\nREPL failed with code " + err.status);
+      console.log(`\nREPL failed with code ${err.status}`);
       return;
     }
 

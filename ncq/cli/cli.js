@@ -22,18 +22,19 @@ class CLI {
     var commands = Array.from(this.cmd.getnames());
 
     //functions starting with do only
+    
+    const doPrefix = "do_";
+    const emptyStr = "";
+
     commands = commands.filter(function (value) {
-      if (value.startsWith("do_")) {
+      if (value.startsWith(doPrefix)) {
         return true;
       }
     });
 
     //get actual commands from function names
     commands.forEach((element, index) => {
-      if (element.startsWith("do_")) {
-        element = element.replace("do_", "");
-      }
-
+      element = element.replace(doPrefix, emptyStr);
       commands[index] = element;
     });
 
