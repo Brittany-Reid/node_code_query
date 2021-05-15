@@ -129,6 +129,9 @@ class NCQ {
       var current = this.state.data.packageToSnippets(p);
       if(current) snippets = snippets.concat(current);
     }
+
+    snippets = this.evaluator.fix(snippets);
+
     return snippets;
   }
 

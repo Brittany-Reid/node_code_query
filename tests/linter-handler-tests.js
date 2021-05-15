@@ -10,7 +10,7 @@ describe("LinterHandler", function () {
       it("should get messages", function () {
         var messages = new LinterHandler().lint("var foo = bar; bar+1");
         assert.strictEqual(messages.length, 4);
-      }).timeout(0); //can be unpredictable
+      });
       it("should filter errors", function () {
         var linter =  new LinterHandler();
         var messages = linter.lint("var foo = bar; bar+1");

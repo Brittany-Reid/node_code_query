@@ -3,8 +3,6 @@ const Linter = require("eslint").Linter;
 /**
  * Handles linting with ESLint. Constructs linter with our settings.
  */
-
-
 class LinterHandler {
   constructor() {
     this.linter = new Linter();
@@ -69,22 +67,33 @@ class LinterHandler {
 
   /**
    * Lints string code.
+   * @param {string} code String code to lint.
+   * @return {Linter.LintMessage[]} Array of linter messages.
    */
   lint(code) {
-
     var messages = this.linter.verify(code, this.config, { filename: "main.js" });
-
     return messages;
   }
 
   /**
    * Filters an array of messages to error severity only.
+   * @param {Linter.LintMessage[]} messages Messages to filter.
+   * @return {Linter.LintMessage[]} Array of filtred messages.
    */
   static errors(messages){
     var errors = messages.filter(function(message){
       if(message.severity == 2) return true;
     })
     return errors;
+  }
+
+  /**
+   * Fix a given string of code.
+   * @param {string} code String code to fix.
+   * @returns {Linter.FixReport} Fix report object for the fixed code.
+   */
+  fix(code){
+    return this.linter.verifyAndFix(code, this.config, { filename: "main.js" });
   }
 }
 
