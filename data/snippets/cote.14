@@ -1,3 +1,0 @@
-# In send data
-
-requester.send({ type: 'find', __timeout: 2000 });

@@ -25,50 +25,50 @@ var language = stopword.en;
  */
 
 if (require.main == module) {
-  main();
+    main();
 }
 
 async function main() {
-  //get config
-  config = getConfig();
+    //get config
+    config = getConfig();
 
-  SNIPPET_DIR = path.join(BASE_DIR, config.get("files.snippets"));
-  INFO_DIR = path.join(BASE_DIR, config.get("files.info"));
+    SNIPPET_DIR = path.join(BASE_DIR, config.get("files.snippets"));
+    INFO_DIR = path.join(BASE_DIR, config.get("files.info"));
 
-  //get datasets
-  await getData();
+    //get datasets
+    await getData();
 
-  //setup database
-  setupDatabase();
+    //setup database
+    setupDatabase();
 }
 
 async function getData() {
-  //if either is missing redownload
-  if (!fs.existsSync(SNIPPET_DIR)) {
-    await downloadData(SNIPPET_DIR);
-  } else if (!fs.existsSync(INFO_DIR)) {
-    await downloadData(INFO_DIR);
-  }
+    //if either is missing redownload
+    if (!fs.existsSync(SNIPPET_DIR)) {
+        await downloadData(SNIPPET_DIR);
+    } else if (!fs.existsSync(INFO_DIR)) {
+        await downloadData(INFO_DIR);
+    }
 }
 
 async function downloadData(dir) {
-  console.error("ERROR: Dataset missing: " + dir);
+    console.error("ERROR: Dataset missing: " + dir);
 
-  //if zip already exists from a faileds setup dont redownload
-  if(!fs.existsSync(TMP_DIR)){
+    //if zip already exists from a faileds setup dont redownload
+    if(!fs.existsSync(TMP_DIR)){
     //download
-    await download(DATA_URL, TMP_DIR);
-  }
+        await download(DATA_URL, TMP_DIR);
+    }
 
-  //extract to data
-  console.log(
-    "Extracting from " + TMP_DIR + " to " + path.dirname(SNIPPET_DIR)
-  );
-  var zip = new Zip(TMP_DIR);
-  zip.extractAllTo(path.dirname(SNIPPET_DIR), true);
+    //extract to data
+    console.log(
+        "Extracting from " + TMP_DIR + " to " + path.dirname(SNIPPET_DIR)
+    );
+    var zip = new Zip(TMP_DIR);
+    zip.extractAllTo(path.dirname(SNIPPET_DIR), true);
 
-  console.log("Deleting " + TMP_DIR);
-  fs.unlinkSync(TMP_DIR);
+    console.log("Deleting " + TMP_DIR);
+    fs.unlinkSync(TMP_DIR);
 }
 
 /**
@@ -77,176 +77,176 @@ async function downloadData(dir) {
  * @param {String} dir - Directory to download to
  */
 async function download(url, dir) {
-  console.log("Downloading Dataset from " + url);
-  return new Promise((resolve, reject) => {
-    var fileStream = fs.createWriteStream(dir);
+    console.log("Downloading Dataset from " + url);
+    return new Promise((resolve, reject) => {
+        var fileStream = fs.createWriteStream(dir);
 
-    fileStream
-      .on("error", (err) => {
-        console.log(err);
-        reject(err);
-      })
-      .on("finish", () => {
-        resolve();
-      });
+        fileStream
+            .on("error", (err) => {
+                console.log(err);
+                reject(err);
+            })
+            .on("finish", () => {
+                resolve();
+            });
 
-    axios
-      .get(url, {
-        responseType: "stream",
-      })
-      .then(function (response) {
-        var total = parseInt(response.data.headers["content-length"]);
-        var current = 0;
-        var nextPercent = 10;
+        axios
+            .get(url, {
+                responseType: "stream",
+            })
+            .then(function (response) {
+                var total = parseInt(response.data.headers["content-length"]);
+                var current = 0;
+                var nextPercent = 10;
 
-        response.data
-          .on("data", function (data) {
-            current += data.length;
+                response.data
+                    .on("data", function (data) {
+                        current += data.length;
 
-            var fraction = Math.round((current / total) * 100);
-            if (fraction >= nextPercent) {
-              console.log(nextPercent + "%");
-              nextPercent += 10;
-            }
-          })
-          .pipe(fileStream);
+                        var fraction = Math.round((current / total) * 100);
+                        if (fraction >= nextPercent) {
+                            console.log(nextPercent + "%");
+                            nextPercent += 10;
+                        }
+                    })
+                    .pipe(fileStream);
 
-        //pass end to filestream
-        response.data.on("end", function () {
-          fileStream.emit("end");
-        });
-      });
-  });
+                //pass end to filestream
+                response.data.on("end", function () {
+                    fileStream.emit("end");
+                });
+            });
+    });
 }
 
 /**
  * Setup Database
  */
 function setupDatabase() {
-  //package info db
-  if (!fs.existsSync(PACKAGE_DB_DIR)) {
-    setupPackageInfo();
-  }
+    //package info db
+    if (!fs.existsSync(PACKAGE_DB_DIR)) {
+        setupPackageInfo();
+    }
 
-  //snippet db
-  if (!fs.existsSync(SNIPPET_DB_DIR)) {
-    setupSnippets();
-  }
+    //snippet db
+    if (!fs.existsSync(SNIPPET_DB_DIR)) {
+        setupSnippets();
+    }
 }
 
 function setupPackageInfo() {
-  console.log("Package Info Database does not exist. Creating...");
+    console.log("Package Info Database does not exist. Creating...");
 
-  var index = new FlexSearch("memory", {
-    tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
-    doc: {
-      id: "id", //index by name for fast look up
-      field: ["Description", "Keywords"],
-    },
-    encode: encode,
-  });
+    var index = new FlexSearch("memory", {
+        tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
+        doc: {
+            id: "id", //index by name for fast look up
+            field: ["Description", "Keywords"],
+        },
+        encode: encode,
+    });
 
-  //read in file
-  var data = fs.readFileSync(INFO_DIR, { encoding: "utf-8" });
+    //read in file
+    var data = fs.readFileSync(INFO_DIR, { encoding: "utf-8" });
 
-  //parse as JSON
-  data = JSON.parse(data);
+    //parse as JSON
+    data = JSON.parse(data);
 
-  var i = 0;
-  for (var packData of data) {
-    var packageObject = {};
+    var i = 0;
+    for (var packData of data) {
+        var packageObject = {};
 
-    //we don't use every field, but I picked out what could be useful in the future
-    //packageObject["Name"] = packData["Name"];
-    packageObject["id"] = i;
-    packageObject["Description"] = packData["Description"];
-    // packageObject["Repository Stars Count"] = packData["Repository Stars Count"];
-    packageObject["Keywords"] = packData["Keywords"];
-    // packageObject["Licenses"] = packData["Licenses"];
-    // packageObject["SourceRank"] = packData["SourceRank"];
-    // packageObject["Repository Forks Count"] =
-    //   packData["Repository Forks Count"];
-    // packageObject["Repository Contributors Count"] =
-    //   packData["Repository Contributors Count"];
-    // packageObject["Latest Release Publish Timestamp"] =
-    //   packData["Latest Release Publish Timestamp"];
-    // packageObject["Latest Release Number"] = packData["Latest Release Number"];
-    // packageObject["Dependent Projects Count"] =
-    //   packData["Dependent Projects Count"];
-    // packageObject["Dependent Repositories Count"] =
-    //   packData["Dependent Repositories Count"];
-    // packageObject["Repository Fork?"] = packData["Repository Fork?"];
-    // packageObject["Repository Created Timestamp"] =
-    //   packData["Repository Created Timestamp"];
-    // packageObject["Repository Updated Timestamp"] =
-    //   packData["Repository Updated Timestamp"];
-    // packageObject["Repository Issues enabled?"] =
-    //   packData["Repository Issues enabled?"];
-    // packageObject["Repository Wiki enabled?"] =
-    //   packData["Repository Wiki enabled?"];
-    // packageObject["Repository Pages enabled?"] =
-    //   packData["Repository Pages enabled?"];
+        //we don't use every field, but I picked out what could be useful in the future
+        //packageObject["Name"] = packData["Name"];
+        packageObject["id"] = i;
+        packageObject["Description"] = packData["Description"];
+        // packageObject["Repository Stars Count"] = packData["Repository Stars Count"];
+        packageObject["Keywords"] = packData["Keywords"];
+        // packageObject["Licenses"] = packData["Licenses"];
+        // packageObject["SourceRank"] = packData["SourceRank"];
+        // packageObject["Repository Forks Count"] =
+        //   packData["Repository Forks Count"];
+        // packageObject["Repository Contributors Count"] =
+        //   packData["Repository Contributors Count"];
+        // packageObject["Latest Release Publish Timestamp"] =
+        //   packData["Latest Release Publish Timestamp"];
+        // packageObject["Latest Release Number"] = packData["Latest Release Number"];
+        // packageObject["Dependent Projects Count"] =
+        //   packData["Dependent Projects Count"];
+        // packageObject["Dependent Repositories Count"] =
+        //   packData["Dependent Repositories Count"];
+        // packageObject["Repository Fork?"] = packData["Repository Fork?"];
+        // packageObject["Repository Created Timestamp"] =
+        //   packData["Repository Created Timestamp"];
+        // packageObject["Repository Updated Timestamp"] =
+        //   packData["Repository Updated Timestamp"];
+        // packageObject["Repository Issues enabled?"] =
+        //   packData["Repository Issues enabled?"];
+        // packageObject["Repository Wiki enabled?"] =
+        //   packData["Repository Wiki enabled?"];
+        // packageObject["Repository Pages enabled?"] =
+        //   packData["Repository Pages enabled?"];
 
 
-    index.add(packageObject);
+        index.add(packageObject);
 
-    i++;
-  }
+        i++;
+    }
 
-  var database = index.export();
+    var database = index.export();
 
-  fs.writeFileSync(PACKAGE_DB_DIR, database, { encoding: "utf-8" });
+    fs.writeFileSync(PACKAGE_DB_DIR, database, { encoding: "utf-8" });
 
-  console.log("DONE!");
+    console.log("DONE!");
 
-  console.log("Package info database was saved to " + PACKAGE_DB_DIR);
+    console.log("Package info database was saved to " + PACKAGE_DB_DIR);
 }
 
 function setupSnippets() {
-  console.log("Snippet Database does not exist. Creating...");
+    console.log("Snippet Database does not exist. Creating...");
 
-  //create index
-  var index = new FlexSearch("memory", {
-    tokenize: "strict",
-    doc: {
-      id: "id",
-      field: ["description"],
-    },
-    encode: encode,
-  });
+    //create index
+    var index = new FlexSearch("memory", {
+        tokenize: "strict",
+        doc: {
+            id: "id",
+            field: ["description"],
+        },
+        encode: encode,
+    });
 
-  var data = fs.readFileSync(SNIPPET_DIR, { encoding: "utf-8" });
+    var data = fs.readFileSync(SNIPPET_DIR, { encoding: "utf-8" });
 
-  data = JSON.parse(data);
+    data = JSON.parse(data);
 
-  var i = 0;
-  for (var packData of data) {
-    var snippets = packData["snippets"];
-    for (var snippet of snippets) {
-      var snippetObject = {};
+    var i = 0;
+    for (var packData of data) {
+        var snippets = packData["snippets"];
+        for (var snippet of snippets) {
+            var snippetObject = {};
 
-      snippetObject["package"] = packData["package"];
-      snippetObject["description"] = snippet["description"];
-      // snippetObject["snippet"] = snippet["snippet"];
-      // snippetObject["num"] = snippet["num"];
-      snippetObject["id"] = snippet["id"];
+            snippetObject["package"] = packData["package"];
+            snippetObject["description"] = snippet["description"];
+            // snippetObject["snippet"] = snippet["snippet"];
+            // snippetObject["num"] = snippet["num"];
+            snippetObject["id"] = snippet["id"];
 
-      index.add(snippetObject);
+            index.add(snippetObject);
+        }
+
+        i++;
     }
 
-    i++;
-  }
+    var database = index.export();
 
-  var database = index.export();
+    fs.writeFileSync(SNIPPET_DB_DIR, database, { encoding: "utf-8" });
 
-  fs.writeFileSync(SNIPPET_DB_DIR, database, { encoding: "utf-8" });
+    console.log("DONE!");
 
-  console.log("DONE!");
-
-  console.log("Snippet database was saved to: " + SNIPPET_DB_DIR);
+    console.log("Snippet database was saved to: " + SNIPPET_DB_DIR);
 }
 
 function encode(str) {
-  var words = DataHandler.keywords(str);
-  return words.join(" ");
+    var words = DataHandler.keywords(str);
+    return words.join(" ");
 }

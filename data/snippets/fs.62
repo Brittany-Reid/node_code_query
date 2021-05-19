@@ -1,7 +1,0 @@
-# The optional options argument can be a string specifying an encoding, or an object with an encoding property specifying the character encoding to use.
-
-fsPromises.mkdtemp(path.join(os.tmpdir(), 'foo-'))
-  .catch(console.error);
-
-
-

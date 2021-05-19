@@ -1,3 +1,0 @@
-# In advertisement settings:
-
-new cote.Requester({ name: `Requester with timeout`, timeout: 1000 });

@@ -1,6 +1,0 @@
-# As environment variable for all requesters
-
-COTE_REQUEST_TIMEOUT=1000 node service.js
-
-
-

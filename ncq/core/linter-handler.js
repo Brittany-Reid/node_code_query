@@ -4,19 +4,19 @@ const Linter = require("eslint").Linter;
  * Handles linting with ESLint. Constructs linter with our settings.
  */
 class LinterHandler {
-  constructor() {
-    this.linter = new Linter();
-    //get rules list
-    var rules = [...this.linter.getRules().entries()];
-    //filter to recommended
-    rules = rules.filter((data) => data[1].meta.docs.recommended);
+    constructor() {
+        this.linter = new Linter();
+        //get rules list
+        var rules = [...this.linter.getRules().entries()];
+        //filter to recommended
+        rules = rules.filter((data) => data[1].meta.docs.recommended);
 
-    //filter severity 
-    rules = rules.map((data) => data[0]);
-    var config = { rules: {} };
-    rules.forEach(function (value, index) {
-        var severity = "error";
-        switch (value) {
+        //filter severity 
+        rules = rules.map((data) => data[0]);
+        var config = { rules: {} };
+        rules.forEach(function (value, index) {
+            var severity = "error";
+            switch (value) {
             /*
              * Allowed Patterns
              * These don't cause runtime errors.
@@ -55,46 +55,46 @@ class LinterHandler {
             default:
                 severity = "error";
                 break;
-        }
-      config.rules[value] = severity;
-    });
+            }
+            config.rules[value] = severity;
+        });
 
-    this.config = config;
+        this.config = config;
 
-    this.config.rules["semi"] = "warn";
-    this.config.rules["no-useless-constructor"] =  "warn";
-  }
+        this.config.rules["semi"] = "warn";
+        this.config.rules["no-useless-constructor"] =  "warn";
+    }
 
-  /**
+    /**
    * Lints string code.
    * @param {string} code String code to lint.
    * @return {Linter.LintMessage[]} Array of linter messages.
    */
-  lint(code) {
-    var messages = this.linter.verify(code, this.config, { filename: "main.js" });
-    return messages;
-  }
+    lint(code) {
+        var messages = this.linter.verify(code, this.config, { filename: "main.js" });
+        return messages;
+    }
 
-  /**
+    /**
    * Filters an array of messages to error severity only.
    * @param {Linter.LintMessage[]} messages Messages to filter.
    * @return {Linter.LintMessage[]} Array of filtred messages.
    */
-  static errors(messages){
-    var errors = messages.filter(function(message){
-      if(message.severity == 2) return true;
-    })
-    return errors;
-  }
+    static errors(messages){
+        var errors = messages.filter(function(message){
+            if(message.severity == 2) return true;
+        })
+        return errors;
+    }
 
-  /**
+    /**
    * Fix a given string of code.
    * @param {string} code String code to fix.
    * @returns {Linter.FixReport} Fix report object for the fixed code.
    */
-  fix(code){
-    return this.linter.verifyAndFix(code, this.config, { filename: "main.js" });
-  }
+    fix(code){
+        return this.linter.verifyAndFix(code, this.config, { filename: "main.js" });
+    }
 }
 
 module.exports = LinterHandler;

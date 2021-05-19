@@ -1,2 +1,0 @@
-# within: asserts a number within a range
-expect(1).to.be.within(0, Infinity);

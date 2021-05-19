@@ -26,21 +26,23 @@ describe("Info", function () {
      */
     before(() => {
         data = new DataHandler();
-        data.loadPackages(INFO_DIR, INFO_DB);
-        data.loadSnippets(SNIPPET_DIR, SNIPPET_DB);
-        data.loadTasks(TASK_DIR);
+        // data.loadPackages(INFO_DIR, INFO_DB);
+        // data.loadSnippets(SNIPPET_DIR, SNIPPET_DB);
+        //data.loadTasks(TASK_DIR);
     });
 
 
     it("How many packages?", function () {
+        data.loadPackages(INFO_DIR, INFO_DB);
         console.log("Packages: " + data.nameToId.size);
     });
 
     it("How many snippets?", function(){
+        data.loadSnippets(SNIPPET_DIR, SNIPPET_DB);
         console.log("Snippets: " + data.snippets.length);
     });
 
-    it("How many tasks?", function(){
-        console.log("Tasks: " + data.tasks.size);
-    });
+    // it("How many tasks?", function(){
+    //     console.log("Tasks: " + data.tasks.size);
+    // });
 });

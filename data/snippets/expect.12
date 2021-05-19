@@ -1,3 +1,0 @@
-# withArgs: creates anonymous function to call fn with arguments
-expect(fn).withArgs(invalid, arg).to.throwException();
-expect(fn).withArgs(valid, arg).to.not.throwException();

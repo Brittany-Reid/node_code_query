@@ -33,6 +33,7 @@
     "chalk-pipe": "^4.0.0",
     "cli-progress": "^3.8.2",
     "clipboardy": "^2.3.0",
+    "csv-parse": "^4.11.1",
     "data-store": "^4.0.3",
     "enquirer": "^2.3.6",
     "eslint": "^7.6.0",
