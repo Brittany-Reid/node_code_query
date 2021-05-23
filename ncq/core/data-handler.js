@@ -107,6 +107,27 @@ class DataHandler{
     }
 
     /**
+     * Return array of packages in database.
+     */
+    getPackages(){
+        var packages = [];
+        this.idToPackage.forEach((value)=>{
+            packages.push(value);
+        });
+        return packages;
+    }
+    /**
+     * Return array of snippets in database.s
+     */
+    getSnippets(){
+        var snippets = [];
+        this.idToSnippet.forEach((value) => {
+            snippets.push(value);
+        })
+        return snippets;
+    }
+
+    /**
     * Process string for keywords.
     */
     static process(string) {

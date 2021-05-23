@@ -19,7 +19,7 @@ class Package{
         //this.hasTestDirectory = true; //82 Both
         this.lastUpdate = info["timeModified"] ? Date.parse(info["timeModified"]) : false; //76 //Both
         this.numberOfCodeBlocks = info["numberOfCodeBlocks"]; //73 User
-        this.hasRepoUrl = !!info["repositoryURL"]; //73 Both
+        this.hasRepoUrl = !!info["repositoryUrl"]; //73 Both
         this.snippetCount = info["snippets"].length //55
         this.linesInReadme = info["linesInReadme"]; //52
 
