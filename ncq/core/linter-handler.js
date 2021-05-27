@@ -13,7 +13,7 @@ class LinterHandler {
 
         //filter severity 
         rules = rules.map((data) => data[0]);
-        var config = { rules: {} };
+        var config = { rules: {}, env:{node: true, es2020: true} };
         rules.forEach(function (value, index) {
             var severity = "error";
             switch (value) {

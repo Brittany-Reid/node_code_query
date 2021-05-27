@@ -3,7 +3,7 @@ const { getLogger } = require("../logger");
 const State = require("./state");
 
 const Evaluator = require("./evaluator");
-const ProgressMonitor = require("progress-monitor");
+const ProgressMonitor = require("progress-monitor"); /* eslint-disable-line */
 const Package = require("./package");
 
 var logger;
@@ -14,14 +14,16 @@ var logger;
  * could be implemented with any interface (say, a web app).
  */
 class NCQ {
-    constructor() {
-
+    constructor({
+        recordLimit = false
+    } = {}) {
+        this.recordLimit = recordLimit,
         this.evaluator = new Evaluator();
 
         //list of installed package names
         this.installedPackages = [];
         this.state = new State();
-        this.state.data = new DataHandler();
+        this.state.data = new DataHandler({recordLimit:this.recordLimit});
 
         if(!logger) logger = getLogger();
     }
@@ -77,8 +79,6 @@ class NCQ {
         // task = task.trim();
         // var snippets = this.state.data.taskToSnippets(task);
 
-
-
         // //sort snippets
         // snippets = snippets.sort(Snippet.sort);
 
@@ -100,7 +100,7 @@ class NCQ {
     snippetsByPackages(packageNames) {
         var snippets = [];
         for(var p of packageNames){
-            var current = this.state.data.packageToSnippets(p);
+            var current = this.state.data.getSnippetsForPackage(p);
             if(current) snippets = snippets.concat(current);
         }
 
@@ -114,7 +114,7 @@ class NCQ {
    */
     packagesByTask(task) {
         task = task.trim();
-        var packages = this.state.data.taskToPackages(task);
+        var packages = this.state.data.searchPackages(task);
 
         //sort
         packages = packages.sort(Package.sort);

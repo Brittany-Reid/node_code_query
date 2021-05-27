@@ -13,8 +13,8 @@ const Snippet = require("./snippet");
 const config = getConfig();
 const BASE_DIR = getBaseDirectory();
 
-const DATA_DIR = path.join(BASE_DIR, config.get("files.data"));
-const PACKAGE_DB_DIR = path.join(BASE_DIR, config.get("files.packageDB"));
+const DATA_PATH = path.join(BASE_DIR, config.get("files.data"));
+const PACKAGE_DB_PATH = path.join(BASE_DIR, config.get("files.packageDB"));
 
 function encode(str) {
     var words = DataHandler.keywords(str);
@@ -25,29 +25,52 @@ function encode(str) {
  * Class that handles loading and accessing data.
  */
 class DataHandler{
+
     /**
-     * @param {Object} options
-     * @param {string} options.dataDir Directory of the dataset.
-     * @param {string} options.packageDBDir Directory of the package database.
+     * @param {Object} options Options object for setting non-default options, usually for testing.
+     * @param {string} options.dataPath Directory of the dataset.
+     * @param {string} options.packageDbPath Directory of the package database, generated once by setup.
+     * @param {number} options.recordLimit Number of records to load, default `false` loads all in file.
+     * @param {number} options.resultLimit Global number of results to return, passed to flexsearch. Default `0` disables limit.
      */
     constructor({
-        dataDir = DATA_DIR,
-        packageDBDir = PACKAGE_DB_DIR,
-        limit = false,
+        dataPath = DATA_PATH,
+        packageDbPath = PACKAGE_DB_PATH,
+        recordLimit = false,
+        resultLimit = 0,
     } = {}){
-        this.limit = limit;
-        this.resultLimit = 0;
+        this.recordLimit = recordLimit;
+        this.resultLimit = resultLimit;
 
-        this.dataDir = dataDir;
-        this.packageDBDir = packageDBDir;
+        this.dataPath = dataPath;
+        this.packageDbPath = packageDbPath;
 
+        /*
+        * Objects are indexed by ID for flexsearch, even snippets (remnant of when snippets had a unique search.)
+        * It's easier to keep in case we want to reimplement.
+        */
+
+        /**
+        * Flexsearch package index object.
+        */
+        this.packageIndex = undefined;
+
+        /**
+         * Map of id number to package object. The id is used by flexsearch to minimize file size.
+         */
         this.idToPackage = new Map();
+        /**
+         * Map of package names to id numbers.
+         */
         this.packageNameToId = new Map();
+        /**
+         * Map of id numbers to code snippet objects.
+         */
         this.idToSnippet = new Map();
+        /**
+         * Map of package id number to an array of code snippet ids.
+         */
         this.packageIdToSnippetIdArray = new Map();
-
-        //package flexsearch index
-        this.packageIndex;
     }
 
     /**
@@ -55,34 +78,35 @@ class DataHandler{
      * @param {ProgressMonitor} monitor 
      */
     async loadDatabase(monitor){
+        var subMonitor1, subMonitor2;
         if (monitor) {
             monitor = ProgressMonitor.adjustTotal(monitor, 100);
             monitor.emit("start");
+            subMonitor1 = monitor.split(5);
+            subMonitor2 = monitor.split(95);
         }
+       
+        await this._loadPackageDB(subMonitor1);
+        await this._loadData(subMonitor2);
 
-        await this._loadData();
-
-        this._loadPackageDB();
 
         if (monitor) monitor.emit("end");
     }
 
     /**
-    * Returns an array of `Package` objects that match a given task.
-    * @param {String} task - Task to search with.
+    * Returns an array of `Package` objects that match a given query string.
+    * @param {String} query - Query string to search with.
     */
-    taskToPackages(task) {
-        var result = this.packageIndex.search({ query: task, limit: this.resultLimit });
+    searchPackages(query) {
+        var result = this.packageIndex.search({ query: query, limit: this.resultLimit });
         var packages = [];
         for (var r of result) {
-            if(r){
-                var id = r.id;
-                var object = this.idToPackage.get(id);
-                
-  
-                if(object) {
-                    packages.push(object);
-                }
+            var id = r.id;
+            var object = this.idToPackage.get(id);
+            
+
+            if(object) {
+                packages.push(object);
             }
         }
 
@@ -91,15 +115,15 @@ class DataHandler{
 
     /**
     * Return array of `Snippet` objects that match a given package name.
-    * @param {String} packageName - The package to look for associated snippets.
+    * @param {String} packageName - The package to return snippets for.
     */
-    packageToSnippets(packageName) {
+    getSnippetsForPackage(packageName) {
         var id = this.packageNameToId.get(packageName);
-        var snippetIds = this.packageIdToSnippetIdArray(id);
+        var snippetIds = this.packageIdToSnippetIdArray.get(id);
 
         var snippets = [];
         for(var s of snippetIds){
-            var snippet = this.idToSnippet(s);
+            var snippet = this.idToSnippet.get(s);
             snippets.push(snippet);
         }
 
@@ -109,7 +133,7 @@ class DataHandler{
     /**
      * Return array of packages in database.
      */
-    getPackages(){
+    get packages(){
         var packages = [];
         this.idToPackage.forEach((value)=>{
             packages.push(value);
@@ -119,7 +143,7 @@ class DataHandler{
     /**
      * Return array of snippets in database.s
      */
-    getSnippets(){
+    get snippets(){
         var snippets = [];
         this.idToSnippet.forEach((value) => {
             snippets.push(value);
@@ -163,8 +187,13 @@ class DataHandler{
         return words;
     }
 
-    _loadPackageDB(){
-        var database = fs.readFileSync(this.packageDBDir, { encoding: "utf-8" });
+    async _loadPackageDB(monitor){
+        if(monitor){
+            monitor = ProgressMonitor.adjustTotal(monitor, 100);
+            monitor.emit("start");
+        }
+
+        var database = fs.readFileSync(this.packageDbPath, { encoding: "utf-8" });
 
         this.packageIndex = new FlexSearch("memory", {
             tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
@@ -176,15 +205,32 @@ class DataHandler{
         });
 
         this.packageIndex.import(database);
+
+        if(monitor) monitor.emit("end");
     }
 
-    async _loadData(){
+    /**
+     * 
+     * @param {ProgressMonitor} monitor 
+     */
+    async _loadData(monitor){
+
+        if(monitor){
+            monitor = ProgressMonitor.adjustTotal(monitor, 100);
+            monitor.emit("start");
+        }
+
         this.idToPackage = new Map();
         this.packageNameToId = new Map();
         var id = 0;
         var sid = 0;
+        var interval = Math.round(620221/100);
+        if(this.recordLimit){
+            interval = Math.round(this.recordLimit/100);
+        }
         const onData = (data, pipeline) => {
-            if(this.limit && id > this.limit){
+            if(id % interval === 0 && monitor) monitor.emit("work", 1)
+            if(this.recordLimit && id > this.recordLimit){
                 pipeline.destroy();
                 return;
             }
@@ -212,7 +258,9 @@ class DataHandler{
             id++;
         }
 
-        await readCSVStream(this.dataDir, onData);
+        await readCSVStream(this.dataPath, onData);
+
+        if(monitor) monitor.emit("end");
     }
 
 }

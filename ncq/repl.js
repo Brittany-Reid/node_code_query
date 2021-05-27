@@ -138,9 +138,16 @@ function getInstalledPackages() {
  * @param {Array} tasks - Array of tasks to use for suggestions.
  */
 function initializeREPL() {
+    var installedPackages = [];
+    if(ncqService) installedPackages = Array.from(ncqService.state.installedPackageNames);
+    var history;
+    if(ncqService){
+        history = new Store({ path: ncqService.state.HISTORY_DIR});
+    }
+
     logger.warn(
         "Initialized REPL with packages " +
-      Array.from(ncqService.state.installedPackageNames)
+      installedPackages
     );
     var tasks = []; //ncqService.state.data.getTaskArray();
 
@@ -149,12 +156,12 @@ function initializeREPL() {
         choices: tasks.slice(0, 10000).sort(),
         prefix: NAME,
         message:
-      "[" + Array.from(ncqService.state.installedPackageNames).join(" ") + "]",
+      "[" + installedPackages.join(" ") + "]",
         footer: footer,
         multiline: true,
         scroll: true,
         history: {
-            store: new Store({ path: ncqService.state.HISTORY_DIR }),
+            store: history,
             autosave: true,
         },
         show: !silent,

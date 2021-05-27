@@ -16,12 +16,16 @@ class Package{
         this.hasReadme = true; //prefiltered //100 Both
         this.hasLicense = !!info["license"]; //85 Both
         this.hasInstallExample = !!info["hasInstallExample"]; //82 Both
-        //this.hasTestDirectory = true; //82 Both
+        this.hasTestDirectory = JSON.parse(info["hasTestDirectory"]); //82 Both
         this.lastUpdate = info["timeModified"] ? Date.parse(info["timeModified"]) : false; //76 //Both
         this.numberOfCodeBlocks = info["numberOfCodeBlocks"]; //73 User
         this.hasRepoUrl = !!info["repositoryUrl"]; //73 Both
         this.snippetCount = info["snippets"].length //55
-        this.linesInReadme = info["linesInReadme"]; //52
+        this.linesInReadme = parseInt(info["linesInReadme"]); //52
+        this.stars = parseInt(info["stars"]);
+        // this.fork = JSON.parse(info["fork"]);
+        // this.forks = parseInt(info["forks"]);
+        // this.watchers = parseInt(info["watchers"]);
 
         this.rankValue = undefined;
     }
@@ -35,6 +39,7 @@ class Package{
         }
         this.rankValue = 0;
 
+        if(this.hasTestDirectory) this.rankValue += 82;
         if(this.hasRunExample) this.rankValue += 100;
         if(this.hasLicense) this.rankValue += 85;
         if(this.hasInstallExample) this.rankValue += 82;

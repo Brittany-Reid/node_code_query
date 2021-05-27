@@ -4,6 +4,7 @@ const LinterHandler = require("./linter-handler");
 
 const path = require("path");
 const Parser = require("./parser");
+const DataHandler = require("./data-handler"); /*eslint-disable-line*/
 
 var config = getConfig();
 
@@ -22,7 +23,10 @@ class State {
 
         //array of installed packages by name
         this.installedPackageNames = new Set();
-        //data handler object
+        /**
+         * DataHandler object.
+         * @type {DataHandler}
+         */
         this.data = undefined;
     }
 }
