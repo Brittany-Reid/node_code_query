@@ -7,9 +7,6 @@
     "type": "git",
     "url": "https://github.com/damorimRG/node_code_query.git"
   },
-  "engines": {
-    "node": "<=12.18.3"
-  },
   "scripts": {
     "nargs": "node --max-old-space-size=4096",
     "install": "npm run setup",
