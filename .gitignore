@@ -29,6 +29,7 @@ data/readmes.json
 
 all.json
 data/info.json
+data/dataset.csv
 data/info.zip
 data/projects_with_repository_fields-1.6.0-2020-01-12.csv
 data/snippets.json

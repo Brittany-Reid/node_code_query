@@ -4,9 +4,7 @@ const utils = require("../utils");
 const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
-const fse = require("fs-extra");
-const cprocess = require("child_process");
-const { TransformationRule } = require("natural");
+const Project = require("../core/project");
 
 var BASE;
 var OPTIONS;
@@ -15,167 +13,94 @@ var OPTIONS;
  * Extended Cmd with our commands, for our CLI.
  */
 class NcqCmd extends Cmd {
-  constructor(input) {
-    super(input);
+    constructor(input) {
+        super(input);
 
-    BASE = utils.getBaseDirectory();
-    OPTIONS = utils.options(process.argv);
+        BASE = utils.getBaseDirectory();
+        OPTIONS = utils.options(process.argv);
 
-    this.opening =
+        this.opening =
       "Welcome to NCQ Command Line Interface. Type help for more information.";
-    this.replWarning =
+        this.replWarning =
       "No REPL. Create a node.js REPL with the repl command to use this command: ";
-    this.unknown = "Did not understand command: ";
-    this.helpPrompt = "Write help to show the list of commands.";
-    this.replCmds = [];
-    this.counter = 0;
-  }
+        this.unknown = "Did not understand command: ";
+        this.helpPrompt = "Write help to show the list of commands.";
+        this.replCmds = [];
+        this.counter = 0;
+    }
 
-  /**
+    /**
    * Extend run to print custom intro.
    */
-  async run() {
-    console.log(this.opening);
-    await super.run();
-  }
+    async run() {
+        console.log(this.opening);
+        await super.run();
+    }
 
-  /**
+    /**
    * The default command, when the command matches no other commands.
    */
-  default(inp) {
+    default(inp) {
     //if command is a repl command, give user help for how to start repl
-    var cmd = inp.substring(0, inp.indexOf("("));
-    if (this.replCmds.includes(cmd)) {
-      console.log(this.replWarning + inp);
-      console.log(this.helpPrompt);
-      return;
+        var cmd = inp.substring(0, inp.indexOf("("));
+        if (this.replCmds.includes(cmd)) {
+            console.log(this.replWarning + inp);
+            console.log(this.helpPrompt);
+            return;
+        }
+
+        //otherwise, don't understand command
+        console.log(this.unknown + inp);
+        console.log(this.helpPrompt);
     }
 
-    //otherwise, don't understand command
-    console.log(this.unknown + inp);
-    console.log(this.helpPrompt);
-  }
-
-  //TODO: move this into repl later
-  // /**
-  //  * Help for list_packages command.
-  //  */
-  // help_list_packages(inp) {
-  //   console.log("Lists available packages.");
-  // }
-
-  // /**
-  //  * Lists packages in the snippet directory for repl.
-  //  */
-  // do_list_packages(inp) {
-  //   for (let i = 0; i < this.packages.length; i++) {
-  //     console.log(this.packages[i]);
-  //   }
-  // }
-
-  /**
+    /**
    * Help for repl command.
    */
-  help_repl(inp) {
-    console.log("Runs a node.js repl.");
-  }
+    help_repl(inp) {
+        console.log("Runs a node.js repl.");
+    }
 
-  do_repl(inp) {
+    do_repl(inp) {
     //if packages
-    var required = [];
-    if (inp.trim() != "") {
-      //print packages
-      console.log(inp);
-      //get list of packages
-      required = inp.split(" ");
-    }
+        var required = [];
+        if (inp.trim() != "") {
+            //print packages
+            console.log(inp);
+            //get list of packages
+            required = inp.split(" ");
+        }
 
-    //make temporary folder
-    this.counter++;
-    var tmpDir = path.join(BASE, "tmp" + this.counter);
-    //if not logging usage temporary folder works as expected, can be overwrtten
-    if(!OPTIONS.usage){
-      if (fs.existsSync(tmpDir)) {
-        rimraf.sync(tmpDir);
-      }
-    }
-    else{
-      //otherwise, find a nonexistant tmpN
-      while(fs.existsSync(tmpDir)){
+        //make temporary folder
         this.counter++;
         var tmpDir = path.join(BASE, "tmp" + this.counter);
-      }
-    }
-
-    fs.mkdirSync(tmpDir);
-
-    //change directory
-    process.chdir(tmpDir);
-
-    fs.writeFileSync(
-      "package.json",
-      '{"license": "ISC", "description": "temporary repl", "repository": "null"}'
-    );
-    fs.writeFileSync("package-lock.json", '{"lockfileVersion": 1}');
-
-    // install packages within that directory
-    cprocess.execSync(
-      "npm install " +
-        required.join(" ") +
-        " --save --production --no-optional",
-      {
-        stdio: [process.stdin, process.stdout, process.stdout],
-      }
-    );
-
-    //reset stdin
-    this.resetStdin();
-
-    //do repl
-    var args = [];
-    if (OPTIONS.log) {
-      args.push("--log");
-    }
-    if (OPTIONS.usage) {
-      args.push("--usage");
-    }
-    if (OPTIONS.searchless) {
-      args.push("--searchless");
-    }
-
-    //pass current process arguments
-    var nodeOptions = "";
-    if (process.execArgv) {
-      nodeOptions = process.execArgv.join(" ") + " ";
-    }
-
-    try {
-      cprocess.execSync(
-        "node " +
-          nodeOptions +
-          "../ncq/repl.js " +
-          required.join(" ") +
-          " " +
-          args.join(" "),
-        {
-          stdio: "inherit",
+        //if not logging usage temporary folder works as expected, can be overwrtten
+        if(!OPTIONS.usage){
+            if (fs.existsSync(tmpDir)) {
+                rimraf.sync(tmpDir);
+            }
         }
-      );
-    } catch (err) {
-      //catch error
-      console.log("\nREPL failed with code " + err.status);
-      return;
-    }
+        else{
+            //otherwise, find a nonexistant tmpN
+            while(fs.existsSync(tmpDir)){
+                this.counter++;
+                tmpDir = path.join(BASE, "tmp" + this.counter);
+            }
+        }
 
-    //return to our directory
-    process.chdir(BASE);
+        Project.createProject(tmpDir, required);
 
-    //retain folder if recording usage
-    if (!OPTIONS.usage) {
-      //delete the temporary folder
-      rimraf.sync(tmpDir);
+        //reset stdin
+        this.resetStdin();
+
+        Project.startReplInProject(tmpDir, required);
+
+        //retain folder if recording usage
+        if (!OPTIONS.usage) {
+            //delete the temporary folder
+            rimraf.sync(tmpDir);
+        }
     }
-  }
 }
 
 module.exports = NcqCmd;
