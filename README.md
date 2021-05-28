@@ -17,11 +17,6 @@ NCQ is a tool to help Node.js developers 1) locate packages for her needs and 2)
 
 NCQ enables users to write queries for packages and their samples in English. It provides a virtual environment for users to try different samples in isolation. The combination of 1) search (for packages and their samples) and 2) virtualization is what makes NCQ distinct.
 
-<!--15m Youtube Demo Video:<br>
-[![15m NCQ Demo](https://img.youtube.com/vi/C1PZ2g96eVo/0.jpg)](https://www.youtube.com/watch?v=C1PZ2g96eVo&t=43s/0.jpg)-->
-
-<!--[Here](https://1drv.ms/v/s!AoG_FqzVTCCZj0TSWAbXMwvzJ_0Z) is a demonstration of a very rough idea of ​​the project.-->
-
 ## Pre-requisites
 
 Latest LTS version of Node/NPM.<br>*Hint: Use nvm to install node/npm. Install [nvm](https://github.com/nvm-sh/nvm). Then, run the command $> nvm install --lts*
@@ -54,6 +49,10 @@ You should see:
 ...
 found 0 vulnerabilities
 ```
+
+## Dataset
+
+The dataset will automatically be downloaded when installing NCQ, you do not need to manually download and extract it, however, the dataset is also made available at https://zenodo.org/record/4835694/files/dataset.zip
 
 ## Illustrative Example
 

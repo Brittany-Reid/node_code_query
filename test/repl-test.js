@@ -5,6 +5,7 @@ const stream = require("stream");
 const stripAnsi = require("strip-ansi");
 const fs = require("fs");
 const rimraf = require("rimraf");
+const Project = require("../ncq/core/project")
 
 /**
  * Utility function, takes a string to send as input to Enquirer prompt
@@ -33,17 +34,9 @@ describe("repl", function () {
     before(async function () {
         this.timeout(0);
 
-        if (fs.existsSync("tmpTest")) {
-            rimraf.sync("tmpTest");
-        }
-        fs.mkdirSync("tmpTest");
-        process.chdir("tmpTest");
+        Project.createProject("tmpTest");
 
-        fs.writeFileSync(
-            "package.json",
-            '{"license": "ISC", "description": "temporary repl", "repository": "null"}'
-        );
-        fs.writeFileSync("package-lock.json", '{"lockfileVersion": 1}');
+        process.chdir("tmpTest");
 
         await initializeState(true, []);
     });

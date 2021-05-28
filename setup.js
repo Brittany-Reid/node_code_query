@@ -1,51 +1,33 @@
 const fs = require("fs");
 const path = require("path");
-const parse = require('csv-parse')
 const FlexSearch = require("flexsearch");
 const DataHandler = require("./ncq/core/data-handler");
 const utils = require("./ncq/utils");
+const axios = require("axios");
+const Zip = require("adm-zip");
 
-const BASE_DIR = utils.getBaseDirectory();
-const DATA_DIR = "data/dataset.csv";
-var SNIPPET_DB_DIR = path.join(BASE_DIR, "data/snippetDB2.txt");
-var PACKAGE_DB_DIR = path.join(BASE_DIR, "data/packageDB2.txt");
+const DATA_URL = "https://zenodo.org/record/4835694/files/dataset.zip";
+const DATA_PATH = "data/dataset.csv";
+const DATA_ZIP_PATH = "data/dataset.zip";
+const PACKAGE_DB_PATH = "data/packageDB.txt";
 
-/**
- * Encode a string into an array of words. Use DataHandler keyword impl.
- * @returns 
- */
-function encode(str) {
-    var words = DataHandler.keywords(str);
-    return words.join(" ");
-}
+async function setupPackageDB(){
+    var packages = [];
+    const onData = (data) => {
+        if(data.keywords) data.keywords = JSON.parse(data.keywords);
+        else{
+            data.keywords = [];
+        }
+        data.snippets = JSON.parse(data.snippets);
+        packages.push(data);
+    }
 
-/**
- * Read a file as stream. Returns a promise.
- */
-function readFileStream(file, onData = (data, pipeline)=>{}, onEnd = (data)=>{}){
-    const parser = parse({
-        delimiter: '\t',
-        relax: true,
-        escape: false,
-        columns:true,
-    });
+    await utils.readCSVStream(DATA_PATH, onData);
 
-    var pipeline = fs.createReadStream(file, {encoding: "utf-8"}).pipe(parser);
-
-    return new Promise((resolve, reject) => {
-        pipeline.on("data", (data) => {
-            onData(data, pipeline);
-        })
-        pipeline.on("end", (data) => {
-            onEnd(data);
-            resolve();
-        })
-    });
-}
-
-async function setupPackageDatabase(packages){
-
-    console.log("Package Info Database does not exist. Creating...");
+    const encode = (str)  => {
+        var words = DataHandler.keywords(str);
+        return words.join(" ");
+    }
 
     var index = new FlexSearch("memory", {
         tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
@@ -55,7 +37,7 @@ async function setupPackageDatabase(packages){
         },
         encode: encode,
     });
-    
+            
     var id = 0;
     for(var p of packages){
         var packageObject = {};
@@ -65,57 +47,83 @@ async function setupPackageDatabase(packages){
         index.add(packageObject);
         id++;
     }
-
+        
     var database = index.export();
+        
+    fs.writeFileSync(PACKAGE_DB_PATH, database, { encoding: "utf-8" });
 
-    fs.writeFileSync(PACKAGE_DB_DIR, database, { encoding: "utf-8" });
-
-    console.log("DONE!");
-
-    console.log("Package info database was saved to " + PACKAGE_DB_DIR);
-    
+    console.log("Done");
 }
 
-async function setupSnippetDatabase(packages){
-    console.log("Snippet Database does not exist. Creating...");
+async function download(url, path) {
+    return new Promise((resolve, reject) => {
+        var fileStream = fs.createWriteStream(path);
 
-    // //create index
-    // var index = new FlexSearch("memory", {
-    //     tokenize: "strict",
-    //     doc: {
-    //         id: "id",
-    //         field: ["description"],
-    //     },
-    //     encode: encode,
-    // });
+        fileStream
+            .on("error", (err) => {
+                console.log(err.message);
+                reject(err);
+            })
+            .on("finish", () => {
+                resolve();
+            });
 
-    // for(var p of packages){
-    //     var snippets = p["snippets"];
+        axios
+            .get(url, {
+                responseType: "stream",
+            })
+            .then(function (response) {
+                var total = parseInt(response.data.headers["content-length"]);
+                var current = 0;
+                var nextPercent = 10;
 
-    // }
+                response.data
+                    .on("data", function (data) {
+                        current += data.length;
+
+                        var fraction = Math.round((current / total) * 100);
+                        if (fraction >= nextPercent) {
+                            console.log(nextPercent + "%");
+                            nextPercent += 10;
+                        }
+                    })
+                    .pipe(fileStream);
+
+                //pass end to filestream
+                response.data.on("end", function () {
+                    fileStream.emit("end");
+                });
+            });
+    });
 }
 
 async function setupDatabase(){
-    var packageExists = fs.existsSync(PACKAGE_DB_DIR);
-    var snippetExists = fs.existsSync(SNIPPET_DB_DIR);
+    var newDataset = false;
+    if(!fs.existsSync(DATA_PATH)){
+        newDataset = true;
+        console.log("Dataset missing. Dataset will be downloaded from https://zenodo.org/record/4835694/files/dataset.zip")
+        await download(DATA_URL, DATA_ZIP_PATH);
 
-    if(packageExists && snippetExists) return;
+        //extract to data
+        console.log("Extracting from " + DATA_ZIP_PATH + " to " + path.dirname(DATA_PATH));
+        var zip = new Zip(DATA_ZIP_PATH);
+        zip.extractAllTo(path.dirname(DATA_PATH), true);
 
-
-    var packages = [];
-    const onData = (data, pipeline)=>{
-        if(data.keywords) data.keywords = JSON.parse(data.keywords);
-        else{
-            data.keywords = [];
-        }
-        data.snippets =JSON.parse(data.snippets);
-        packages.push(data);
+        //delete
+        console.log("Deleting " + DATA_ZIP_PATH);
+        fs.unlinkSync(DATA_ZIP_PATH);
     }
-    await readFileStream(DATA_DIR, onData);
-    if(!packageExists) setupPackageDatabase(packages);
-    if(!snippetExists) setupSnippetDatabase(packages);
-}
 
+    if(newDataset || !fs.existsSync(PACKAGE_DB_PATH)){
+        if(newDataset){
+            console.log("Updating package database.")
+        }
+        else{
+            console.log("No package database exists, creating.")
+        }
+        setupPackageDB();
+    }
+}
 
 async function main(){
     setupDatabase();

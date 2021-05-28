@@ -13,7 +13,7 @@
   "scripts": {
     "nargs": "node --max-old-space-size=4096",
     "install": "npm run setup",
-    "setup": "npm run nargs ncq/setup",
+    "setup": "npm run nargs setup",
     "start": "npm run nargs ncq/main",
     "debug": "npm run nargs ncq/main -- --log",
     "analytics": "npm run nargs ncq/main -- --usage",

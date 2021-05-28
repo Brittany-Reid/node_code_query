@@ -12,8 +12,9 @@ describe("Package", function () {
      * Load in a single package.
      */
     before(async function(){
+        this.timeout(0);
         data = new DataHandler({recordLimit:1});
-        await data.loadDatabase();
+        return await data.loadDatabase();
     })
 
     describe("unit tests", function(){
