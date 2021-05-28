@@ -7,20 +7,17 @@
     "type": "git",
     "url": "https://github.com/damorimRG/node_code_query.git"
   },
-  "engines": {
-    "node": "<=12.18.3"
-  },
   "scripts": {
     "nargs": "node --max-old-space-size=4096",
     "install": "npm run setup",
-    "setup": "npm run nargs ncq/setup",
+    "setup": "npm run nargs setup",
     "start": "npm run nargs ncq/main",
     "debug": "npm run nargs ncq/main -- --log",
     "analytics": "npm run nargs ncq/main -- --usage",
     "searchless": "npm run nargs ncq/main -- --usage --searchless",
-    "test": "mocha tests",
+    "test": "mocha test --max-old-space-size=4096",
     "coverage": "nyc npm run test",
-    "info": "mocha tests/info"
+    "info": "mocha tests/info --max-old-space-size=4096"
   },
   "keywords": [],
   "author": "",
@@ -28,11 +25,12 @@
   "dependencies": {
     "adm-zip": "^0.4.16",
     "ansi-colors": "^4.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "chalk-pipe": "^4.0.0",
     "cli-progress": "^3.8.2",
     "clipboardy": "^2.3.0",
+    "csv-parse": "^4.11.1",
     "data-store": "^4.0.3",
     "enquirer": "^2.3.6",
     "eslint": "^7.6.0",

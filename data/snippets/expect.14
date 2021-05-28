@@ -1,3 +1,0 @@
-# greaterThan/above: asserts >
-expect(3).to.be.above(0);
-expect(5).to.be.greaterThan(3);

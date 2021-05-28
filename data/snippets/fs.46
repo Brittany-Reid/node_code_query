@@ -1,3 +1,0 @@
-# If options is a string, then it specifies the encoding:
-
-fs.readFile('/etc/passwd', 'utf8', callback)

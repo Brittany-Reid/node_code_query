@@ -3,47 +3,41 @@
  */
 
 class Snippet {
-  constructor(code, id, packageName, order, packageInfo) {
+    constructor(code, id, packageName, order, packageInfo) {
     //snippet string
-    this.code = code;
-    //id code
-    this.id = id;
-    //package name snippet belongs to
-    this.packageName = packageName;
-    //order in readme
-    this.order = order;
-    //package object this snippet belongs to
-    this.packageInfo = packageInfo;
+        this.code = code;
+        //id code
+        this.id = id;
+        //package name snippet belongs to
+        this.packageName = packageName;
+        //order in readme
+        this.order = order;
+        //package object this snippet belongs to
+        this.packageInfo = packageInfo;
 
-    this.rankValue = undefined;
-    this.errors = undefined;
-  }
-
-  lint(){
-    var linter = new LinterHandler();
-    var messages = linter.lint(this.code);
-    this.errors = LinterHandler.errors(messages);
-    return this.errors;
-  }
-
-  /**
-   * Calculate a rank value for snippet. For now let's just use stars.
-   */
-  rank() {
-    if(!this.rankValue){
-        if(this.packageInfo){
-            this.rankValue = this.packageInfo.stars;
-        }
-        else{
-            this.rankValue = 0;
-        }
+        this.rankValue = undefined;
+        this.errors = undefined;
     }
 
-    return this.rankValue;
-  }
+    /**
+   * Calculate a rank value for snippet. For now let's just use stars.
+   */
+    rank() {
+        // if(!this.rankValue){
+        //     if(this.packageInfo){
+        //         this.rankValue = this.packageInfo.stars;
+        //     }
+        //     else{
+        //         this.rankValue = 0;
+        //     }
+        // }
 
-  /**
-     * Snuppet sort function, use as comparator argument to Array.sort() etc.
+        // return this.rankValue;
+        return 0;
+    }
+
+    /**
+     * Snippet sort function, use as comparator argument to Array.sort() etc.
      * Sorts in descending order.
      */
     static sort(a, b){

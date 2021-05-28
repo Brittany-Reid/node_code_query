@@ -1,7 +1,0 @@
-# The encoding option is ignored if data is a buffer.
-
-const data = new Uint8Array(Buffer.from('Hello Node.js'));
-fs.writeFile('message.txt', data, (err) => {
-  if (err) throw err;
-  console.log('The file has been saved!');
-});

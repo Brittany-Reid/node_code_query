@@ -1,4 +1,0 @@
-# If options is a string, then it specifies the encoding:
-
-fs.appendFile('message.txt', 'data to append', 'utf8', callback);
-

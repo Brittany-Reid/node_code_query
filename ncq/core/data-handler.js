@@ -1,366 +1,328 @@
-const Snippet = require("./snippet");
-const Package = require("./package");
 
-const FlexSearch = require("flexsearch");
 const fs = require("fs");
 const path = require("path");
 const natural = require("natural");
 const stopword = require("stopword");
+const FlexSearch = require("flexsearch");
 const ProgressMonitor = require("progress-monitor");
+const { getConfig } = require("../config");
+const { getBaseDirectory, readCSVStream } = require("../utils");
+const Package = require("./package");
+const Snippet = require("./snippet");
+
+const config = getConfig();
+const BASE_DIR = getBaseDirectory();
+
+const DATA_PATH = path.join(BASE_DIR, config.get("files.data"));
+const PACKAGE_DB_PATH = path.join(BASE_DIR, config.get("files.packageDB"));
 
 function encode(str) {
-  var words = DataHandler.keywords(str);
-  return words.join(" ");
+    var words = DataHandler.keywords(str);
+    return words.join(" ");
 }
 
-class DataHandler {
-  constructor() {
-    //limit on snippets
-    this.limit = 0;
-    //stopword language
-    this.language = stopword.en;
-    //regex for removing all non-alpha numeric characters
-    this.NONALPHANUMREGX = /[^a-zA-Z0-9 ]+/g;
-    //regex for task chars
-    this.TASKPUNCT = /[,-]+/g;
+/**
+ * Class that handles loading and accessing data.
+ */
+class DataHandler{
 
-    this.idToPackage = new Map(); //id to package object. ids are generated, not part of the dataset
-    this.nameToId = new Map();
-    this.snippets = []; //id to snippet object, ids are associated in the dataset
+    /**
+     * @param {Object} options Options object for setting non-default options, usually for testing.
+     * @param {string} options.dataPath Directory of the dataset.
+     * @param {string} options.packageDbPath Directory of the package database, generated once by setup.
+     * @param {number} options.recordLimit Number of records to load, default `false` loads all in file.
+     * @param {number} options.resultLimit Global number of results to return, passed to flexsearch. Default `0` disables limit.
+     */
+    constructor({
+        dataPath = DATA_PATH,
+        packageDbPath = PACKAGE_DB_PATH,
+        recordLimit = false,
+        resultLimit = 0,
+    } = {}){
+        this.recordLimit = recordLimit;
+        this.resultLimit = resultLimit;
 
-    this.packageIndex;
-    this.snippetIndex;
+        this.dataPath = dataPath;
+        this.packageDbPath = packageDbPath;
 
-    this.tasks = new Map();
-  }
+        /*
+        * Objects are indexed by ID for flexsearch, even snippets (remnant of when snippets had a unique search.)
+        * It's easier to keep in case we want to reimplement.
+        */
 
-  /**
-   * Returns set of tasks as an array.
-   */
-  getTaskArray() {
-    return Array.from(this.tasks.keys());
-  }
-  /**
-   * Return array of `Snippet` objects that match a given package name.
-   * @param {String} packageName - The package to look for associated snippets.
-   */
-  packageToSnippets(packageName) {
-    var result = this.snippetIndex.where({ package: packageName });
+        /**
+        * Flexsearch package index object.
+        */
+        this.packageIndex = undefined;
 
-    var snippets = [];
-    for (var r of result) {
-      var id = r.id;
-      var object = this.snippets[id];
-
-      snippets.push(object);
+        /**
+         * Map of id number to package object. The id is used by flexsearch to minimize file size.
+         */
+        this.idToPackage = new Map();
+        /**
+         * Map of package names to id numbers.
+         */
+        this.packageNameToId = new Map();
+        /**
+         * Map of id numbers to code snippet objects.
+         */
+        this.idToSnippet = new Map();
+        /**
+         * Map of package id number to an array of code snippet ids.
+         */
+        this.packageIdToSnippetIdArray = new Map();
     }
 
-    return snippets;
-  }
+    /**
+     * Load database into memory
+     * @param {ProgressMonitor} monitor 
+     */
+    async loadDatabase(monitor){
+        var subMonitor1, subMonitor2;
+        if (monitor) {
+            monitor = ProgressMonitor.adjustTotal(monitor, 100);
+            monitor.emit("start");
+            subMonitor1 = monitor.split(5);
+            subMonitor2 = monitor.split(95);
+        }
+       
+        await this._loadPackageDB(subMonitor1);
+        await this._loadData(subMonitor2);
 
-  /**
-   * Returns an array of `Package` objects that match a given task.
-   * @param {String} task - Task to search with.
-   */
-  taskToPackages(task) {
-    var result = this.packageIndex.search({ query: task, limit: this.limit });
 
-    var packages = [];
-    for (var r of result) {
-      if(r){
-        var id = r.id;
-        var object = this.idToPackage.get(id);
-  
-        packages.push(object);
-      }
+        if (monitor) monitor.emit("end");
     }
 
-    return packages;
-  }
+    /**
+    * Returns an array of `Package` objects that match a given query string.
+    * @param {String} query - Query string to search with.
+    */
+    searchPackages(query) {
+        var result = this.packageIndex.search({ query: query, limit: this.resultLimit });
+        var packages = [];
+        for (var r of result) {
+            var id = r.id;
+            var object = this.idToPackage.get(id);
+            
 
-  taskToSnippets(task) {
-    var result = this.snippetIndex.search({ query: task, limit: this.limit });
+            if(object) {
+                packages.push(object);
+            }
+        }
 
-    var snippets = [];
-    for (var r of result) {
-      var id = r.id;
-      var object = this.snippets[id];
-
-      snippets.push(object);
+        return packages;
     }
 
-    return snippets;
-  }
+    /**
+    * Return array of `Snippet` objects that match a given package name.
+    * @param {String} packageName - The package to return snippets for.
+    */
+    getSnippetsForPackage(packageName) {
+        var id = this.packageNameToId.get(packageName);
+        var snippetIds = this.packageIdToSnippetIdArray.get(id);
 
-  loadPackages(info_dir, db_dir, monitor) {
-    if (monitor) {
-      monitor = ProgressMonitor.adjustTotal(monitor, 100);
-      monitor.emit("start");
-    }
-    var data = fs.readFileSync(info_dir, { encoding: "utf-8" });
+        var snippets = [];
+        for(var s of snippetIds){
+            var snippet = this.idToSnippet.get(s);
+            snippets.push(snippet);
+        }
 
-    //parse
-    data = JSON.parse(data);
-
-    var interval = Math.round(data.length / 91);
-    var i = 0;
-    for (var packData of data) {
-      if (i != 0 && i % Math.floor(interval) == 0) {
-        if (monitor) monitor.emit("work", 1);
-      }
-      var packageObject = new Package(packData, i);
-
-      var name = packData["Name"];
-      this.nameToId.set(name, i);
-
-      //add to map
-      this.idToPackage.set(i, packageObject);
-      i++;
+        return snippets;
     }
 
-    var database = fs.readFileSync(db_dir, { encoding: "utf-8" });
-
-    this.packageIndex = new FlexSearch("memory", {
-      tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
-      doc: {
-        id: "id", //index by name for fast look up
-        field: ["Description", "Keywords"],
-      },
-      encode: encode,
-    });
-
-    this.packageIndex.import(database);
-
-    if (monitor) monitor.emit("end");
-  }
-
-  loadSnippets(snippet_dir, db_dir, monitor) {
-    if (monitor) {
-      monitor = ProgressMonitor.adjustTotal(monitor, 100);
-      monitor.emit("start");
+    /**
+     * Return array of packages in database.
+     */
+    get packages(){
+        var packages = [];
+        this.idToPackage.forEach((value)=>{
+            packages.push(value);
+        });
+        return packages;
+    }
+    /**
+     * Return array of snippets in database.s
+     */
+    get snippets(){
+        var snippets = [];
+        this.idToSnippet.forEach((value) => {
+            snippets.push(value);
+        })
+        return snippets;
     }
 
-    var data = fs.readFileSync(snippet_dir, { encoding: "utf-8" });
-
-    //parse
-    data = JSON.parse(data);
-
-    var interval = Math.round(data.length / 91);
-
-    //for each package
-    var i = 0;
-    for (var packData of data) {
-      if (i != 0 && i % Math.floor(interval) == 0) {
-        if (monitor) monitor.emit("work", 1);
-      }
-
-      //get package name
-      var name = packData["package"];
-
-      var snippets = packData["snippets"];
-      for (var snippet of snippets) {
-        //get snippet info
-        var code = snippet["snippet"];
-        var id = snippet["id"];
-
-        var order = snippet["num"];
-
-        var packageInfo = this.idToPackage.get(this.nameToId.get(name));
-
-        var snippetObject = new Snippet(code, id, name, order, packageInfo);
-
-        this.snippets[id] = snippetObject;
-      }
-
-      i++;
-    }
-
-    var database = fs.readFileSync(db_dir, { encoding: "utf-8" });
-
-    this.snippetIndex = new FlexSearch("memory", {
-      tokenize: "strict",
-      doc: {
-        id: "id",
-        field: ["description"],
-      },
-      encode: encode,
-    });
-
-    this.snippetIndex.import(database);
-
-    if (monitor) monitor.emit("end");
-  }
-
-  /**
-   *
-   * @param {String} dir
-   * @param {ProgressMonitor} monitor
-   */
-  loadTasks(dir, monitor) {
-    if (monitor) {
-      monitor = ProgressMonitor.adjustTotal(monitor, 100);
-      monitor.emit("start");
-    }
-
-    var file = fs.readFileSync(dir, { encoding: "utf-8" });
-
-    //get lines
-    var lines = file.split("\n");
-
-    var interval = lines.length / 91;
-
-    var taskMap2 = new Map();
-
-    //for each line
-    for (let i = 0; i < lines.length; i++) {
-      if (i != 0 && i % Math.floor(interval) == 0) {
-        if (monitor) monitor.emit("work", 1);
-      }
-
-      const line = lines[i];
-      var parts = line.split(", ");
-      var task = parts[0];
-      var ids = parts.slice(1);
-
-      if(task.split(" ").length < 3) continue;
-
-      // var tokens = task.split(" ");
-      // tokens = tokens.filter((element) => {
-      //   if(element != "use" && element != "get" && element != "set" && element != "access" && element != "create" && element != "specify" && element != "add" && element != "generate" && element != "support"){
-      //     return true;
-      //   }
-      // })
-      // tokens = DataHandler.keywords(tokens.join(" "));
-      // tokens = new Set(tokens);
-      // if(tokens.size > 1){
-      //   tokens = Array.from(tokens);
-      //   tokens = tokens.sort();
-      //   tokens = tokens.join(" ");
-      //   var entry = taskMap2.get(tokens);
-      //   if(!entry){
-      //     entry = [task, ...ids];
-      //     taskMap2.set(tokens, entry);
-      //   }
-      //   else{
-      //     var t = entry[0];
-      //     if(task.length < t.length){
-      //       entry[0] = task;
-      //     }
-      //     entry = entry.concat(ids);
-      //     taskMap2.set(tokens, entry);
-      //   }
-      // }
-
-      this.tasks.set(task, ids);
-    }
-
-    // var tokens = Array.from(taskMap2.keys());
-    // var toWrite = "";
-    // for(var t of tokens){
-    //   var line = taskMap2.get(t);
-    //   toWrite += line.join(", ") + "\n";
-    // }
-    
-    // var taskMap = new Map();
-    // var tasks = Array.from(this.tasks.keys());
-    // var toWrite = "";
-    // for(var t of tasks){
-    //   var ids = this.tasks.get(t);
-    //   var packages = this.taskToPackages(t);
-    //   var line = t + ", " + ids.join(", ");
-
-    //   taskMap.set(line, packages.length);
-    // }
-
-    // var tasks = Array.from(taskMap.keys());
-    // function s(a, b){
-    //   var a = taskMap.get(a);
-    //   var b = taskMap.get(b);
-
-    //   return b-a;
-    // }
-    // tasks = tasks.sort(s);
-
-    // var i = 0;
-    // for(var t of tasks){
-    //   if(i < 10000){
-    //     toWrite += t + "\n";
-    //   }
-    //   i++;
-    // }
-
-    // fs.writeFileSync("task,id.txt", toWrite, {encoding: "utf-8"})
-
-
-    if (monitor) monitor.emit("end");
-  }
-
-  /**
-   * Process string for keywords.
-   */
-  static process(string) {
+    /**
+    * Process string for keywords.
+    */
+    static process(string) {
     //all lowercase
-    var processed = string.toLowerCase();
+        var processed = string.toLowerCase();
 
-    //remove extra whitespace on ends
-    processed = processed.trim();
+        //remove extra whitespace on ends
+        processed = processed.trim();
 
-    //replace newlines with spaces
-    processed = processed.replace(/\n/g, " ");
+        //replace newlines with spaces
+        processed = processed.replace(/\n/g, " ");
 
-    //remove any non alphanum chars
-    processed = processed.replace(this.NONALPHANUMREGX, "");
+        //remove any non alphanum chars
+        processed = processed.replace(this.NONALPHANUMREGX, "");
 
-    //find any blocks of whitespace and make sure they are only spaces
-    processed = processed.replace(/\s+/g, " ");
+        //find any blocks of whitespace and make sure they are only spaces
+        processed = processed.replace(/\s+/g, " ");
 
-    return processed;
-  }
-
-  static keywords(string) {
-    string = this.process(string);
-
-    var words = string.split(" ");
-    //remove stop words
-    words = stopword.removeStopwords(words, this.language);
-    //stem
-    words = words.map((word) => {
-      const cleanWord = word.replace(/[^a-zA-Z ]/g, "");
-      return natural.PorterStemmer.stem(word);
-    });
-    return words;
-  }
-
-  /**
-   * Formats a task for us. Can return null *in the future, if we want to filter out some tasks.
-   */
-  processTask(task) {
-    //normalize to lowercase
-    task = task.toLowerCase();
-    //remove extra whitespace on ends
-    task = task.trim();
-
-    //replace punctuation with space
-    task = task.replace(this.TASKPUNCT, " ");
-    //find any blocks of whitespace and make sure they are only spaces
-    task = task.replace(/\s+/g, " ");
-
-    //alphanum only
-    if (task.match(this.NONALPHANUMREGX)) {
-      return;
+        return processed;
     }
 
-    return task;
-  }
+    static keywords(string) {
+        string = this.process(string);
+
+        var words = string.split(" ");
+        //remove stop words
+        words = stopword.removeStopwords(words, this.language);
+        //stem
+        words = words.map((word) => {
+            // const cleanWord = word.replace(/[^a-zA-Z ]/g, "");
+            return natural.PorterStemmer.stem(word);
+        });
+        return words;
+    }
+
+    async _loadPackageDB(monitor){
+        if(monitor){
+            monitor = ProgressMonitor.adjustTotal(monitor, 100);
+            monitor.emit("start");
+        }
+
+        var database = fs.readFileSync(this.packageDbPath, { encoding: "utf-8" });
+
+        this.packageIndex = new FlexSearch("memory", {
+            tokenize: "strict", //opposed to splitting a word into f/fi/fil/file our search is non specific enough as is
+            doc: {
+                id: "id", //index by name for fast look up
+                field: ["description", "keywords"],
+            },
+            encode: encode,
+        });
+
+        this.packageIndex.import(database);
+
+        if(monitor) monitor.emit("end");
+    }
+
+    /**
+     * 
+     * @param {ProgressMonitor} monitor 
+     */
+    async _loadData(monitor){
+
+        if(monitor){
+            monitor = ProgressMonitor.adjustTotal(monitor, 100);
+            monitor.emit("start");
+        }
+
+        this.idToPackage = new Map();
+        this.packageNameToId = new Map();
+        var id = 0;
+        var sid = 0;
+        var interval = Math.round(620221/100);
+        if(this.recordLimit){
+            interval = Math.round(this.recordLimit/100);
+        }
+        const onData = (data, pipeline) => {
+            if(id % interval === 0 && monitor) monitor.emit("work", 1)
+            if(this.recordLimit && id > this.recordLimit){
+                pipeline.destroy();
+                return;
+            }
+            if(data.keywords) data.keywords = JSON.parse(data.keywords);
+            else{ data.keywords = [];}
+            data.snippets =JSON.parse(data.snippets);
+
+            var packageObject = new Package(data, id);
+            var name = data["name"];
+
+            this.packageNameToId.set(name, id);
+            this.idToPackage.set(id, packageObject);
+
+            var snippets = data.snippets;
+            var i = 0;
+            var snippetIds = [];
+            for(var s of snippets){
+                var snippetObject = new Snippet(s, sid, name, i);
+                this.idToSnippet.set(sid, snippetObject);
+                snippetIds.push(sid);
+                sid++;
+                i++;
+            }
+            this.packageIdToSnippetIdArray.set(id, snippetIds);
+            id++;
+        }
+
+        await readCSVStream(this.dataPath, onData);
+
+        if(monitor) monitor.emit("end");
+    }
+
 }
 
-// var data = new DataHandler();
-// data.loadPackages("data/packageStats.json", "data/packageDB.txt");
-// data.loadSnippets("data/snippets.json", "data/snippetDB.txt");
-// data.loadTasks("data/id,tasks.txt");
+// async function main(){
+//     var data = new DataHandler({limit:100});
+//     await data.loadDatabase();
+//     data.taskToPackages("puzzles")[0].rank();
+// }
 
-// data.taskToPackages("read");
-// console.log(data.taskToSnippets("read").length);
-// data.packageToSnippets("3box-react-hooks");
+// main();
+
+
+
+// class DataHandler {
+//     constructor({
+//       data_dir = config,
+//       packagedb_dir,
+//     }) {
+//     //limit on snippets
+//         this.limit = 0;
+//         //stopword language
+//         this.language = stopword.en;
+//         //regex for removing all non-alpha numeric characters
+//         this.NONALPHANUMREGX = /[^a-zA-Z0-9 ]+/g;
+//         //regex for task chars
+//         this.TASKPUNCT = /[,-]+/g;
+
+//         this.idToPackage = new Map(); //id to package object. ids are generated, not part of the dataset
+//         this.nameToId = new Map();
+//         this.snippets = []; //id to snippet object, ids are associated in the dataset
+
+//         this.packageIndex;
+//         this.snippetIndex;
+
+//         this.tasks = new Map();
+//     }
+
+
+
+
+//     /**
+//    * Formats a task for us. Can return null *in the future, if we want to filter out some tasks.
+//    */
+//     processTask(task) {
+//     //normalize to lowercase
+//         task = task.toLowerCase();
+//         //remove extra whitespace on ends
+//         task = task.trim();
+
+//         //replace punctuation with space
+//         task = task.replace(this.TASKPUNCT, " ");
+//         //find any blocks of whitespace and make sure they are only spaces
+//         task = task.replace(/\s+/g, " ");
+
+//         //alphanum only
+//         if (task.match(this.NONALPHANUMREGX)) {
+//             return;
+//         }
+
+//         return task;
+//     }
+// }
 
 module.exports = DataHandler;

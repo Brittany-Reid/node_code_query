@@ -1,0 +1,30 @@
+{
+    "ignorePatterns": "patch",
+    "extends": "eslint:recommended",
+    "rules": {
+        "no-unused-vars": [
+            "error",
+            {
+                "vars": "all",
+                "args": "none",
+                "ignoreRestSiblings": false
+            }
+        ],
+        "indent": [
+            "error",
+            4
+        ],
+        "object-property-newline": "off",
+        "function-call-argument-newline": "off",
+        "no-func-assign": "off",
+        "multiline-ternary": [
+            "warn",
+            "never"
+        ]
+    },
+    "env": {
+        "node": true,
+        "es2020": true,
+        "mocha": true
+    }
+}

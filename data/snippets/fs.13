@@ -1,7 +1,0 @@
-# On Windows, file: URLs having encoded backslash will result in a throw:
-
-// On Windows
-fs.readFileSync(new URL('file:///C:/path/%5C'));
-fs.readFileSync(new URL('file:///C:/path/%5c'));
-/* TypeError [ERR_INVALID_FILE_URL_PATH]: File URL path must not include encoded
-\ or / characters */

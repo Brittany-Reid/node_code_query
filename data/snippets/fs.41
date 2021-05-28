@@ -1,5 +1,0 @@
-# fs.existsSync(path)
-
-if (fs.existsSync('/etc/passwd')) {
-  console.log('The path exists.');
-}

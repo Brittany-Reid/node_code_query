@@ -1,8 +1,0 @@
-# Retorna o conteúdo do path.
-
-// macOS, Linux, and Windows
-fs.readFileSync('<directory>');
-// => [Error: EISDIR: illegal operation on a directory, read <directory>]
-
-//  FreeBSD
-fs.readFileSync('<directory>'); // => <data>
