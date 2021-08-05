@@ -1,12 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 const FlexSearch = require("flexsearch");
-const DataHandler = require("./ncq/core/data-handler");
-const utils = require("./ncq/utils");
+const DataHandler = require("./src/core/data-handler");
+const utils = require("./src/utils");
 const axios = require("axios");
 const Zip = require("adm-zip");
 
-const DATA_URL = "https://zenodo.org/record/4835694/files/dataset.zip";
+const DATA_URL = "https://zenodo.org/record/5094598/files/dataset.zip";
 const DATA_PATH = "data/dataset.csv";
 const DATA_ZIP_PATH = "data/dataset.zip";
 const PACKAGE_DB_PATH = "data/packageDB.txt";
@@ -101,7 +101,7 @@ async function setupDatabase(){
     var newDataset = false;
     if(!fs.existsSync(DATA_PATH)){
         newDataset = true;
-        console.log("Dataset missing. Dataset will be downloaded from https://zenodo.org/record/4835694/files/dataset.zip")
+        console.log("Dataset missing. Dataset will be downloaded from " + DATA_URL)
         await download(DATA_URL, DATA_ZIP_PATH);
 
         //extract to data
