@@ -9,6 +9,7 @@ node_modules
 repls
 testRepls
 logs
+testLogs
 history.json
 history-repl.json
 config.json

@@ -56,6 +56,7 @@ async function setupPackageDB(){
 }
 
 async function download(url, path) {
+    if(!fs.existsSync("data")) fs.mkdirSync("data");
     return new Promise((resolve, reject) => {
         var fileStream = fs.createWriteStream(path);
 

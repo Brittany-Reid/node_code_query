@@ -78,7 +78,7 @@ const ReplPrompt = ({
         if(!displayingSnippet) return;
         var snippet = snippets[snippetIndex];
         var code = snippet.code;
-        logger.warn("Got snippet: {" + JSON.stringify(code) + "} from package " + snippet.package);
+        logger.info("Got snippet: {" + JSON.stringify(code) + "} from package " + snippet.package);
         ref.current.setInput(code);
     }, [snippetIndex, displayingSnippet]);
 
