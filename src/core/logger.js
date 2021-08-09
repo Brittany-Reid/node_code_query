@@ -88,8 +88,8 @@ function setupLogger(){
     return globalLogger;
 }
 
-function getLogger(){
-    if(globalLogger) return globalLogger;
+function getLogger(reset = false){
+    if(globalLogger && !reset) return globalLogger;
     return setupLogger();
 }
 

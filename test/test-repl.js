@@ -221,7 +221,8 @@ describe("REPL", function(){
         }).timeout(10000);
     });
 
-    afterEach(()=>{
+    afterEach(function(){
+        this.timeout(0);
         if(process.cwd() !== getBaseDirectory()){
             process.chdir(getBaseDirectory());
         }

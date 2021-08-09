@@ -22,7 +22,7 @@ describe("Project", function(){
         it("should create project", function(){
             Project.createProject("test1");
             assert.strictEqual(fs.existsSync(path.join(state.replDir, "test1")), true);
-        });
+        }).timeout(0);
         it("should overwrite project if already exists", function(){
             Project.createProject("test1");
             //cause some trouble
@@ -59,7 +59,7 @@ describe("Project", function(){
             assert.ok(ran); //it ran
             assert.strictEqual(path.resolve(dir), path.resolve(path.join(getBaseDirectory(), state.replDir, "test1"))); //it was in the right dir
             assert.strictEqual(path.resolve(process.cwd()), path.resolve(getBaseDirectory())); //it returned to the right dir
-        });
+        }).timeout(0);
         it("should handle a repl error", function(){
             Project.createProject("test1");
             var stub = sinon.stub(child_process, "execSync")
@@ -74,7 +74,7 @@ describe("Project", function(){
             }
             stub.restore();
             assert.strictEqual(path.resolve(process.cwd()), path.resolve(getBaseDirectory())); //it returned to the right dir
-        });
+        }).timeout(0);
         it("should do install", function(){
             Project.createProject("test1");
             var stub = sinon.stub(child_process, "execSync")
@@ -148,10 +148,12 @@ describe("Project", function(){
         }).timeout(0);
     });
     
-    afterEach(()=>{
+    afterEach(function(){
+        this.timeout(0);
         if(fs.existsSync("testRepls")) rimraf.sync("testRepls");
     });
 
     after(() =>{
+        state.replDir = "repls"
     })
 });

@@ -32,7 +32,7 @@ class Prompt{
 
 
     async run(...args){
-        var result =  await new Promise((resolve, reject) => {
+        var result = await new Promise((resolve, reject) => {
             this.properties.onCancel = ()=>{
                 this.onCancel();
                 reject();

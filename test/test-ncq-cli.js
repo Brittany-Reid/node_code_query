@@ -89,6 +89,7 @@ describe("NcqCLI", function(){
         var cli;
 
         beforeEach(()=>{
+            if(fs.existsSync("testRepls")) rimraf.sync("testRepls");
             state.lastSession = undefined;
             cli = new NcqCLI(new PromptHandler(CliPrompt));
             cli.defaultProjectName = "ncq_test";
@@ -204,7 +205,7 @@ describe("NcqCLI", function(){
             const expected = "Project already exists at ncq_test1. Do you want to overwrite?\n" +
             "\x1B[36m(*) Yes\x1B[39m  ( ) No";
             assert.strictEqual(app.lastFrame(), expected);
-        }); 
+        }).timeout(0); 
         it("should be able to cancel overwrite prompt", async function(){
             //make fake project 1
             if(!fs.existsSync(replDir)) fs.mkdirSync(replDir);
@@ -222,7 +223,7 @@ describe("NcqCLI", function(){
             const expected = "\x1B[2mProject already exists at ncq_test1. Do you want to overwrite?\x1B[22m\n" +
                 "\x1B[36m\x1B[2m(*) Yes\x1B[22m\x1B[39m  \x1B[2m( ) No\x1B[22m";
             assert.strictEqual(app.lastFrame(), expected);
-        }); 
+        });
         it("should be able to say no to overwrite prompt", async function(){
             //make fake project 1
             if(!fs.existsSync(replDir)) fs.mkdirSync(replDir);

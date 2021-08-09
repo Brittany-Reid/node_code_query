@@ -59,14 +59,14 @@ const ScrollSelect = ({
     const [canceled, setCanceled] = React.useState(false);
     const [selected, setSelected] = React.useState(false);
     const [selectedItem, setSelectedItem] = React.useState(undefined);
-    const [formattedItems, setFormattedItems] = React.useState([]);
+    const [formattedItems, setFormattedItems] = React.useState(undefined);
 
     React.useEffect(()=>{
-        var formtted = items;
-        for(var f of formtted){
+        var formatted = items;
+        for(var f of formatted){
             f.accentColor = accentColor;
         }
-        setFormattedItems(formtted);
+        setFormattedItems(formatted)
     }, [items]);
 
     useTerminalSize((columns, rows) => {
@@ -77,18 +77,18 @@ const ScrollSelect = ({
     /**
      * What happens on select. Exits then prints the selected item's label.
      */
-    const internalOnSelect = React.useCallback((selected)=>{
-        setSelectedItem(selected);
+    const internalOnSelect = React.useCallback((selectedItem)=>{
+        setSelectedItem(selectedItem);
         setSelected(true);
         //wait for render
         setTimeout(()=>{
-            if(typeof onSelect === "function") onSelect(selected.label);
+            if(typeof onSelect === "function") onSelect(selectedItem.label);
         }, 100);
     }, []);
 
-    const internalOnCancel = React.useCallback((selected)=>{
+    const internalOnCancel = React.useCallback((selectedItem)=>{
         setCanceled(true);
-        if(typeof onCancel === "function") onCancel(selected);
+        if(typeof onCancel === "function") onCancel(selectedItem);
     }, [onCancel]);
 
     ink.useInput((input, key) => {
@@ -123,6 +123,8 @@ const ScrollSelect = ({
             e(itemComponent, selectedItem)
         );
     }
+
+    if(typeof formattedItems === "undefined") return null;
 
     return e(ink.Box, {flexDirection: "column"}, 
         messageElement,

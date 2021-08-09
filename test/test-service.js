@@ -57,12 +57,14 @@ describe("Service", function () {
         });
         it("can cancel package search", async function () {
             var result = Service.packageSearch("utility");
+            await delay(100);
             await press(ESC);
             var info = await result;
             assert.strictEqual(typeof info, "undefined");
         });
         it("can select a package", async function () {
             var result = Service.packageSearch("utility");
+            await delay(100);
             await press("\r"); //select first
             await delay(100);
             await press(ESC); //escape install
@@ -72,6 +74,7 @@ describe("Service", function () {
         }).timeout(0);
         it("can select to install package", async function () {
             var result = Service.packageSearch("utility");
+            await delay(100);
             await press("\r"); //select first
             await delay(100);
             await press("\r"); //install
