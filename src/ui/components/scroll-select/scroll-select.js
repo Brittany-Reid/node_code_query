@@ -59,50 +59,47 @@ const ScrollSelect = ({
     const [canceled, setCanceled] = React.useState(false);
     const [selected, setSelected] = React.useState(false);
     const [selectedItem, setSelectedItem] = React.useState(undefined);
-    const [formattedItems, setFormattedItems] = React.useState(undefined);
 
-    React.useEffect(()=>{
-        var formatted = items;
-        for(var f of formatted){
-            f.accentColor = accentColor;
-        }
-        setFormattedItems(formatted)
-    }, [items]);
-
+    //resize when terminal resizes
     useTerminalSize((columns, rows) => {
         setHeight(rows);
         setWidth(columns);
     });
-     
+
     /**
      * What happens on select. Exits then prints the selected item's label.
      */
     const internalOnSelect = React.useCallback((selectedItem)=>{
         setSelectedItem(selectedItem);
         setSelected(true);
-        //wait for render
+        // if(typeof onSelect === "function") onSelect(selectedItem.label);
+    }, []);
+
+    React.useEffect(() =>{
+        if(!selected) return;
         setTimeout(()=>{
             if(typeof onSelect === "function") onSelect(selectedItem.label);
         }, 100);
-    }, []);
+    }, [selectedItem, selected])
 
     const internalOnCancel = React.useCallback((selectedItem)=>{
         setCanceled(true);
         if(typeof onCancel === "function") onCancel(selectedItem);
     }, [onCancel]);
 
-    ink.useInput((input, key) => {
-        if(key.escape || (key.ctrl && input === "c")){
-            internalOnCancel();
-        }
-    }, {isActive: isFocused});
+    // ink.useInput((input, key) => {
+    //     if(key.escape || (key.ctrl && input === "c")){
+    //         internalOnCancel();
+    //     }
+    // }, {isActive: isFocused});
 
     const ScrollMenuProps = {
-        accentColor: accentColor,
+        dimColor: canceled ? true : false,
         maxHeight: message ? height-3 : height-2,
         width: "100%",
-        items: formattedItems,
+        items: items,
         onSelect: internalOnSelect,
+        onCancel: internalOnCancel,
         itemComponent: itemComponent,
         isFocused: isFocused,
         arrows: arrows,
@@ -124,12 +121,11 @@ const ScrollSelect = ({
         );
     }
 
-    if(typeof formattedItems === "undefined") return null;
-
     return e(ink.Box, {flexDirection: "column"}, 
         messageElement,
         e(ScrollMenu, ScrollMenuProps)
     );
+    
 };
 
 module.exports = ScrollSelect;

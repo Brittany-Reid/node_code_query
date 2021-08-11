@@ -13,21 +13,16 @@ class ListSelect extends Prompt{
     }
 
     async run(items, message, itemComponent){
+        //items need accent colour set individually
+        //i did have this working in the actual component but it causes weird bugs in windows :(
+        for(var i of items){
+            i.accentColor = this.properties.accentColor;
+        }
         this.properties.message = message;
         this.properties.items = items;
         this.properties.itemComponent = itemComponent;
         return await super.run();
     }
 }
-
-// var files = fs.readdirSync(path.join(getBaseDirectory(), "repls"));
-// var items = [];
-// items.push({label: "Create New"});
-// items.push({label: "Load Previous"});
-// for(var f of files) items.push({
-//     date: fs.statSync(path.join(getBaseDirectory(), "repls", f)).mtime.toDateString(),
-//     label: f
-// });
-// new ListSelect().run(items, "Select a REPL to load?", FolderEntry);
 
 module.exports = ListSelect;

@@ -22,7 +22,7 @@ class Project{
         //create repl directory if neccessary
         Project.replDirectory();
 
-        var projectPath = path.join(state.replDir, projectName);
+        var projectPath = path.join(getBaseDirectory(), state.replDir, projectName);
 
         if(fs.existsSync(projectPath)){
             rimraf.sync(projectPath);
@@ -49,11 +49,11 @@ class Project{
     }
 
     static replDirectory(){
-        if(!fs.existsSync(state.replDir)) fs.mkdirSync(state.replDir);
+        if(!fs.existsSync(path.join(getBaseDirectory(), state.replDir))) fs.mkdirSync(path.join(getBaseDirectory(), state.replDir));
     }
 
     static loadProject(projectName){
-        var projectPath = path.join(state.replDir, projectName);
+        var projectPath = path.join(getBaseDirectory(), state.replDir, projectName);
         if(!fs.existsSync(projectPath)){
             state.write("Error: Project '" + projectName + "' does not exist!");
             return;
@@ -129,7 +129,7 @@ class Project{
      */
     static getRepls(){
         var repls = [];
-        if(!fs.existsSync(state.replDir)) return repls;
+        if(!fs.existsSync(path.join(getBaseDirectory(), state.replDir))) return repls;
         repls = fs.readdirSync(path.join(getBaseDirectory(), state.replDir));
         return repls;
     }
