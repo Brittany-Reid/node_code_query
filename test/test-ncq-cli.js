@@ -140,6 +140,8 @@ describe("NcqCLI", function(){
             await press(ARROW_DOWN);
             await press("\r");
 
+            //wait for load to happen
+            await delay(100);
             assert.strictEqual(currentProject, "test1");
         }); 
         it("should be able to load another", async function(){
@@ -155,6 +157,8 @@ describe("NcqCLI", function(){
             await press(ARROW_DOWN);
             await press(ARROW_DOWN);
             await press("\r");
+            //wait for load to happen
+            await delay(100);
 
             assert.strictEqual(currentProject, "ncq_test1");
         }); 
@@ -166,6 +170,7 @@ describe("NcqCLI", function(){
             cli.run();
             await send("repl"); //repl command
             await press("\r"); //select new
+            await delay(100); //wait for name
             var app = state.app;
             await press("\r"); //confirm name
 
@@ -181,6 +186,7 @@ describe("NcqCLI", function(){
             cli.run();
             await send("repl"); //repl command
             await press("\r"); //select new
+            await delay(100); //wait for name
             var app = state.app;
             for(var i=0; i<9; i++) await press(DELETE);
             await press("\r"); //confirm name
@@ -196,6 +202,7 @@ describe("NcqCLI", function(){
             cli.run();
             await send("repl"); //repl command
             await press("\r"); //select new
+            await delay(100); //wait for name
             await press(DELETE);
             await press("1"); //write 1
             await press("\r"); //confirm name
@@ -203,7 +210,7 @@ describe("NcqCLI", function(){
             await press("\r");
 
             const expected = "Project already exists at ncq_test1. Do you want to overwrite?\n" +
-            "\x1B[36m(*) Yes\x1B[39m  ( ) No";
+                "\x1B[36m(*) Yes\x1B[39m  ( ) No";
             assert.strictEqual(app.lastFrame(), expected);
         }).timeout(0); 
         it("should be able to cancel overwrite prompt", async function(){
@@ -214,6 +221,7 @@ describe("NcqCLI", function(){
             cli.run();
             await send("repl"); //repl command
             await press("\r"); //select new
+            await delay(100); //wait for name
             await press(DELETE);
             await press("1"); //write 1
             await press("\r"); //confirm name
@@ -221,7 +229,7 @@ describe("NcqCLI", function(){
             await press(ESC);
             
             const expected = "\x1B[2mProject already exists at ncq_test1. Do you want to overwrite?\x1B[22m\n" +
-                "\x1B[36m\x1B[2m(*) Yes\x1B[22m\x1B[39m  \x1B[2m( ) No\x1B[22m";
+                    "\x1B[36m\x1B[2m(*) Yes\x1B[22m\x1B[39m  \x1B[2m( ) No\x1B[22m";
             assert.strictEqual(app.lastFrame(), expected);
         });
         it("should be able to say no to overwrite prompt", async function(){
@@ -232,6 +240,7 @@ describe("NcqCLI", function(){
             cli.run();
             await send("repl"); //repl command
             await press("\r"); //select new
+            await delay(100); //wait for name
             await press(DELETE);
             await press("1"); //write 1
             await press("\r"); //confirm name
@@ -240,7 +249,7 @@ describe("NcqCLI", function(){
             await press("\r");
             
             const expected = "Project already exists at ncq_test1. Do you want to overwrite?\n" +
-                    "( ) Yes  \x1B[36m(*) No\x1B[39m";
+                        "( ) Yes  \x1B[36m(*) No\x1B[39m";
             assert.strictEqual(app.lastFrame(), expected);
         }); 
         afterEach(()=>{
