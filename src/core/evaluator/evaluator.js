@@ -1,4 +1,5 @@
 
+const Fixer = require("./fixer");
 const LinterHandler = require("./linter-handler");
 const Snippet = require("../snippet");
 
@@ -8,6 +9,7 @@ const Snippet = require("../snippet");
 class Evaluator{
     constructor(){
         this.linter = new LinterHandler();
+        this.fixer = new Fixer(this.linter);
     }
 
     /**
@@ -32,35 +34,20 @@ class Evaluator{
      */
     fix(snippets){
         for(var i=0; i<snippets.length; i++){
-            var fix = this.linter.fix(snippets[i].code);
-            var errors = LinterHandler.errors(fix.messages);
-
-            //module errors on script
-            if(this.linter.config.parserOptions.sourceType === "script"){
-                //is it a module?
-                var isModule = false;
-                for(var e of errors){
-                    if(e.message === "Parsing error: 'import' and 'export' may appear only with 'sourceType: module'"){
-                        isModule = true;
-                    }
-                }
-                //if module, fix as module
-                if(isModule){
-                    this.linter.config.parserOptions.sourceType = "module";
-                    fix = this.linter.fix(snippets[i].code);
-                    snippets[i].code = fix.output;
-                    this.linter.config.parserOptions.sourceType = "script";
-                    //run again for commonjs errors
-                    fix = this.linter.fix(snippets[i].code);
-                }
-            }
-            snippets[i].code = fix.output;
-            snippets[i].errors = LinterHandler.errors(fix.messages);
+            // if(i !== 0) process.stdout.moveCursor(0, -1);
+            // console.log(i);
+            snippets[i] =this.fixer.fix(snippets[i]);
         }
 
         return snippets;
     }
-
 }
+
+
+
+// var code = "const root = db.ref('/');\n//or\nconst root = db.ref('');";
+// var snippets = [new Snippet(code)];
+// snippets = new Evaluator().fix(snippets);
+// console.log(snippets)
 
 module.exports = Evaluator;

@@ -11,7 +11,8 @@
     "install": "npm run setup",
     "setup": "npm run nargs setup",
     "test": "mocha test --max-old-space-size=4096",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "info": "mocha test/info --max-old-space-size=4096"
   },
   "keywords": [],
   "author": "",

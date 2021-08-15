@@ -1,0 +1,18 @@
+DATASET INFORMATION:
+--------
+ALL FIXES
+
+ERROR, SEVERITY, FATAL, NUM OCCURANCES, NUM AFFECTED SNIPPETS, PERCENT
+Parsing error: Unexpected token, 2, true, 2735, 2735, 0.07244457394114374
+no-const-assign, 2, undefined, 71, 55, 0.0014568378671893625
+no-dupe-keys, 2, undefined, 31, 16, 0.00042380737954599636
+no-this-before-super, 2, undefined, 10, 6, 0.00015892776732974863
+constructor-super, 2, undefined, 6, 5, 0.00013243980610812387
+no-shadow-restricted-names, 2, undefined, 3, 3, 0.00007946388366487431
+Parsing error: Expecting Unicode escape sequence \uXXXX, 2, true, 2, 2, 0.000052975922443249545
+Parsing error: Unexpected character, 2, true, 1, 1, 0.000026487961221624773
+no-dupe-class-members, 2, undefined, 1, 1, 0.000026487961221624773
+Parsing error: Unterminated template, 2, true, 1, 1, 0.000026487961221624773
+
+Snippets without errors: 34933/37753(0.9253039493550181)
+Snippets without errors or warnings: 34933/37753(0.9253039493550181)
