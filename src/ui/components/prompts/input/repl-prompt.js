@@ -141,12 +141,12 @@ const ReplPrompt = ({
 
     useInput((input, key)=>{
         //right arrow
-        if(input === "[1;2C" || key.f3){
+        if((key.rightArrow && key.shift) || key.f3){
             nextSnippet(1);
             return;
         }
         //left arrow
-        if(input === "[1;2D" || key.f2){
+        if((key.leftArrow && key.shift) || key.f2){
             nextSnippet(-1);
             return;
         }
