@@ -33,7 +33,9 @@ class Evaluator{
      * @return {Snippet[]} Array of snippets after fixing with error information updated.
      */
     fix(snippets){
+
         for(var i=0; i<snippets.length; i++){
+            // if(i<1600000) continue;
             // if(i !== 0) process.stdout.moveCursor(0, -1);
             // console.log(i);
             snippets[i] =this.fixer.fix(snippets[i]);
