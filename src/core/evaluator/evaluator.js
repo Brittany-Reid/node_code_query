@@ -35,9 +35,6 @@ class Evaluator{
     fix(snippets){
 
         for(var i=0; i<snippets.length; i++){
-            // if(i<1600000) continue;
-            // if(i !== 0) process.stdout.moveCursor(0, -1);
-            // console.log(i);
             snippets[i] =this.fixer.fix(snippets[i]);
         }
 
@@ -45,11 +42,5 @@ class Evaluator{
     }
 }
 
-
-
-// var code = "const root = db.ref('/');\n//or\nconst root = db.ref('');";
-// var snippets = [new Snippet(code)];
-// snippets = new Evaluator().fix(snippets);
-// console.log(snippets)
 
 module.exports = Evaluator;

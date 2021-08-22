@@ -7,6 +7,12 @@ const LinterHandler = require("../src/core/evaluator/linter-handler");
  */
 describe("LinterHandler", function () {  
     describe("functions", function () {
+        it("parse should not report style warnings", function () {
+            var snippet = "\tvar a;";
+            var linter = new LinterHandler();
+            var result = linter.parse(snippet)
+            assert.strictEqual(result.length, 0);
+        });
         it("should get messages", function () {
             var linter = new LinterHandler();
             linter.config.rules = {

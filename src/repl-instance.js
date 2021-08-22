@@ -16,7 +16,7 @@ async function main(){
     logger.info("Logger initialized at: " + logger.directory);
     logger.info("REPL started at: " + process.cwd());
     
-    await Service.initialize({recordLimit: 100});
+    await Service.initialize({recordLimit: state.recordLimit});
 
     //initialize REPL
     var repl = new REPL();

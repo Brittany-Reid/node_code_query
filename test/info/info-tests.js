@@ -85,7 +85,7 @@ describe("Dataset Info (takes time to load)", function () {
         logger.info("DATASET INFORMATION:")
         this.timeout(0);
         data = new DataHandler({
-            recordLimit: 1000
+            //recordLimit: 1000
         });
         await data.loadDatabase();
     })
@@ -219,9 +219,10 @@ describe("Dataset Info (takes time to load)", function () {
         logger.info("ESLINT FIX ANALYSIS\n")
         var snippets = data.snippets;
         var evaluator = new Evaluator();
+        evaluator.linter.config.rules["no-import"] = "off";
+        evaluator.linter.config.rules["no-export"] = "off";
         evaluator.fixer.rules = {
-            "redeclared-identifier": false,
-            "no-import-export": false
+            "parsing-error": false
         };
         var evaluatedSnippets = evaluator.fix(snippets);
         var errorData = {};
@@ -258,8 +259,7 @@ describe("Dataset Info (takes time to load)", function () {
         var snippets = data.snippets;
         var evaluator = new Evaluator();
         evaluator.fixer.rules = {
-            "redeclared-identifier": false,
-            "no-import-export": true
+            "parsing-error": false
         };
         var evaluatedSnippets = evaluator.fix(snippets);
         var errorData = {};

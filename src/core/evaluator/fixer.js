@@ -6,14 +6,14 @@ const LinterHandler = require("./linter-handler");
 class Fixer{
 
     constructor(linter){
+        /**@type {LinterHandler} */
         this.linter = linter;
         this.rules = {
-            "redeclared-identifier": true,
-            "no-import-export": true,
             "parsing-error": true,
         }
     }
 
+    /** Run full ESLint on code snippet */
     runESLint(snippet){
         var fix = this.linter.fix(snippet.code);
         
@@ -21,15 +21,27 @@ class Fixer{
         snippet.code = fix.output;
         snippet.errors = LinterHandler.errors(fix.messages);
 
+        snippet = this.hasCode(snippet);
 
         return snippet;
     }
 
-    attemptFix(snippet){
+    /**
+     * Try to parse.
+     */
+    parse(snippet){
+        var errors = this.linter.parse(snippet.code);
+        snippet.errors = errors;
+        return snippet;
+    }
+
+    attemptFix(snippet, parse){
         var fixed = false;
-        //run eslint
-        snippet = this.runESLint(snippet);
-        if(!snippet.errors || snippet.errors.length < 1) return {snippet, fixed};
+
+        if(parse){
+            snippet = this.parse(snippet);
+            if(!snippet.errors || snippet.errors.length < 1) return {snippet, fixed};
+        }
         
         if(snippet.errors[0].fatal){
             //is line already commented out
@@ -56,9 +68,9 @@ class Fixer{
         var fix = undefined;
         if(!this.rules[errorType]) return {snippet, fixed}
         switch(errorType){
-            case "no-import-export":
-                fix = this.fixNoImportExport(snippet, error);
-                break;
+            // case "no-import-export":
+            //     fix = this.fixNoImportExport(snippet, error);
+            //     break;
             case "parsing-error":
                 fix = this.fixParsingError(snippet, error);
                 break;
@@ -74,32 +86,67 @@ class Fixer{
     }
 
     fix(snippet){
-        
+
+        var first = true;
+
+        //step 1, run eslint
+        snippet = this.runESLint(snippet);
+        //step 2a, if it has no parsing errors, return
+        if(!this.hasErrors(snippet)){
+            return snippet;
+        }
+
+        //step 2b, if it has parsing errors try to fix
         var stop = false;
         var fixed = false;
-        var previousFixed;
 
         //run until no more fixes have been applied
         while(!stop){
-            var fix = this.attemptFix(snippet);
+            var fix = this.attemptFix(snippet, !first);
             snippet = fix.snippet;
-            previousFixed = fixed;
             fixed = fix.fixed;
-            if(previousFixed === false && fixed === false){
+            if(fixed === false){
                 stop = true;
             }
+            if(first) first = false;
         }
 
-        //rerun eslint for after fix eval
-        if(fixed) snippet = this.runESLint(snippet);
+        //rerun eslint again if we now have no parsing errors
+        //(it wont run eslint fixes if there is a parsing error)
+        if(!this.hasErrors(snippet)){
+            snippet = this.runESLint(snippet);
+        }
 
         return snippet;
     }
 
-    getError(message){
-        if(message === "Parsing error: 'import' and 'export' may appear only with 'sourceType: module'"){
-            return "no-import-export";
+    /**
+     * Check for parsing errors.
+     * ESLint returns a single fatal error in this case.
+     * @param {Snippet} snippet 
+     * @returns 
+     */
+    hasErrors(snippet){
+        var errors = snippet.errors;
+        if(errors.length < 1) return false;
+        if(errors[0].fatal) return true;
+    }
+
+    /**
+     * Check if has code and update snippet state.
+     */
+    hasCode(snippet, parse = false){
+        if(parse) this.parse(snippet)
+        var code = this.linter.linter.getSourceCode();
+        if(!code) return snippet;
+        var ast = code.ast;
+        if(!ast.tokens || ast.tokens.length === 0){
+            snippet.hasCode = false;
         }
+        return snippet;
+    }
+
+    getError(message){
         if(message.startsWith("Parsing error: ")) return "parsing-error";
     }
 
@@ -111,46 +158,6 @@ class Fixer{
         return fix;
     }
 
-    fixNoImportExport(snippet, error){
-
-        //1. try to do one run
-        var fix = this.runESLintAsModule(snippet.code);
-        var messages = fix.messages;
-        //if there are error messages
-        if(messages && messages.length > 0){
-            var nextError = fix.messages[0];
-            //is it fatal (parsing error)?
-            if(error.fatal){
-                return undefined;
-                // if(typeof nextError.line === "undefined") return undefined;
-                // var lines = this.getLines(snippet.code, 1, nextError.line-1);
-                // console.log(lines)
-                // //if no lines, unfixable
-                // if(typeof lines === "undefined" || lines.length < 1) return undefined;
-                // //run this section only
-                // var nextFix = this.runESLintAsModule(lines);
-                // //still a fatal parsing error, unfixable
-                // if(nextFix.messages && nextFix.messages > 0 && nextFix.messages[0].fatal){
-                //     return undefined;
-                // }
-                // //merge back
-                // var end = this.getLines(snippet.code, nextError.line)
-                // snippet.code = nextFix.output+"\n" + end;
-                // return snippet;
-            }
-        }
-
-        snippet.code = fix.output;
-        return snippet;
-    }
-
-    fixRedeclaredIdentifier(snippet, error){
-        var code = snippet.code;
-        var lineNum = error.line;
-        code = this.commentLine(code, lineNum);
-        snippet.code = code;
-        return snippet;
-    }
     fixParsingError(snippet, error){
         var code = snippet.code;
         var lineNum = error.line;

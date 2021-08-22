@@ -1,5 +1,6 @@
 require("mocha");
 var assert = require("assert");
+const Evaluator = require("../src/core/evaluator/evaluator");
 const Snippet = require("../src/core/snippet");
 
 /**
@@ -23,7 +24,7 @@ describe("Snippet", function () {
             assert.strictEqual(snippet.stars, packageObject.stars);
         });
     });
-    describe("functions", function () {
+    describe("sorting", function () {
         it("unevaluated snippets last", function () {
             var snippetA = new Snippet("a");
             var snippetB = new Snippet("b");
@@ -57,6 +58,32 @@ describe("Snippet", function () {
             snippetB.rankValue = 1;
             var result = Snippet.sort(snippetA, snippetB);
             assert.strictEqual(result, -1);
+
+        });
+        it("code snippets with no code should go last", function () {
+            /* This is meant to handle all commented out cases.
+            * I already filtered code snippets to remove empty ones from the dataset.
+            */
+            var snippetA = new Snippet(""); //empty
+            var snippetB = new Snippet("<jsx>\n</jsx>"); //will be completely commented out
+            var snippetC = new Snippet("class A extends B{\nconstructor(){}\n}") //will have an error
+            var snippetD = new Snippet("var a;") //no errors
+
+            var snippets = [snippetA, snippetB, snippetC, snippetD];
+            var evaluatedSnippets = new Evaluator().fix(snippets);
+            
+            assert.strictEqual(evaluatedSnippets[0].hasCode, false);
+            assert.strictEqual(evaluatedSnippets[1].hasCode, false);
+            assert.strictEqual(evaluatedSnippets[2].errors.length, 1);
+            assert.strictEqual(evaluatedSnippets[3].errors.length, 0);
+
+            evaluatedSnippets.sort(Snippet.sort);
+            
+            assert.strictEqual(evaluatedSnippets[0].code, snippetD.code); //no error
+            assert.strictEqual(evaluatedSnippets[1].code, snippetC.code); //has errors
+            //no code, retains original order
+            assert.strictEqual(evaluatedSnippets[2].code, snippetA.code);
+            assert.strictEqual(evaluatedSnippets[3].code, snippetB.code);
 
         });
     }); 

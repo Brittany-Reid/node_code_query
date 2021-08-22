@@ -4,9 +4,20 @@ const { Console } = require("console");
 const stream = require("stream");
 const DataHandler = require("./data-handler");
 const packageJSON = require('../../package.json');
-const { Command } = require('commander');
+const commander = require('commander');
+const Evaluator = require("./evaluator/evaluator");
+const {Command} = commander;
 
 class EmptyStdout extends stream.Writable{}
+
+function myParseInt(value, dummyPrevious) {
+    // parseInt takes a string and a radix
+    const parsedValue = parseInt(value, 10);
+    if (isNaN(parsedValue)) {
+        throw new commander.InvalidArgumentError('Not a number.');
+    }
+    return parsedValue;
+}
 
 /**
  * Common State Module
@@ -35,6 +46,8 @@ class State {
         this._stdin = process.stdin; 
         /**@type {DataHandler} */
         this.dataHandler = undefined;
+        /**@type {Evaluator} */
+        this.evaluator = undefined;
 
         this.console = new Console(this.stdout, this.stderr);
     }
@@ -83,12 +96,12 @@ class State {
         program.version(state.version);
         program.option('-d, --debug', 'output extra debugging')
             .option('-u, --usage', 'output usage information for user study purposes')
-            .option('-r, --recordLimit <num>', 'limit the number of records loaded');
+            .option('-r, --recordLimit <num>', 'limit the number of records loaded', myParseInt);
         program.parse(process.argv);
         var options = program.opts();
         if(options.debug) state.debug = true;
         if(options.usage) state.usage = true;
-        if(options.recordLimit) state.recordLimit = options.recordLimit;
+        if(options.recordLimit !== undefined) state.recordLimit = options.recordLimit;
     }
 }
 

@@ -139,11 +139,11 @@ class DataHandler{
         var snippetIds = this.packageIdToSnippetIdArray.get(id);
     
         var snippets = [];
+        if(typeof snippetIds === "undefined") return snippets;
         for(var s of snippetIds){
             var snippet = this.idToSnippet.get(s);
             snippets.push(snippet);
         }
-    
         return snippets;
     }
 

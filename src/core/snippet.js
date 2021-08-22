@@ -16,6 +16,7 @@ class Snippet {
 
         this.rankValue = undefined;
         this.errors = undefined;
+        this.hasCode = true;
     }
 
     /**
@@ -24,7 +25,9 @@ class Snippet {
     rank() {
         if(typeof this.rankValue === "undefined"){
             this.rankValue = undefined;
-            if(this.errors && this.errors.length > 0) this.rankValue = this.errors.length;
+            if(typeof this.errors === "undefined") return undefined; //not evaluated
+            if(this.hasCode === false) return undefined; //undefined is always at end of set, so return undefined here
+            this.rankValue = this.errors.length;
         }
         return this.rankValue;
     }

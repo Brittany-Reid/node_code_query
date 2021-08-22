@@ -8,6 +8,7 @@ const ProgressBar = require("../ui/components/progress-bar");
 const React = require("react");
 const Package = require("./package");
 const chalk = require("chalk");
+const Evaluator = require("./evaluator/evaluator");
 
 const e = React.createElement;
 
@@ -20,6 +21,7 @@ class Service {
         var monitor = new ProgressMonitor(100);
         state.app = state.render(e(ProgressBar, {monitor:monitor}));
         state.dataHandler = new DataHandler(options);
+        state.evaluator = new Evaluator();
         await state.dataHandler.loadDatabase(monitor);
         state.app.unmount();
     }
@@ -84,10 +86,10 @@ class Service {
         var snippets = [];
         for(var p of packages){
             var current = state.dataHandler.getSnippetsForPackage(p);
-            if(current) snippets = snippets.concat(current);
+            if(current && current.length > 0) snippets = snippets.concat(current);
         }
 
-        //snippets = this.evaluator.fix(snippets);
+        snippets = state.evaluator.fix(snippets);
         snippets = snippets.sort(Snippet.sort);
 
         return snippets;

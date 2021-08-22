@@ -83,6 +83,27 @@ describe("Service", function () {
             assert.strictEqual(info.toInstall, true);
         }).timeout(0);
     });
+    describe("snippet search", function(){
+        before(async function(){
+            this.timeout(0);
+            await Service.initialize({recordLimit:100});
+        });
+        it("snippet search retrieves results for a package", async function () {
+            var query = "101";
+            var result = Service.packageSnippets([query]);
+            assert(result.length > 1);
+        });
+        it("snippet search retrieves results for multiple packages", async function () {
+            var packages = ["101", "0ui"]
+            var result = Service.packageSnippets(packages);
+            assert(result.length > 1);
+        });
+        it("snippet search returns empty on unknown package", async function () {
+            var query = "package_"; //illegal npm package name
+            var result = Service.packageSnippets([query]);
+            assert.strictEqual(result.length, 0);
+        });
+    });
 
     after(()=>{
         writeStub.restore();

@@ -21,7 +21,7 @@ class LinterHandler {
         this.config.rules = rules;
         this.config.env = {node: true, es2020: true}
         this.config.parserOptions = {
-            sourceType: "script"
+            sourceType: "module"
         }
     }
 
@@ -66,96 +66,23 @@ class LinterHandler {
             "yoda": ["warn", "never"],
             "no-extra-boolean-cast": "warn",
             "no-regex-spaces": "warn",
-            "indent": ["warn", "tab"],
+            "indent": ["warn", "2"],
             "no-useless-computed-key": "warn",
             "semi" : "warn"
         }
 
-        // var rules = {
-        //     //custom
-        //     "no-import" : "error",
-        //     //best practice
-        //     "accessor-pairs": ["warn", { "setWithoutGet": true, "enforceForClassMembers": true }],
-        //     "curly": ["warn", "multi-line"],
-        //     "eqeqeq": ["warn", "always", { "null": "ignore" }],
-        //     "dot-location": ["warn", "property"],
-        //     "no-caller": "warn",
-        //     "no-empty-pattern": "warn",
-        //     "no-eval": "warn",
-        //     "no-extend-native": "warn",
-        //     "no-extra-bind": "warn",
-        //     "no-fallthrough": "warn",
-        //     "no-floating-decimal": "warn",
-        //     "no-func-assign": "warn",
-        //     "no-global-assign": "warn",
-        //     "no-implied-eval": "warn",
-        //     "no-iterator": "warn",
-        //     "no-labels": ["warn", { "allowLoop": false, "allowSwitch": false }],
-        //     "no-lone-blocks": "warn",
-        //     // "no-multi-spaces": "warn", //style
-        //     "no-multi-str": "warn",
-        //     "no-new": "warn",
-        //     "no-new-func": "warn",
-        //     "no-new-wrappers": "warn",
-        //     "no-octal": "warn",
-        //     "no-octal-escape": "warn",
-        //     "no-proto": "warn",
-        //     "no-redeclare": ["warn", { "builtinGlobals": false }],
-        //     "no-return-assign": ["warn", "except-parens"],
-        //     "no-self-assign": ["warn", { "props": true }],
-        //     "no-self-compare": "warn",
-        //     "no-sequences": "warn",
-        //     "no-throw-literal": "warn",
-        //     "no-unmodified-loop-condition": "warn",
-        //     "no-useless-call": "warn",
-        //     "no-useless-escape": "warn",
-        //     "no-with": "warn",
-        //     "wrap-iife": ["warn", "any", { "functionPrototypeMethods": true }],
-        //     "yoda": ["warn", "never"],
-        //     "no-unexpected-multiline": "warn",
-        //     //possible errors
-        //     "no-cond-assign": "warn",
-        //     "no-constant-condition": ["error", { "checkLoops": false }], //error
-        //     "no-control-regex": "warn",
-        //     "no-debugger": "warn",
-        //     "no-dupe-args": "error", //error
-        //     "no-dupe-keys": "error", //error
-        //     "no-duplicate-case": "warn",
-        //     "no-empty-character-class": "warn",
-        //     "no-ex-assign": "warn",
-        //     "no-extra-boolean-cast": "warn",
-        //     "no-extra-parens": ["warn", "functions"],
-        //     "no-invalid-regexp": "error",
-        //     "no-irregular-whitespace": "warn",
-        //     "node/no-new-require": "warn",
-        //     "no-obj-calls": "error",
-        //     "node/no-path-concat": "warn",
-        //     "no-regex-spaces": "warn",
-        //     "no-sparse-arrays": "warn",
-        //     "no-template-curly-in-string": "warn",
-        //     "no-unreachable": "error",
-        //     "no-unsafe-finally": "warn",
-        //     "no-unsafe-negation": "warn",
-        //     "use-isnan": ["warn", {
-        //         "enforceForSwitchCase": true,
-        //         "enforceForIndexOf": true
-        //     }],
-        //     "valid-typeof": ["warn", { "requireStringLiterals": true }],
-        //     //variables
-        //     "no-delete-var": "warn",
-        //     "no-shadow-restricted-names": "error",
-        //     //es6
-        //     "constructor-super": "error",
-        //     "no-class-assign": "warn",
-        //     "no-const-assign": "error",
-        //     "no-dupe-class-members": "error",
-        //     "no-new-symbol": "error",
-        //     "no-this-before-super": "error",
-        //     "no-useless-computed-key": "warn",
-        //     "no-useless-constructor": "warn",
-        // };
-
         return rules;
+    }
+
+    /**
+     * Runs ESLint with only parsing errors.
+     */
+    parse(code){
+        //create modified config
+        var config = Object.assign({}, this.config);
+        config.rules = {};
+        var messages = this.linter.verify(code, config);
+        return messages;
     }
 
     /**

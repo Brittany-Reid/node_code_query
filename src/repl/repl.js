@@ -141,6 +141,10 @@ class REPL{
         }
 
         var samples = Service.packageSnippets(packages);
+        if(!samples || samples.length < 1){
+            state.write("No samples for packages: " + packages.join(", "));
+            return;
+        }
         this.promptReadable.promptOptions.snippets = samples;
     }
 
