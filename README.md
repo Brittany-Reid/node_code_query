@@ -77,7 +77,9 @@ If you didn't install NCQ globally, you can use `npm start` to run the program i
   
 To load or create a new REPL, use the `repl` command. Once you have selected an option, NCQ will load that instance for you and you can begin programming!
 
-## REPL Commands
+### REPL Commands
+  
+<details>
   
 #### `.packages <query>`
   
@@ -98,4 +100,11 @@ Searches for code snippets from the given packages, and shows them to you right 
 #### `.help`
   
 Show more commands.
+    
+</details>
+  
+### References
+  
+Links to published work will be added here.
+
 
