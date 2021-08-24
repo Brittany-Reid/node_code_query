@@ -20,7 +20,7 @@ const HtopFooter = ({
     accentColor = "cyan",
     ...props
 }) =>{
-    const fkeys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const fkeys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     return e(ink.Box, {justifyContent: "flex-start", width:"100%"},
         e(ink.Text, {wrap: "truncate"},

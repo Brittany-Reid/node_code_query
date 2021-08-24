@@ -14,7 +14,7 @@ describe("HtopFooter", function(){
             var app = render(element);
             app.unmount();
             var expected = "";
-            for(var f = 1; f<13; f++){
+            for(var f = 1; f<11; f++){
                 expected += chalk.bold("F" + f) + chalk.bgCyan.black("     ");
             }
             assert.strictEqual(app.lastFrame(), expected);
@@ -24,7 +24,7 @@ describe("HtopFooter", function(){
             var app = render(element);
             app.unmount();
             var expected = "";
-            for(var f = 1; f<13; f++){
+            for(var f = 1; f<11; f++){
                 var command  = "     ";
                 if(f === 1) command = "Label ";
                 expected += chalk.bold("F" + f) + chalk.bgCyan.black(command);
@@ -36,7 +36,7 @@ describe("HtopFooter", function(){
             var app = render(element);
             app.unmount();
             var expected = "";
-            for(var f = 1; f<13; f++){
+            for(var f = 1; f<11; f++){
                 var command  = "     ";
                 expected += chalk.bold("F" + f) + chalk.bgCyan.black(command);
             }

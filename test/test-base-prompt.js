@@ -38,13 +38,13 @@ describe("BasePrompt", function(){
             await delay(100);
             app.unmount();
             var expected = "> a" + chalk.inverse(" ") + "\n";
-            for(var f = 1; f<13; f++){
+            for(var f = 1; f<11; f++){
                 var command = "     ";
                 if(f === 5) command = "Clear ";
-                if(f === 12) command = "Cancel ";
+                if(f === 10) command = "Cancel ";
                 expected += chalk.bold("F" + f) + chalk.bgCyan.black(command);
             }
-            expected += chalk.bgCyan("          ");
+            expected += chalk.bgCyan("                          ");
             assert.strictEqual(app.lastFrame(), expected);
         });
         it("should show suggest in footer", async function(){
@@ -53,14 +53,14 @@ describe("BasePrompt", function(){
             await delay(100);
             app.unmount();
             var expected = "> a" + chalk.inverse(" ") + "\n";
-            for(var f = 1; f<13; f++){
+            for(var f = 1; f<11; f++){
                 var command = "     ";
                 if(f === 1) command = "Suggest ";
                 if(f === 5) command = "Clear ";
-                if(f === 12) command = "Cancel ";
+                if(f === 10) command = "Cancel ";
                 expected += chalk.bold("F" + f) + chalk.bgCyan.black(command);
             }
-            expected += chalk.bgCyan("       ");
+            expected += chalk.bgCyan("                       ");
             assert.strictEqual(app.lastFrame(), expected);
         });
     });

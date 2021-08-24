@@ -212,10 +212,10 @@ class REPL{
             return;
         }
         if(!result) return;
-        fs.writeFileSync(Project.filename, code);
-        var internalClear = this.replInstance.commands["clear"].action.bind(this.replInstance);
-        internalClear();
-        this.internalLoad(Project.filename);
+        fs.writeFileSync(Project.filename, result);
+        //var internalClear = this.replInstance.commands["clear"].action.bind(this.replInstance);
+        this.replInstance.resetContext();
+        this.load();
     }
 
     /**

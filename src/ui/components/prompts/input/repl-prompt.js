@@ -51,9 +51,11 @@ const e = React.createElement;
  */
 const ReplPrompt = ({
     accentColor = "cyan",
+    footerKeys,
     onCancel,
     snippets,
     promptWritable,
+    additionalKeys,
     ...props
 }) => {
 
@@ -120,13 +122,16 @@ const ReplPrompt = ({
         }
     });
 
-    const footerKeys = React.useMemo(()=>{
+    var internalFooterKeys = footerKeys;
+    if(!footerKeys) internalFooterKeys = React.useMemo(()=>{
         return {
             f1: "Suggest",
             f2: displayingSnippet? "Prev" : undefined,
             f3: displayingSnippet? "Next" : undefined,
-            f5: "clear",
-            f12: "Cancel",
+            f5: "Clear",
+            f6: "Editor",
+            f9: "Save",
+            f10: "Cancel",
         };
     }, [displayingSnippet]);
 
@@ -154,13 +159,42 @@ const ReplPrompt = ({
             setCleared(true);
             return;
         }
+        // if(key.f9){
+        //     setCleared(true);
+        //     return;
+        // }
     });
+
+    var internalAdditionalKeys = additionalKeys;
+    if(!additionalKeys) internalAdditionalKeys = {
+        setInput: [
+            {
+                key: {
+                    f5: true
+                },
+                args: [""],
+            },
+            {
+                key: {
+                    f9: true,
+                },
+                args: [".save"]
+            },
+            {
+                key: {
+                    f6: true,
+                },
+                args: [".editor"]
+            }
+        ]
+    }
 
     const promptProps = {
         multiline: true,
         ref: ref,
         accentColor: accentColor,
-        footerKeys: footerKeys,
+        footerKeys: internalFooterKeys,
+        additionalKeys: internalAdditionalKeys,
         header: header,
         onCancel: internalOnCancel,
     };

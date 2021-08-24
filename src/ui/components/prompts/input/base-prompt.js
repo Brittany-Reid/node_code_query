@@ -19,7 +19,7 @@ const e = React.createElement;
  */
 const BasePrompt = React.forwardRef(({
     additionalKeys,
-    footerKeys = {f1: "Suggest", f5: "Clear", f12: "Cancel"},
+    footerKeys = {f1: "Suggest", f5: "Clear", f10: "Cancel"},
     header,
     accentColor = "cyan",
     ...props
@@ -51,7 +51,7 @@ const BasePrompt = React.forwardRef(({
     const defaultBindings = {
         cancel: {
             key: {
-                f12: true,
+                f10: true,
             }
         },
         setInput: {
