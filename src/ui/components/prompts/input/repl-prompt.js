@@ -58,7 +58,8 @@ const ReplPrompt = ({
     additionalKeys,
     ...props
 }) => {
-
+    const {exit} = ink.useApp();
+    const {stdout} = ink.useStdout();
     const ref = React.useRef();
     const [cleared, setCleared] = React.useState(false);
     const [displayingSnippet, setDisplayingSnippet] = React.useState(false);
@@ -159,10 +160,23 @@ const ReplPrompt = ({
             setCleared(true);
             return;
         }
-        // if(key.f9){
-        //     setCleared(true);
-        //     return;
-        // }
+        //for editor prompt to not use, it would be better to have both share a base 'code prompt' though
+        if(!additionalKeys){
+            if(key.f9){
+                ref.current.setInput(".save index.js");
+                ref.current.submit();
+                exit();
+                stdout.moveCursor(0, -1);
+                return;
+            }
+            if(key.f9){
+                ref.current.setInput(".editor index.js");
+                ref.current.submit();
+                exit();
+                stdout.moveCursor(0, -1);
+                return;
+            }
+        }
     });
 
     var internalAdditionalKeys = additionalKeys;
@@ -174,18 +188,18 @@ const ReplPrompt = ({
                 },
                 args: [""],
             },
-            {
-                key: {
-                    f9: true,
-                },
-                args: [".save"]
-            },
-            {
-                key: {
-                    f6: true,
-                },
-                args: [".editor"]
-            }
+            // {
+            //     key: {
+            //         f9: true,
+            //     },
+            //     args: [".save"]
+            // },
+            // {
+            //     key: {
+            //         f6: true,
+            //     },
+            //     args: [".editor"]
+            // }
         ]
     }
 
