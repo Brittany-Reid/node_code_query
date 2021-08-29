@@ -214,45 +214,45 @@ describe("Dataset Info (takes time to load)", function () {
         logger.info("Snippets without errors or warnings: " + snippetsNoWarnOrError + "/" + snippets.length + "(" + (snippetsNoWarnOrError/snippets.length) +")")
         noFixErrorData = errorData;
     }).timeout(0);
-    it("Should tell us impact of eslint fixes", function(){
-        logger.info("--------");
-        logger.info("ESLINT FIX ANALYSIS\n")
-        var snippets = data.snippets;
-        var evaluator = new Evaluator();
-        evaluator.linter.config.rules["no-import"] = "off";
-        evaluator.linter.config.rules["no-export"] = "off";
-        evaluator.fixer.rules = {
-            "parsing-error": false
-        };
-        var evaluatedSnippets = evaluator.fix(snippets);
-        var errorData = {};
-        var snippetsNoWarnOrErrorFix = 0;
-        var snippetsNoErrorFix = 0;
+    // it("Should tell us impact of eslint fixes", function(){
+    //     logger.info("--------");
+    //     logger.info("ESLINT FIX ANALYSIS\n")
+    //     var snippets = data.snippets;
+    //     var evaluator = new Evaluator();
+    //     evaluator.linter.config.rules["no-import"] = "off";
+    //     evaluator.linter.config.rules["no-export"] = "off";
+    //     evaluator.fixer.rules = {
+    //         "parsing-error": false
+    //     };
+    //     var evaluatedSnippets = evaluator.fix(snippets);
+    //     var errorData = {};
+    //     var snippetsNoWarnOrErrorFix = 0;
+    //     var snippetsNoErrorFix = 0;
 
-        for(var s of evaluatedSnippets){
-            var errors = s.errors;
-            var justErrors = LinterHandler.errors(errors);
-            if(justErrors.length < 1) snippetsNoErrorFix++;
-            if(errors.length < 1) snippetsNoWarnOrErrorFix++;
-            addToErrorData(errors, s.id, errorData);
-        }
-        var keys = Object.keys(errorData);
-        keys.sort((a, b)=>{
-            var aValue = errorData[a].occurances;
-            var bValue = errorData[b].occurances;
-            return bValue - aValue;
-        })
-        logger.info("ERROR, SEVERITY, FATAL, NUM OCCURANCES, NUM AFFECTED SNIPPETS, PERCENT")
-        for(var k of keys){
-            var e = errorData[k];
-            logger.info(k + ", " + e.severity + ", "+ e.fatal+ ", "+ e.occurances + ", " + e.affectedSnippets.size + ", " + (errorData[k].affectedSnippets.size/snippets.length))
-        }
+    //     for(var s of evaluatedSnippets){
+    //         var errors = s.errors;
+    //         var justErrors = LinterHandler.errors(errors);
+    //         if(justErrors.length < 1) snippetsNoErrorFix++;
+    //         if(errors.length < 1) snippetsNoWarnOrErrorFix++;
+    //         addToErrorData(errors, s.id, errorData);
+    //     }
+    //     var keys = Object.keys(errorData);
+    //     keys.sort((a, b)=>{
+    //         var aValue = errorData[a].occurances;
+    //         var bValue = errorData[b].occurances;
+    //         return bValue - aValue;
+    //     })
+    //     logger.info("ERROR, SEVERITY, FATAL, NUM OCCURANCES, NUM AFFECTED SNIPPETS, PERCENT")
+    //     for(var k of keys){
+    //         var e = errorData[k];
+    //         logger.info(k + ", " + e.severity + ", "+ e.fatal+ ", "+ e.occurances + ", " + e.affectedSnippets.size + ", " + (errorData[k].affectedSnippets.size/snippets.length))
+    //     }
 
-        logger.info("");
-        logger.info("Snippets without errors: " + snippetsNoErrorFix + "/" + snippets.length + "(" + (snippetsNoErrorFix/snippets.length) +")")
-        logger.info("Snippets without errors or warnings: " + snippetsNoWarnOrErrorFix + "/" + snippets.length + "(" + (snippetsNoWarnOrErrorFix/snippets.length) +")")
+    //     logger.info("");
+    //     logger.info("Snippets without errors: " + snippetsNoErrorFix + "/" + snippets.length + "(" + (snippetsNoErrorFix/snippets.length) +")")
+    //     logger.info("Snippets without errors or warnings: " + snippetsNoWarnOrErrorFix + "/" + snippets.length + "(" + (snippetsNoWarnOrErrorFix/snippets.length) +")")
 
-    }).timeout(0);
+    // }).timeout(0);
     it("Should tell us impact of no import export", function(){
         logger.info("--------");
         logger.info("NO IMPORT EXPORT\n")
@@ -299,6 +299,7 @@ describe("Dataset Info (takes time to load)", function () {
         var errorData = {};
         var snippetsNoWarnOrErrorFix = 0;
         var snippetsNoErrorFix = 0;
+        var noLines = 0;
 
         for(var s of evaluatedSnippets){
             var errors = s.errors;
@@ -308,6 +309,7 @@ describe("Dataset Info (takes time to load)", function () {
             // if(errors.length > 0 && errors[0].message === "Parsing error: 'import' and 'export' may appear only with 'sourceType: module'"){
             //     console.log(s.code)
             // }
+            if(s.hasCode === false) noLines++;
             addToErrorData(errors, s.id, errorData);
         }
         var keys = Object.keys(errorData);
@@ -323,6 +325,7 @@ describe("Dataset Info (takes time to load)", function () {
         }
 
         logger.info("");
+        logger.info("Snippets without lines: " + noLines + "/" + snippets.length + "(" + (noLines/snippets.length) +")")
         logger.info("Snippets without errors: " + snippetsNoErrorFix + "/" + snippets.length + "(" + (snippetsNoErrorFix/snippets.length) +")")
         logger.info("Snippets without errors or warnings: " + snippetsNoWarnOrErrorFix + "/" + snippets.length + "(" + (snippetsNoWarnOrErrorFix/snippets.length) +")")
 
