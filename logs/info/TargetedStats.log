@@ -1,0 +1,489 @@
+DATASET INFORMATION:
+TOTAL PACKAGES: 620221
+TOTAL SNIPPETS: 2161911
+AVERAGE SNIPPETS PER PACKAGE: 3.4857107385915667
+MIN SNIPPETS: 1 (0-100)
+MAX SNIPPETS: 634 (rambdax)
+NUM PACKAGES WITH DESCRIPTION: 616744/620221 (0.9943939337752188)
+NUM PACKAGES WITH KEYWORDS: 415611/620221 (0.670101463833053)
+NUM PACKAGES WITH RUN EXAMPLE: 346864/620221 (0.559258715844836)
+NUM PACKAGES WITH LICENSE: 565452/620221 (0.9116943799065171)
+NUM PACKAGES WITH INSTALL EXAMPLE: 454624/620221 (0.733003235943317)
+NUM PACKAGES WITH LAST UPDATE: 620221/620221 (1)
+NUM PACKAGES WITH REPOSITORY URL: 524252/620221 (0.8452664453477067)
+--------
+PARSING ERROR ANALYSIS
+
+ERROR, SEVERITY, FATAL, NUM OCCURANCES, NUM AFFECTED SNIPPETS, PERCENT
+Parsing error: Unexpected token, 2, true, 529551, 529551, 0.24494579101544883
+Parsing error: 'import' and 'export' may appear only with 'sourceType: module', 2, true, 361761, 361761, 0.16733390042420804
+Parsing error: Unexpected character, 2, true, 46767, 46767, 0.021632250356282013
+Parsing error: Identifier has already been declared, 2, true, 9445, 9445, 0.004368819993052443
+Parsing error: Invalid regular expression, 2, true, 4521, 4521, 0.00209120541964956
+Parsing error: Assigning to rvalue, 2, true, 4144, 4144, 0.0019168226629125806
+Parsing error: Unterminated regular expression, 2, true, 2911, 2911, 0.0013464939120990643
+Parsing error: Identifier directly after number, 2, true, 2494, 2494, 0.0011536090061061719
+Parsing error: Unterminated string constant, 2, true, 1907, 1907, 0.0008820899657756494
+Parsing error: Expecting Unicode escape sequence \uXXXX, 2, true, 1518, 1518, 0.0007021565642618961
+Parsing error: Shorthand property assignments are valid only in destructuring patterns, 2, true, 640, 640, 0.00029603438809460705
+Parsing error: Unterminated template, 2, true, 616, 616, 0.0002849330985410593
+Parsing error: Label is already declared, 2, true, 546, 546, 0.00025255433734321163
+Parsing error: Unterminated comment, 2, true, 458, 458, 0.00021184960898020316
+Parsing error: Duplicate regular expression flag, 2, true, 222, 222, 0.00010268692837031682
+Parsing error: Reserved keyword, 2, true, 196, 196, 0.00009066053135397341
+Parsing error: Unexpected keyword 'var', 2, true, 188, 188, 0.00008696010150279081
+Parsing error: Unterminated template literal, 2, true, 130, 130, 0.000060131985081717055
+Parsing error: 'import' and 'export' may only appear at the top level, 2, true, 106, 106, 0.00004903069552816929
+Parsing error: Unexpected keyword 'this', 2, true, 101, 101, 0.000046717926871180176
+Parsing error: Unexpected keyword 'const', 2, true, 99, 99, 0.000045792819408384527
+Parsing error: super() call outside constructor of a subclass, 2, true, 73, 73, 0.00003376642239204112
+Parsing error: Unexpected keyword 'new', 2, true, 63, 63, 0.00002914088507806288
+Parsing error: Unexpected keyword 'default', 2, true, 61, 61, 0.000028215777615267232
+Parsing error: Unexpected keyword 'true', 2, true, 58, 58, 0.00002682811642107376
+Parsing error: Invalid number, 2, true, 56, 56, 0.000025903008958278115
+Parsing error: Expected number in radix 16, 2, true, 55, 55, 0.000025440455226880294
+Parsing error: 'super' keyword outside a method, 2, true, 54, 54, 0.00002497790149548247
+Parsing error: Argument name clash, 2, true, 52, 52, 0.000024052794032686823
+Parsing error: Unexpected keyword 'return', 2, true, 50, 50, 0.000023127686569891174
+Parsing error: Unexpected keyword 'function', 2, true, 49, 49, 0.000022665132838493353
+Parsing error: Cannot use 'import.meta' outside a module, 2, true, 46, 46, 0.000021277471644299882
+Parsing error: Unexpected keyword 'false', 2, true, 34, 34, 0.000015726826867526
+Parsing error: Unexpected keyword 'delete', 2, true, 31, 31, 0.000014339165673332528
+Parsing error: Unexpected keyword 'in', 2, true, 30, 30, 0.000013876611941934705
+Parsing error: Bad character escape sequence, 2, true, 29, 29, 0.00001341405821053688
+Parsing error: Missing catch or finally clause, 2, true, 27, 27, 0.000012488950747741235
+Parsing error: Unexpected keyword 'class', 2, true, 27, 27, 0.000012488950747741235
+Parsing error: let is disallowed as a lexically bound name, 2, true, 24, 24, 0.000011101289553547764
+Parsing error: Unexpected keyword 'import', 2, true, 21, 21, 0.000009713628359354293
+Parsing error: Comma is not permitted after the rest element, 2, true, 19, 19, 0.000008788520896558647
+Parsing error: Unexpected keyword 'do', 2, true, 18, 18, 0.000008325967165160823
+Parsing error: Unexpected keyword 'case', 2, true, 17, 17, 0.000007863413433763
+Parsing error: Unexpected keyword 'export', 2, true, 13, 13, 0.000006013198508171706
+Parsing error: getter should have no params, 2, true, 13, 13, 0.000006013198508171706
+Parsing error: Parenthesized pattern, 2, true, 12, 12, 0.000005550644776773882
+Parsing error: Unsyntactic continue, 2, true, 11, 11, 0.000005088091045376058
+Parsing error: Unexpected keyword 'continue', 2, true, 10, 10, 0.000004625537313978235
+Parsing error: The only valid meta property for import is 'import.meta', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'if', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'super', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Cannot use 'yield' as identifier inside a generator, 2, true, 8, 8, 0.000003700429851182588
+Parsing error: The only valid meta property for new is 'new.target', 2, true, 8, 8, 0.000003700429851182588
+Parsing error: Unexpected keyword 'switch', 2, true, 7, 7, 0.0000032378761197847644
+Parsing error: Unsyntactic break, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Invalid Unicode escape, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Bad escape sequence in untagged template literal, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Complex binding patterns require an initialization value, 2, true, 5, 5, 0.0000023127686569891176
+Parsing error: Unexpected keyword 'null', 2, true, 4, 4, 0.000001850214925591294
+Parsing error: Unexpected keyword 'typeof', 2, true, 4, 4, 0.000001850214925591294
+Parsing error: Unexpected keyword 'for', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'try', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'with', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'debugger', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'break', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'void', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Optional chaining cannot appear in left-hand side, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'else', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'catch', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Cannot use 'await' as identifier inside an async function, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Illegal 'use strict' directive in function with non-simple parameter list, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Expected number in radix 2, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: setter should have exactly one param, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'while', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'finally', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'extends', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Binding arguments in strict mode, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Maximum call stack size exceeded, 2, true, 1, 1, 4.625537313978235e-7
+
+Snippets without errors: 1192529/2161911(0.5516087387501151)
+--------
+RULE ANALYSIS
+
+ERROR, SEVERITY, FATAL, NUM OCCURANCES, NUM AFFECTED SNIPPETS, PERCENT
+indent, 1, undefined, 4945998, 681122, 0.3150555226371483
+semi, 1, undefined, 1115771, 423537, 0.19590861973503998
+Parsing error: Unexpected token, 2, true, 529551, 529551, 0.24494579101544883
+Parsing error: 'import' and 'export' may appear only with 'sourceType: module', 2, true, 361761, 361761, 0.16733390042420804
+no-multi-spaces, 1, undefined, 127183, 46852, 0.021671567423450826
+Parsing error: Unexpected character, 2, true, 46767, 46767, 0.021632250356282013
+eqeqeq, 1, undefined, 13600, 8720, 0.004033468537789021
+Parsing error: Identifier has already been declared, 2, true, 9445, 9445, 0.004368819993052443
+curly, 1, undefined, 7982, 5060, 0.002340521880872987
+Parsing error: Invalid regular expression, 2, true, 4521, 4521, 0.00209120541964956
+Parsing error: Assigning to rvalue, 2, true, 4144, 4144, 0.0019168226629125806
+Parsing error: Unterminated regular expression, 2, true, 2911, 2911, 0.0013464939120990643
+Parsing error: Identifier directly after number, 2, true, 2494, 2494, 0.0011536090061061719
+dot-location, 1, undefined, 2040, 926, 0.00042832475527438454
+Parsing error: Unterminated string constant, 2, true, 1907, 1907, 0.0008820899657756494
+no-floating-decimal, 1, undefined, 1659, 800, 0.0003700429851182588
+Parsing error: Expecting Unicode escape sequence \uXXXX, 2, true, 1518, 1518, 0.0007021565642618961
+yoda, 1, undefined, 1346, 778, 0.00035986680302750666
+no-dupe-keys, 2, undefined, 924, 653, 0.0003020475866027787
+Parsing error: Shorthand property assignments are valid only in destructuring patterns, 2, true, 640, 640, 0.00029603438809460705
+Parsing error: Unterminated template, 2, true, 616, 616, 0.0002849330985410593
+Parsing error: Label is already declared, 2, true, 546, 546, 0.00025255433734321163
+Parsing error: Unterminated comment, 2, true, 458, 458, 0.00021184960898020316
+no-const-assign, 2, undefined, 393, 259, 0.00011980141643203629
+Parsing error: Duplicate regular expression flag, 2, true, 222, 222, 0.00010268692837031682
+Parsing error: Reserved keyword, 2, true, 196, 196, 0.00009066053135397341
+no-shadow-restricted-names, 2, undefined, 188, 175, 0.00008094690299461911
+Parsing error: Unexpected keyword 'var', 2, true, 188, 188, 0.00008696010150279081
+no-this-before-super, 2, undefined, 164, 85, 0.000039317067168814994
+no-extra-boolean-cast, 1, undefined, 152, 138, 0.00006383241493289964
+Parsing error: Unterminated template literal, 2, true, 130, 130, 0.000060131985081717055
+no-useless-computed-key, 1, undefined, 128, 80, 0.00003700429851182588
+constructor-super, 2, undefined, 109, 107, 0.00004949324925956712
+Parsing error: 'import' and 'export' may only appear at the top level, 2, true, 106, 106, 0.00004903069552816929
+no-extra-bind, 1, undefined, 106, 82, 0.000037929405974621524
+Parsing error: Unexpected keyword 'this', 2, true, 101, 101, 0.000046717926871180176
+Parsing error: Unexpected keyword 'const', 2, true, 99, 99, 0.000045792819408384527
+Parsing error: super() call outside constructor of a subclass, 2, true, 73, 73, 0.00003376642239204112
+Parsing error: Unexpected keyword 'new', 2, true, 63, 63, 0.00002914088507806288
+Parsing error: Unexpected keyword 'default', 2, true, 61, 61, 0.000028215777615267232
+Parsing error: Unexpected keyword 'true', 2, true, 58, 58, 0.00002682811642107376
+Parsing error: Invalid number, 2, true, 56, 56, 0.000025903008958278115
+Parsing error: Expected number in radix 16, 2, true, 55, 55, 0.000025440455226880294
+Parsing error: 'super' keyword outside a method, 2, true, 54, 54, 0.00002497790149548247
+Parsing error: Argument name clash, 2, true, 52, 52, 0.000024052794032686823
+Parsing error: Unexpected keyword 'return', 2, true, 50, 50, 0.000023127686569891174
+Parsing error: Unexpected keyword 'function', 2, true, 49, 49, 0.000022665132838493353
+Parsing error: Cannot use 'import.meta' outside a module, 2, true, 46, 46, 0.000021277471644299882
+Parsing error: Unexpected keyword 'false', 2, true, 34, 34, 0.000015726826867526
+no-dupe-args, 2, undefined, 34, 34, 0.000015726826867526
+Parsing error: Unexpected keyword 'delete', 2, true, 31, 31, 0.000014339165673332528
+Parsing error: Unexpected keyword 'in', 2, true, 30, 30, 0.000013876611941934705
+Parsing error: Bad character escape sequence, 2, true, 29, 29, 0.00001341405821053688
+Parsing error: Missing catch or finally clause, 2, true, 27, 27, 0.000012488950747741235
+Parsing error: Unexpected keyword 'class', 2, true, 27, 27, 0.000012488950747741235
+Parsing error: let is disallowed as a lexically bound name, 2, true, 24, 24, 0.000011101289553547764
+Parsing error: Unexpected keyword 'import', 2, true, 21, 21, 0.000009713628359354293
+no-dupe-class-members, 2, undefined, 20, 8, 0.000003700429851182588
+Parsing error: Comma is not permitted after the rest element, 2, true, 19, 19, 0.000008788520896558647
+Parsing error: Unexpected keyword 'do', 2, true, 18, 18, 0.000008325967165160823
+Parsing error: Unexpected keyword 'case', 2, true, 17, 17, 0.000007863413433763
+Parsing error: Unexpected keyword 'export', 2, true, 13, 13, 0.000006013198508171706
+Parsing error: getter should have no params, 2, true, 13, 13, 0.000006013198508171706
+Parsing error: Parenthesized pattern, 2, true, 12, 12, 0.000005550644776773882
+Parsing error: Unsyntactic continue, 2, true, 11, 11, 0.000005088091045376058
+Parsing error: Unexpected keyword 'continue', 2, true, 10, 10, 0.000004625537313978235
+Parsing error: The only valid meta property for import is 'import.meta', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'if', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'super', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Cannot use 'yield' as identifier inside a generator, 2, true, 8, 8, 0.000003700429851182588
+Parsing error: The only valid meta property for new is 'new.target', 2, true, 8, 8, 0.000003700429851182588
+Parsing error: Unexpected keyword 'switch', 2, true, 7, 7, 0.0000032378761197847644
+no-new-symbol, 2, undefined, 6, 5, 0.0000023127686569891176
+no-regex-spaces, 1, undefined, 6, 6, 0.000002775322388386941
+Parsing error: Unsyntactic break, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Invalid Unicode escape, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Bad escape sequence in untagged template literal, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Complex binding patterns require an initialization value, 2, true, 5, 5, 0.0000023127686569891176
+Parsing error: Unexpected keyword 'null', 2, true, 4, 4, 0.000001850214925591294
+Parsing error: Unexpected keyword 'typeof', 2, true, 4, 4, 0.000001850214925591294
+no-invalid-regexp, 2, undefined, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'for', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'try', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'with', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'debugger', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'break', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'void', 2, true, 2, 2, 9.25107462795647e-7
+no-obj-calls, 2, undefined, 2, 2, 9.25107462795647e-7
+Parsing error: Optional chaining cannot appear in left-hand side, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'else', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'catch', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Cannot use 'await' as identifier inside an async function, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Illegal 'use strict' directive in function with non-simple parameter list, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Expected number in radix 2, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: setter should have exactly one param, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'while', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'finally', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'extends', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Binding arguments in strict mode, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Maximum call stack size exceeded, 2, true, 1, 1, 4.625537313978235e-7
+
+Snippets without errors: 1191284/2161911(0.5510328593545247)
+Snippets without errors or warnings: 318498/2161911(0.147322438342744)
+--------
+ESLINT FIX ANALYSIS
+
+ERROR, SEVERITY, FATAL, NUM OCCURANCES, NUM AFFECTED SNIPPETS, PERCENT
+Parsing error: Unexpected token, 2, true, 529552, 529552, 0.24494625356918023
+Parsing error: 'import' and 'export' may appear only with 'sourceType: module', 2, true, 361761, 361761, 0.16733390042420804
+Parsing error: Unexpected character, 2, true, 46767, 46767, 0.021632250356282013
+Parsing error: Identifier has already been declared, 2, true, 9445, 9445, 0.004368819993052443
+Parsing error: Invalid regular expression, 2, true, 4521, 4521, 0.00209120541964956
+Parsing error: Assigning to rvalue, 2, true, 4144, 4144, 0.0019168226629125806
+Parsing error: Unterminated regular expression, 2, true, 2911, 2911, 0.0013464939120990643
+Parsing error: Identifier directly after number, 2, true, 2494, 2494, 0.0011536090061061719
+Parsing error: Unterminated string constant, 2, true, 1907, 1907, 0.0008820899657756494
+Parsing error: Expecting Unicode escape sequence \uXXXX, 2, true, 1518, 1518, 0.0007021565642618961
+no-dupe-keys, 2, undefined, 924, 653, 0.0003020475866027787
+Parsing error: Shorthand property assignments are valid only in destructuring patterns, 2, true, 640, 640, 0.00029603438809460705
+Parsing error: Unterminated template, 2, true, 616, 616, 0.0002849330985410593
+Parsing error: Label is already declared, 2, true, 546, 546, 0.00025255433734321163
+Parsing error: Unterminated comment, 2, true, 458, 458, 0.00021184960898020316
+no-const-assign, 2, undefined, 393, 259, 0.00011980141643203629
+Parsing error: Duplicate regular expression flag, 2, true, 222, 222, 0.00010268692837031682
+Parsing error: Reserved keyword, 2, true, 196, 196, 0.00009066053135397341
+no-shadow-restricted-names, 2, undefined, 188, 175, 0.00008094690299461911
+Parsing error: Unexpected keyword 'var', 2, true, 188, 188, 0.00008696010150279081
+no-this-before-super, 2, undefined, 164, 85, 0.000039317067168814994
+Parsing error: Unterminated template literal, 2, true, 130, 130, 0.000060131985081717055
+constructor-super, 2, undefined, 109, 107, 0.00004949324925956712
+Parsing error: 'import' and 'export' may only appear at the top level, 2, true, 106, 106, 0.00004903069552816929
+Parsing error: Unexpected keyword 'this', 2, true, 101, 101, 0.000046717926871180176
+Parsing error: Unexpected keyword 'const', 2, true, 99, 99, 0.000045792819408384527
+Parsing error: super() call outside constructor of a subclass, 2, true, 73, 73, 0.00003376642239204112
+Parsing error: Unexpected keyword 'new', 2, true, 63, 63, 0.00002914088507806288
+Parsing error: Unexpected keyword 'default', 2, true, 61, 61, 0.000028215777615267232
+Parsing error: Unexpected keyword 'true', 2, true, 58, 58, 0.00002682811642107376
+Parsing error: Invalid number, 2, true, 56, 56, 0.000025903008958278115
+Parsing error: Expected number in radix 16, 2, true, 55, 55, 0.000025440455226880294
+Parsing error: 'super' keyword outside a method, 2, true, 54, 54, 0.00002497790149548247
+Parsing error: Argument name clash, 2, true, 52, 52, 0.000024052794032686823
+Parsing error: Unexpected keyword 'return', 2, true, 50, 50, 0.000023127686569891174
+Parsing error: Unexpected keyword 'function', 2, true, 49, 49, 0.000022665132838493353
+Parsing error: Cannot use 'import.meta' outside a module, 2, true, 46, 46, 0.000021277471644299882
+Parsing error: Unexpected keyword 'false', 2, true, 34, 34, 0.000015726826867526
+no-dupe-args, 2, undefined, 34, 34, 0.000015726826867526
+Parsing error: Unexpected keyword 'delete', 2, true, 31, 31, 0.000014339165673332528
+Parsing error: Unexpected keyword 'in', 2, true, 30, 30, 0.000013876611941934705
+Parsing error: Bad character escape sequence, 2, true, 29, 29, 0.00001341405821053688
+Parsing error: Missing catch or finally clause, 2, true, 27, 27, 0.000012488950747741235
+Parsing error: Unexpected keyword 'class', 2, true, 27, 27, 0.000012488950747741235
+Parsing error: let is disallowed as a lexically bound name, 2, true, 24, 24, 0.000011101289553547764
+Parsing error: Unexpected keyword 'import', 2, true, 21, 21, 0.000009713628359354293
+no-dupe-class-members, 2, undefined, 20, 8, 0.000003700429851182588
+Parsing error: Comma is not permitted after the rest element, 2, true, 19, 19, 0.000008788520896558647
+Parsing error: Unexpected keyword 'do', 2, true, 18, 18, 0.000008325967165160823
+Parsing error: Unexpected keyword 'case', 2, true, 17, 17, 0.000007863413433763
+Parsing error: Unexpected keyword 'export', 2, true, 13, 13, 0.000006013198508171706
+Parsing error: getter should have no params, 2, true, 13, 13, 0.000006013198508171706
+Parsing error: Parenthesized pattern, 2, true, 12, 12, 0.000005550644776773882
+Parsing error: Unsyntactic continue, 2, true, 11, 11, 0.000005088091045376058
+Parsing error: Unexpected keyword 'continue', 2, true, 10, 10, 0.000004625537313978235
+Parsing error: The only valid meta property for import is 'import.meta', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'if', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'super', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Cannot use 'yield' as identifier inside a generator, 2, true, 8, 8, 0.000003700429851182588
+Parsing error: The only valid meta property for new is 'new.target', 2, true, 8, 8, 0.000003700429851182588
+Parsing error: Unexpected keyword 'switch', 2, true, 7, 7, 0.0000032378761197847644
+no-new-symbol, 2, undefined, 6, 5, 0.0000023127686569891176
+Parsing error: Unsyntactic break, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Invalid Unicode escape, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Bad escape sequence in untagged template literal, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Complex binding patterns require an initialization value, 2, true, 5, 5, 0.0000023127686569891176
+Parsing error: Unexpected keyword 'null', 2, true, 4, 4, 0.000001850214925591294
+Parsing error: Unexpected keyword 'typeof', 2, true, 4, 4, 0.000001850214925591294
+no-invalid-regexp, 2, undefined, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'for', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'try', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'with', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'debugger', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'break', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'void', 2, true, 2, 2, 9.25107462795647e-7
+no-obj-calls, 2, undefined, 2, 2, 9.25107462795647e-7
+Parsing error: Optional chaining cannot appear in left-hand side, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'else', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'catch', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Cannot use 'await' as identifier inside an async function, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Illegal 'use strict' directive in function with non-simple parameter list, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Expected number in radix 2, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: setter should have exactly one param, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'while', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'finally', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'extends', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Binding arguments in strict mode, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Maximum call stack size exceeded, 2, true, 1, 1, 4.625537313978235e-7
+
+Snippets without errors: 1191283/2161911(0.5510323968007934)
+Snippets without errors or warnings: 1191283/2161911(0.5510323968007934)
+--------
+NO IMPORT EXPORT
+
+ERROR, SEVERITY, FATAL, NUM OCCURANCES, NUM AFFECTED SNIPPETS, PERCENT
+Parsing error: Unexpected token, 2, true, 530809, 530809, 0.2455276836095473
+Parsing error: 'import' and 'export' may appear only with 'sourceType: module', 2, true, 140044, 140044, 0.0647778747598768
+Parsing error: Unexpected character, 2, true, 46768, 46768, 0.02163271291001341
+Parsing error: Identifier has already been declared, 2, true, 9445, 9445, 0.004368819993052443
+Parsing error: Invalid regular expression, 2, true, 4521, 4521, 0.00209120541964956
+Parsing error: Assigning to rvalue, 2, true, 4144, 4144, 0.0019168226629125806
+Parsing error: Unterminated regular expression, 2, true, 2911, 2911, 0.0013464939120990643
+Parsing error: Identifier directly after number, 2, true, 2496, 2496, 0.0011545341135689674
+Parsing error: Unterminated string constant, 2, true, 1916, 1916, 0.0008862529493582299
+Parsing error: Expecting Unicode escape sequence \uXXXX, 2, true, 1518, 1518, 0.0007021565642618961
+no-dupe-keys, 2, undefined, 1027, 723, 0.0003344263478006264
+Parsing error: Shorthand property assignments are valid only in destructuring patterns, 2, true, 640, 640, 0.00029603438809460705
+Parsing error: Unterminated template, 2, true, 619, 619, 0.00028632075973525275
+Parsing error: Label is already declared, 2, true, 546, 546, 0.00025255433734321163
+no-const-assign, 2, undefined, 497, 343, 0.00015865592986945347
+Parsing error: Unterminated comment, 2, true, 458, 458, 0.00021184960898020316
+no-this-before-super, 2, undefined, 243, 127, 0.000058744323887523584
+Parsing error: Duplicate regular expression flag, 2, true, 222, 222, 0.00010268692837031682
+Parsing error: Reserved keyword, 2, true, 196, 196, 0.00009066053135397341
+no-shadow-restricted-names, 2, undefined, 189, 176, 0.00008140945672601693
+Parsing error: Unexpected keyword 'var', 2, true, 188, 188, 0.00008696010150279081
+Parsing error: Cannot use 'import.meta' outside a module, 2, true, 175, 175, 0.00008094690299461911
+constructor-super, 2, undefined, 162, 155, 0.00007169582836666264
+Parsing error: Unterminated template literal, 2, true, 130, 130, 0.000060131985081717055
+Parsing error: 'import' and 'export' may only appear at the top level, 2, true, 106, 106, 0.00004903069552816929
+Parsing error: Unexpected keyword 'this', 2, true, 101, 101, 0.000046717926871180176
+Parsing error: Unexpected keyword 'const', 2, true, 99, 99, 0.000045792819408384527
+Parsing error: super() call outside constructor of a subclass, 2, true, 73, 73, 0.00003376642239204112
+Parsing error: Unexpected keyword 'new', 2, true, 63, 63, 0.00002914088507806288
+Parsing error: Unexpected keyword 'default', 2, true, 61, 61, 0.000028215777615267232
+Parsing error: Unexpected keyword 'true', 2, true, 58, 58, 0.00002682811642107376
+Parsing error: Invalid number, 2, true, 56, 56, 0.000025903008958278115
+Parsing error: Expected number in radix 16, 2, true, 55, 55, 0.000025440455226880294
+Parsing error: 'super' keyword outside a method, 2, true, 55, 55, 0.000025440455226880294
+Parsing error: Argument name clash, 2, true, 52, 52, 0.000024052794032686823
+Parsing error: Unexpected keyword 'return', 2, true, 50, 50, 0.000023127686569891174
+Parsing error: Unexpected keyword 'function', 2, true, 49, 49, 0.000022665132838493353
+Parsing error: Unexpected keyword 'false', 2, true, 34, 34, 0.000015726826867526
+no-dupe-args, 2, undefined, 34, 34, 0.000015726826867526
+Parsing error: Unexpected keyword 'delete', 2, true, 31, 31, 0.000014339165673332528
+Parsing error: Unexpected keyword 'in', 2, true, 30, 30, 0.000013876611941934705
+Parsing error: Bad character escape sequence, 2, true, 29, 29, 0.00001341405821053688
+Parsing error: Missing catch or finally clause, 2, true, 27, 27, 0.000012488950747741235
+Parsing error: Unexpected keyword 'class', 2, true, 27, 27, 0.000012488950747741235
+no-dupe-class-members, 2, undefined, 24, 12, 0.000005550644776773882
+Parsing error: let is disallowed as a lexically bound name, 2, true, 24, 24, 0.000011101289553547764
+Parsing error: Unexpected keyword 'import', 2, true, 21, 21, 0.000009713628359354293
+Parsing error: Comma is not permitted after the rest element, 2, true, 19, 19, 0.000008788520896558647
+Parsing error: Unexpected keyword 'do', 2, true, 18, 18, 0.000008325967165160823
+Parsing error: Unexpected keyword 'case', 2, true, 17, 17, 0.000007863413433763
+Parsing error: Unexpected keyword 'export', 2, true, 13, 13, 0.000006013198508171706
+Parsing error: getter should have no params, 2, true, 13, 13, 0.000006013198508171706
+Parsing error: Parenthesized pattern, 2, true, 12, 12, 0.000005550644776773882
+Parsing error: Unsyntactic continue, 2, true, 11, 11, 0.000005088091045376058
+no-new-symbol, 2, undefined, 11, 10, 0.000004625537313978235
+Parsing error: Unexpected keyword 'continue', 2, true, 10, 10, 0.000004625537313978235
+Parsing error: The only valid meta property for import is 'import.meta', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'if', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'super', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Cannot use 'yield' as identifier inside a generator, 2, true, 8, 8, 0.000003700429851182588
+Parsing error: The only valid meta property for new is 'new.target', 2, true, 8, 8, 0.000003700429851182588
+Parsing error: Unexpected keyword 'switch', 2, true, 7, 7, 0.0000032378761197847644
+Parsing error: Unsyntactic break, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Invalid Unicode escape, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Bad escape sequence in untagged template literal, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Complex binding patterns require an initialization value, 2, true, 5, 5, 0.0000023127686569891176
+Parsing error: Unexpected keyword 'null', 2, true, 4, 4, 0.000001850214925591294
+Parsing error: Unexpected keyword 'typeof', 2, true, 4, 4, 0.000001850214925591294
+no-invalid-regexp, 2, undefined, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'for', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'try', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'with', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'debugger', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'break', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'void', 2, true, 2, 2, 9.25107462795647e-7
+no-obj-calls, 2, undefined, 2, 2, 9.25107462795647e-7
+Parsing error: Optional chaining cannot appear in left-hand side, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'else', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'catch', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Cannot use 'await' as identifier inside an async function, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Illegal 'use strict' directive in function with non-simple parameter list, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Expected number in radix 2, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: setter should have exactly one param, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'while', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'finally', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'extends', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Binding arguments in strict mode, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Maximum call stack size exceeded, 2, true, 1, 1, 4.625537313978235e-7
+
+Snippets without errors: 1411385/2161911(0.6528413981889171)
+Snippets without errors or warnings: 1411385/2161911(0.6528413981889171)
+--------
+ALL FIXES
+
+ERROR, SEVERITY, FATAL, NUM OCCURANCES, NUM AFFECTED SNIPPETS, PERCENT
+Parsing error: Unexpected token, 2, true, 532533, 532533, 0.24632512624247715
+Parsing error: 'import' and 'export' may appear only with 'sourceType: module', 2, true, 140106, 140106, 0.06480655309122346
+Parsing error: Unexpected character, 2, true, 46789, 46789, 0.021642426538372762
+Parsing error: Invalid regular expression, 2, true, 4521, 4521, 0.00209120541964956
+Parsing error: Assigning to rvalue, 2, true, 4144, 4144, 0.0019168226629125806
+Parsing error: Unterminated regular expression, 2, true, 2911, 2911, 0.0013464939120990643
+Parsing error: Identifier directly after number, 2, true, 2497, 2497, 0.0011549966673003653
+Parsing error: Identifier has already been declared, 2, true, 2143, 2143, 0.0009912526463855358
+Parsing error: Unterminated string constant, 2, true, 1919, 1919, 0.0008876406105524233
+Parsing error: Expecting Unicode escape sequence \uXXXX, 2, true, 1520, 1520, 0.0007030816717246918
+no-dupe-keys, 2, undefined, 1028, 724, 0.0003348889015320242
+Parsing error: Shorthand property assignments are valid only in destructuring patterns, 2, true, 643, 643, 0.0002974220492888005
+Parsing error: Unterminated template, 2, true, 622, 622, 0.0002877084209294462
+Parsing error: Label is already declared, 2, true, 546, 546, 0.00025255433734321163
+no-const-assign, 2, undefined, 538, 372, 0.00017206998807999034
+Parsing error: Unterminated comment, 2, true, 461, 461, 0.00021323727017439663
+no-this-before-super, 2, undefined, 243, 127, 0.000058744323887523584
+Parsing error: Duplicate regular expression flag, 2, true, 222, 222, 0.00010268692837031682
+Parsing error: Reserved keyword, 2, true, 197, 197, 0.00009112308508537123
+no-shadow-restricted-names, 2, undefined, 189, 176, 0.00008140945672601693
+Parsing error: Unexpected keyword 'var', 2, true, 188, 188, 0.00008696010150279081
+Parsing error: Cannot use 'import.meta' outside a module, 2, true, 175, 175, 0.00008094690299461911
+constructor-super, 2, undefined, 162, 155, 0.00007169582836666264
+Parsing error: Unterminated template literal, 2, true, 130, 130, 0.000060131985081717055
+Parsing error: 'import' and 'export' may only appear at the top level, 2, true, 106, 106, 0.00004903069552816929
+Parsing error: Unexpected keyword 'this', 2, true, 101, 101, 0.000046717926871180176
+Parsing error: Unexpected keyword 'const', 2, true, 99, 99, 0.000045792819408384527
+Parsing error: super() call outside constructor of a subclass, 2, true, 73, 73, 0.00003376642239204112
+Parsing error: Unexpected keyword 'new', 2, true, 63, 63, 0.00002914088507806288
+Parsing error: Unexpected keyword 'default', 2, true, 61, 61, 0.000028215777615267232
+Parsing error: Unexpected keyword 'true', 2, true, 58, 58, 0.00002682811642107376
+Parsing error: Invalid number, 2, true, 56, 56, 0.000025903008958278115
+Parsing error: Expected number in radix 16, 2, true, 55, 55, 0.000025440455226880294
+Parsing error: 'super' keyword outside a method, 2, true, 55, 55, 0.000025440455226880294
+Parsing error: Argument name clash, 2, true, 52, 52, 0.000024052794032686823
+Parsing error: Unexpected keyword 'return', 2, true, 50, 50, 0.000023127686569891174
+Parsing error: Unexpected keyword 'function', 2, true, 49, 49, 0.000022665132838493353
+Parsing error: Unexpected keyword 'false', 2, true, 34, 34, 0.000015726826867526
+no-dupe-args, 2, undefined, 34, 34, 0.000015726826867526
+Parsing error: Unexpected keyword 'delete', 2, true, 31, 31, 0.000014339165673332528
+Parsing error: Unexpected keyword 'in', 2, true, 30, 30, 0.000013876611941934705
+Parsing error: Bad character escape sequence, 2, true, 29, 29, 0.00001341405821053688
+Parsing error: Missing catch or finally clause, 2, true, 27, 27, 0.000012488950747741235
+Parsing error: Unexpected keyword 'class', 2, true, 27, 27, 0.000012488950747741235
+no-dupe-class-members, 2, undefined, 24, 12, 0.000005550644776773882
+Parsing error: let is disallowed as a lexically bound name, 2, true, 24, 24, 0.000011101289553547764
+Parsing error: Unexpected keyword 'import', 2, true, 21, 21, 0.000009713628359354293
+Parsing error: Comma is not permitted after the rest element, 2, true, 19, 19, 0.000008788520896558647
+Parsing error: Unexpected keyword 'do', 2, true, 18, 18, 0.000008325967165160823
+Parsing error: Unexpected keyword 'case', 2, true, 17, 17, 0.000007863413433763
+Parsing error: Unexpected keyword 'export', 2, true, 13, 13, 0.000006013198508171706
+Parsing error: getter should have no params, 2, true, 13, 13, 0.000006013198508171706
+Parsing error: Parenthesized pattern, 2, true, 12, 12, 0.000005550644776773882
+Parsing error: Unsyntactic continue, 2, true, 11, 11, 0.000005088091045376058
+no-new-symbol, 2, undefined, 11, 10, 0.000004625537313978235
+Parsing error: Unexpected keyword 'continue', 2, true, 10, 10, 0.000004625537313978235
+Parsing error: The only valid meta property for import is 'import.meta', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'if', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Unexpected keyword 'super', 2, true, 9, 9, 0.000004162983582580411
+Parsing error: Cannot use 'yield' as identifier inside a generator, 2, true, 8, 8, 0.000003700429851182588
+Parsing error: The only valid meta property for new is 'new.target', 2, true, 8, 8, 0.000003700429851182588
+Parsing error: Unexpected keyword 'switch', 2, true, 7, 7, 0.0000032378761197847644
+Parsing error: Unsyntactic break, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Invalid Unicode escape, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Bad escape sequence in untagged template literal, 2, true, 6, 6, 0.000002775322388386941
+Parsing error: Complex binding patterns require an initialization value, 2, true, 5, 5, 0.0000023127686569891176
+Parsing error: Unexpected keyword 'null', 2, true, 4, 4, 0.000001850214925591294
+Parsing error: Unexpected keyword 'typeof', 2, true, 4, 4, 0.000001850214925591294
+no-invalid-regexp, 2, undefined, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'for', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'try', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'with', 2, true, 3, 3, 0.0000013876611941934705
+Parsing error: Unexpected keyword 'debugger', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'break', 2, true, 2, 2, 9.25107462795647e-7
+Parsing error: Unexpected keyword 'void', 2, true, 2, 2, 9.25107462795647e-7
+no-obj-calls, 2, undefined, 2, 2, 9.25107462795647e-7
+Parsing error: Optional chaining cannot appear in left-hand side, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'else', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'catch', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Cannot use 'await' as identifier inside an async function, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Illegal 'use strict' directive in function with non-simple parameter list, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Expected number in radix 2, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: setter should have exactly one param, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'while', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'finally', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Unexpected keyword 'extends', 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Binding arguments in strict mode, 2, true, 1, 1, 4.625537313978235e-7
+Parsing error: Maximum call stack size exceeded, 2, true, 1, 1, 4.625537313978235e-7
+
+Snippets without errors: 1416834/2161911(0.6553618534713038)
+Snippets without errors or warnings: 1416834/2161911(0.6553618534713038)
