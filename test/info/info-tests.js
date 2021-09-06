@@ -158,6 +158,7 @@ describe("Dataset Info (takes time to load)", function () {
         logger.info("--------");
         logger.info("PARSING ERROR ANALYSIS\n");
         var noErrors = 0;
+        var noLines = 0;
         var errorData = {};
         var snippets = data.snippets;
         var linter = new LinterHandler();
@@ -167,6 +168,7 @@ describe("Dataset Info (takes time to load)", function () {
             var errors = linter.lint(code);
             if(errors.length < 1) noErrors++;
             addToErrorData(errors, s.id, errorData);
+            if(s.hasCode === false) noLines++;
         }
         var keys = Object.keys(errorData);
         keys.sort((a, b)=>{
@@ -180,6 +182,7 @@ describe("Dataset Info (takes time to load)", function () {
             logger.info(k + ", " + e.severity + ", "+ e.fatal+ ", "+ e.occurances + ", " + e.affectedSnippets.size + ", " + (errorData[k].affectedSnippets.size/snippets.length))
         }
         logger.info("");
+        logger.info("Snippets without lines: " + noLines + "/" + snippets.length + "(" + (noLines/snippets.length) +")")
         logger.info("Snippets without errors: " + noErrors + "/" + snippets.length + "(" + (noErrors/snippets.length) +")")
     }).timeout(0);
     it("Should tell us also rule info", function(){

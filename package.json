@@ -28,7 +28,7 @@
     "eslint-plugin-node": "^11.1.0",
     "flexsearch": "^0.6.32",
     "fs-extra": "^10.0.0",
-    "ink-scroll-prompts": "github:Brittany-Reid/ink-scroll-prompts",
+    "ink-scroll-prompts": "^0.0.1",
     "natural": "^5.0.3",
     "progress-monitor": "^1.0.0",
     "react": "^16.14.0",
