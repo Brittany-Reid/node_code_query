@@ -54,6 +54,91 @@ npm install -g
 
 The dataset will automatically be downloaded when installing NCQ, you do not need to manually download and extract it, however, the dataset is also made available at https://zenodo.org/record/5094598
 
+
+
+## Example
+
+Let us consider the scenario where the developer wants to read a file (e.g., "/etc/passwd") and print its contents on screen. Here is how NCQ can help:
+
+### 1. Start NCQ
+
+(Brittany: The images are placeholders, they take up too much room at the moment.)
+
+Run the `ncq` command, or if you didn't install the tool globally, `npm run start` within the root drectory. Your screen should look like this.
+
+<p align="center">
+  <img src="media/run_example.png" alt="ncq command"/>
+</p>
+
+### 2. Create a new REPL
+Type the `repl` command to create an environment where you can play with different examples. The name REPL refers to "Read Eval Print Loop". The tool will present the REPL load menu, if this is the first use, you will be prompted to name a new REPL project instead. When you are done, the REPL will start, initializing your project and loading in the code snippet database. This may take some time.
+
+<p align="center">
+  <img src="media/run_example2.png" alt="repl command"/>
+</p>
+
+The square brackets in the command prompt indicate that you successfully created a node repl, i.e., you can run any node.js code from the prompt now. However, you do not have any library installed!
+
+### 3. Search for packages
+
+Type `.packages read text file` to see an interactive list of packages from NPM you can install.
+
+<p align="center">
+  <img src="media/run_example3.png" alt="packages command"/>
+</p>
+
+In this case, we select the first package using enter. This will ask us if we would like to install. Press enter to install the package.
+
+<p align="center">
+  <img src="media/run_example4.png" alt="packages command"/>
+</p>
+
+Your screen should now look like this, indicating the package was installed successfully:
+
+<p align="center">
+  <img src="media/run_example5.png" alt="packages command"/>
+</p>
+
+### 4. Search for code snippets
+
+Use the `.samples` command to see code snippets for the currently installed packages. You can also search for the specific package using `.samples @jcbuisson/readlinesync`. You should see a code snippet on your screen, you can navigate these with `F2` and `F3`.
+
+<p align="center">
+  <img src="media/run_example6.png" alt="packages command"/>
+</p>
+
+### 5. Run the example
+
+The above example generates an iteratable set of lines from a file, then prints each line. Press enter to run the code. You will see an error that `filePath` is undefined.
+
+(Brittany: I also notice the package/snippet header doesn't clear properly, I will look into this.)
+
+### 6. Modify the example
+
+Rerun the `.samples` command to see the previous example. This time, add a new line at the beginning. Remember that the current working directory is the REPL project directory, so you need the file to be in this directory for the following path to work:
+
+```js
+var filePath = "etc/passwd" //new code
+const readlineSync = require('@jcbuisson/readlinesync');
+const lineGenerator = readlineSync(filePath);
+for (let line of lineGenerator) {
+  console.info(line);
+}
+```
+
+If you recieve an error about already defined constants, use the `.clear` command to reset your REPL state.
+
+(Brittany: I need to re-add the newline button, sorry I forgot! Just copy the whole example code.)
+
+You will see the contents of the file outputed on the REPL.
+
+(Brittany: you will also see some `undefineds` this is a repl option that can be disabled, I thought seeing undefined may be good, but it does this for each line so I will disable it again soon.)
+
+### 7. Save the project
+
+Use the `.save index.js` command to save your progress. This file can be found in the `repls/PROJECT` directory.
+
+
 ## Usage
   
 You can start the NCQ CLI by using the ncq command anywhere.
@@ -106,5 +191,4 @@ Show more commands.
 ### References
   
 Links to published work will be added here.
-
 
