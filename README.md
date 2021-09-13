@@ -111,7 +111,7 @@ Use the `.samples` command to see code snippets for the currently installed pack
 
 The above example generates an iteratable set of lines from a file, then prints each line. Press enter to run the code. You will see an error that `filePath` is undefined.
 
-(Brittany: I also notice the package/snippet header doesn't clear properly, I will look into this.)
+(Brittany: I also notice the package/snippet header doesn't clear properly, I will look into this. EDIT: should be fixed now)
 
 ### 6. Modify the example
 
@@ -128,7 +128,7 @@ for (let line of lineGenerator) {
 
 If you recieve an error about already defined constants, use the `.clear` command to reset your REPL state.
 
-(Brittany: I need to re-add the newline button, sorry I forgot! Just copy the whole example code.)
+(Brittany: I need to re-add the newline button, sorry I forgot! Just copy the whole example code. EDIT: should work now.)
 
 You will see the contents of the file outputed on the REPL.
 

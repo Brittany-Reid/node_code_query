@@ -41,13 +41,6 @@ const BasePrompt = React.forwardRef(({
         setHeight(rows);
     });
 
-    const headerComponent = React.useMemo(()=>{
-        if(typeof header === "string"){
-            return e(ink.Text, {}, header);
-        }
-        return header;
-    }, [header]);
-
     const defaultBindings = {
         cancel: {
             key: {
@@ -72,17 +65,17 @@ const BasePrompt = React.forwardRef(({
     const inputProps = {
         prefix: "NCQ",
         minHeight:2,
-        maxHeight: header ? height-3 : height-2,
+        maxHeight: height-2,
         width: "100%",
         additionalKeys: _extends(defaultBindings, additionalKeys),
         footerMessage: footerMessage,
         footer:true,
         accentColor: accentColor,
         ref: ref,
+        header: header
     };
 
     return e(ink.Box, {flexDirection: "column"}, 
-        headerComponent,
         e(HandledInputPrompt, _extends(inputProps, props))
     );
 });

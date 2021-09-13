@@ -52,7 +52,6 @@ const e = React.createElement;
 const ReplPrompt = ({
     accentColor = "cyan",
     footerKeys,
-    onCancel,
     snippets,
     promptWritable,
     additionalKeys,
@@ -97,11 +96,6 @@ const ReplPrompt = ({
         setSnippetIndex(newIndex);
     }, [displayingSnippet, snippets, snippetIndex]);
 
-    const internalOnCancel = React.useCallback(() =>{
-        setDisplayingSnippet(false);
-        if(typeof onCancel === "function") onCancel();
-    }, [onCancel]);
-
     /*
      * On output from the writable.
      * Handles console.log while prompt is on screen, for example async printing.
@@ -129,6 +123,7 @@ const ReplPrompt = ({
             f1: "Suggest",
             f2: displayingSnippet? "Prev" : undefined,
             f3: displayingSnippet? "Next" : undefined,
+            f4: "Newline",
             f5: "Clear",
             f6: "Editor",
             f9: "Save",
@@ -169,7 +164,7 @@ const ReplPrompt = ({
                 stdout.moveCursor(0, -1);
                 return;
             }
-            if(key.f9){
+            if(key.f6){
                 ref.current.setInput(".editor index.js");
                 ref.current.submit();
                 exit();
@@ -181,6 +176,12 @@ const ReplPrompt = ({
 
     var internalAdditionalKeys = additionalKeys;
     if(!additionalKeys) internalAdditionalKeys = {
+        append: [
+            {
+                key: {f4:true},
+                args: ["\n"]
+            }
+        ],
         setInput: [
             {
                 key: {
@@ -210,7 +211,6 @@ const ReplPrompt = ({
         footerKeys: internalFooterKeys,
         additionalKeys: internalAdditionalKeys,
         header: header,
-        onCancel: internalOnCancel,
     };
 
     return e(BasePrompt, _extends(promptProps, props));

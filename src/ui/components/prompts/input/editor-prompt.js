@@ -10,23 +10,12 @@ const e = React.createElement;
  */
 const EditorPrompt = ({
     accentColor = "cyan",
-    onSubmit,
     ...props
 }) => {
 
-    const [displayHeader, setDisplayHeader] = React.useState(true);
-
-    const header = React.useMemo(()=> {
-        if(!displayHeader) return;
-        return e(ColorBox, {justifyContent: "center", backgroundColor: accentColor}, 
-            e(ink.Text, {backgroundColor: accentColor, color: "black"} , "editor")
-        )
-    }, [displayHeader])
-
-    const internalOnSubmit = (value) => {
-        setDisplayHeader(false);
-        if(onSubmit) onSubmit(value);
-    }
+    const header = e(ColorBox, {justifyContent: "center", backgroundColor: accentColor}, 
+        e(ink.Text, {backgroundColor: accentColor, color: "black"} , "editor")
+    );
 
     const additionalKeys = _extends({}, InputPrompt.defaultKeyBindings);
 
@@ -53,6 +42,7 @@ const EditorPrompt = ({
 
     const promptProps = {
         accentColor: accentColor,
+        minHeight:3,
         prefix: "",
         seperator: "",
         header: header,
@@ -64,7 +54,6 @@ const EditorPrompt = ({
             f9: "Save",
             f10: "Exit",
         },
-        onSubmit: internalOnSubmit
     };
 
     return e(ReplPrompt, _extends(promptProps, props));
