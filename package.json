@@ -12,7 +12,8 @@
     "setup": "npm run nargs setup",
     "test": "mocha test --max-old-space-size=4096",
     "coverage": "nyc npm run test",
-    "info": "mocha test/info --max-old-space-size=4096"
+    "info": "mocha test/info --max-old-space-size=4096",
+    "start": "npm run nargs src/cli.js"
   },
   "keywords": [],
   "author": "",
