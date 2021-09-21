@@ -211,7 +211,7 @@ class REPL{
         } catch(e){
             return;
         }
-        if(!result) return;
+        if(typeof result === "undefined") return;
         fs.writeFileSync(Project.filename, result);
         //var internalClear = this.replInstance.commands["clear"].action.bind(this.replInstance);
         this.replInstance.resetContext();
@@ -220,11 +220,20 @@ class REPL{
 
     /**
      * Was the repl edited, used to ask for save.
-     * Just count lines so it has the effect of not asking on a blank REPL.
      */
     wasEdited(){
-        if(this.replInstance.lines.join('\n').trim().length > 0) return true;
-        return false;
+        var oldContents = undefined;
+        var newContents = this.replInstance.lines.join('\n');
+        //if file exists
+        if(fs.existsSync(Project.filename)){
+            //get contents
+            oldContents = fs.readFileSync(Project.filename, {encoding:"utf-8"});
+        }
+        
+        if(!oldContents && !newContents) return false;
+        if(oldContents === newContents) return false;
+
+        return true;
     }
 
     save(){
