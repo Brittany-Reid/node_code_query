@@ -44,6 +44,7 @@ class REPL{
             terminal: false,
             useColors: true,
             preview: false,
+            ignoreUndefined: true,
         };
 
         this.replInstance = undefined;
