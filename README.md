@@ -54,7 +54,43 @@ npm install -g
 
 The dataset will automatically be downloaded when installing NCQ, you do not need to manually download and extract it, however, the dataset is also made available at https://zenodo.org/record/5094598
 
+## Keybindings
 
+
+### REPL mode
+
+<details>
+
+| KeyBinding | Command | Details |
+| - | - | - |
+| <kbd>return</kbd> | Submit |  |
+| <kbd>escape</kbd> or <kbd>f10</kbd>| Cancel |  |
+| <kbd>delete</kbd> | Delete Character | |
+| <kbd>meta</kbd> + <kbd>delete</kbd> | Delete word | <kbd>ctrl</kbd> + <kbd>w</kbd> also works. |
+| <kbd>ctrl</kbd> + <kbd>delete</kbd> | Delete line | <kbd>ctrl</kbd> + <kbd>u</kbd> also works. |
+| <kbd>ctrl</kbd> + <kbd>←</kbd> | Move to line start | |
+| <kbd>ctrl</kbd> + <kbd>➞</kbd> | Move to line end | |
+| <kbd>meta</kbd> + <kbd>←</kbd> | Previous Word | <kbd>meta</kbd> + <kbd>b</kbd> also works. |
+| <kbd>meta</kbd> + <kbd>➞</kbd> | Next word | <kbd>meta</kbd> + <kbd>f</kbd> also works. |
+| <kbd>↑</kbd> | Cursor Line Up | |
+| <kbd>↓</kbd> | Cursor Line Down | |
+| <kbd>f4</kbd> | Newline | |
+| <kbd>f5</kbd> | Clear | Clears currently entered input, not the same as `.clear`. |
+| <kbd>f6</kbd> | Editor | Enter editor mode. |
+| <kbd>f9</kbd> | Save | |
+
+</details>
+
+### Editor mode
+
+<details>
+
+| KeyBinding | Command | Details |
+| - | - | - |
+| <kbd>return</kbd> | Newline |  |
+| <kbd>f9</kbd> or <kbd>ctrl</kbd> + <kbd>s</kbd>| Save |  |
+
+</details>
 
 ## Example
 
