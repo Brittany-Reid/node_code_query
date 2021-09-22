@@ -64,7 +64,7 @@ Let us consider the scenario where the developer wants to read a file (e.g., "/e
 
 (Brittany: The images are placeholders, they take up too much room at the moment.)
 
-Run the `ncq` command, or if you didn't install the tool globally, `npm run start` within the root drectory. Your screen should look like this.
+Run the `ncq` command, or if you didn't install the tool globally, `npm start` within the root drectory. Your screen should look like this.
 
 <p align="center">
   <img src="media/run_example.png" alt="ncq command"/>
