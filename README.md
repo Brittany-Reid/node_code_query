@@ -117,7 +117,7 @@ The square brackets in the command prompt indicate that you successfully created
 
 ### 3. Search for packages
 
-Type `.packages read text file` to see an interactive list of packages from NPM you can install.
+Type `.packages read text file` to see an interactive list of packages from NPM you can install for the task "read text file".
 
 <p align="center">
   <img src="media/run_example3.png" alt="packages command"/>
