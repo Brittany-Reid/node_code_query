@@ -38,6 +38,12 @@ const EditorPrompt = ({
         },
         args: ["\n"]
     }
+
+    additionalKeys.cancel.push({
+        key: {
+            f10: true,
+        }
+    });
     
 
     const promptProps = {
