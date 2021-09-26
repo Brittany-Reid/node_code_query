@@ -74,6 +74,24 @@ class REPL{
         this.defineCommands();
 
         this.handlePrompt();
+
+        this.replInstance._domain.on('error', this.onError);
+    }
+
+    /**
+     * What happens on a domain error.
+     * This error object is some odd type, maybe native error?
+     * It should run after the existing repl event
+     */
+    onError(e){
+        if(typeof e === "object" && e !== null){
+            if(e.name === "SyntaxError"){
+                if(e.message && e.message.startsWith("Identifier '") && e.message.endsWith("' has already been declared")){
+                    state.write(chalk.yellow("NCQ Hint: You can use Editor mode or the .clear command to reset the REPL state."))
+                }
+            }
+        }
+        
     }
 
     /**
