@@ -3,6 +3,7 @@ const { useInput } = require("ink-scroll-prompts");
 const React = require("react");
 const { getLogger } = require("../../../../core/logger");
 const Snippet = require("../../../../core/snippet");
+const state = require("../../../../core/state");
 const { _extends } = require("../../../../utils");
 const BasePrompt = require("./base-prompt");
 
@@ -81,6 +82,7 @@ const ReplPrompt = ({
         var snippet = snippets[snippetIndex];
         var code = snippet.code;
         logger.info("Got snippet: {" + JSON.stringify(code) + "} from package " + snippet.package);
+        state.lastCodeSnippet = snippet;
         ref.current.setInput(code);
     }, [snippetIndex, displayingSnippet]);
 
@@ -165,6 +167,7 @@ const ReplPrompt = ({
                 return;
             }
             if(key.f6){
+                state.previousCode = ref.current.inputBoxRef.current.state.input;
                 ref.current.setInput(".editor index.js");
                 ref.current.submit();
                 exit();

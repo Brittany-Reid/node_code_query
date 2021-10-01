@@ -48,6 +48,8 @@ class State {
         this.dataHandler = undefined;
         /**@type {Evaluator} */
         this.evaluator = undefined;
+        this.previousCode = undefined;
+        this.lastCodeSnippet = undefined;
 
         this.console = new Console(this.stdout, this.stderr);
     }

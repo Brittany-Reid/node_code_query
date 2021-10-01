@@ -33,6 +33,8 @@ class PromptReadable  extends stream.Readable {
      * Overwrite the read function to prompt for input.
      */
     _read(size) {
+        state.previousCode = undefined;
+        state.lastCodeSnippet = undefined;
         if (this.paused) {
             this.push("");
             return;

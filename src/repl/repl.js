@@ -231,8 +231,19 @@ class REPL{
         state.write("// Entering editor mode");
 
         var code = this.replInstance.lines.join("\n");
+        var result = null;
+        //no code!
+        if(!code && state.previousCode){
+            //do you want to load your previous code?
+            result = await new Select().run("REPL state empty, do you want to load in your previous code?", ["Yes", "No"]);
+            if(result === "Yes") code = state.previousCode;
+        }
+        if(result === null && !code && state.lastCodeSnippet){
+            //do you want to load last code snippet?
+            result = await new Select().run("REPL state empty, do you want to load the last code snippet?", ["Yes", "No"]);
+            if(result === "Yes") code = state.lastCodeSnippet.code;
+        }
         var pHandler = new PromptHandler(EditorPrompt, {initialInput: code});
-        var result;
         try{
             result = await pHandler.run();
         } catch(e){
