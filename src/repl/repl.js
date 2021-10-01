@@ -87,7 +87,8 @@ class REPL{
         if(typeof e === "object" && e !== null){
             if(e.name === "SyntaxError"){
                 if(e.message && e.message.startsWith("Identifier '") && e.message.endsWith("' has already been declared")){
-                    state.write(chalk.yellow("NCQ Hint: You can use Editor mode or the .clear command to reset the REPL state."))
+                    const message = "NCQ Hint: You can reset the REPL state using .reset, or modify and overwrite it by saving in Editor mode.";
+                    state.write(chalk.yellow(message))
                 }
             }
         }
@@ -121,6 +122,13 @@ class REPL{
 
     defineCommands(){
         var that = this;
+        //redefine clear
+        var reset = this.replInstance.commands.clear;
+        this.replInstance.defineCommand("reset", reset);
+        
+        delete this.replInstance.commands.clear; //ReadOnlyDict<REPLCommand> ignore this warning as it still works
+
+        //new commands
         this.replInstance.defineCommand("install", {
             help: that.installHelp,
             action:function(arg){

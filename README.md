@@ -75,7 +75,7 @@ The dataset will automatically be downloaded when installing NCQ, you do not nee
 | <kbd>↑</kbd> | Cursor Line Up | |
 | <kbd>↓</kbd> | Cursor Line Down | |
 | <kbd>f4</kbd> | Newline | |
-| <kbd>f5</kbd> | Clear | Clears currently entered input, not the same as `.clear`. |
+| <kbd>f5</kbd> | Clear | Clears currently entered input. |
 | <kbd>f6</kbd> | Editor | Enter editor mode. |
 | <kbd>f9</kbd> | Save | |
 
@@ -162,7 +162,7 @@ for (let line of lineGenerator) {
 }
 ```
 
-If you recieve an error about already defined constants, use the `.clear` command to reset your REPL state.
+If you recieve an error about already defined constants, use the `.reset` command to reset your REPL state.
 
 (Brittany: I need to re-add the newline button, sorry I forgot! Just copy the whole example code. EDIT: should work now.)
 
