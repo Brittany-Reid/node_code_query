@@ -17,6 +17,7 @@ class Snippet {
         this.rankValue = undefined;
         this.errors = undefined;
         this.hasCode = true;
+        this.fixed = false;
     }
 
     /**

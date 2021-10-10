@@ -13,15 +13,44 @@ class Fixer{
         }
     }
 
+    wasFixed(messages, fixedMessages){
+        var fixed = false;
+        var beforeErrors = LinterHandler.errors(messages);
+        var afterErrors = LinterHandler.errors(fixedMessages);
+        for(var e of beforeErrors){
+            if(e.fatal) continue;
+            var currentFixed = true;
+            var name = e.ruleId;
+            var line = e.line;
+            var column = e.column;
+            for(var e2 of afterErrors){
+                if(name === e2.ruleId && line === e2.line && e2.column === column){
+                    currentFixed = false;
+                    break;
+                }
+            }
+            if(currentFixed){
+                fixed = true;
+                break;
+            }
+        }
+        return fixed;
+    }
+
     /** Run full ESLint on code snippet */
     runESLint(snippet){
+        //get messages
+        var messages = this.linter.lint(snippet.code);
+
         var fix = this.linter.fix(snippet.code);
         
         //update snippet
         snippet.code = fix.output;
         snippet.errors = LinterHandler.errors(fix.messages);
+        var fixed = this.wasFixed(messages, fix.messages);
 
         snippet = this.hasCode(snippet);
+        if(fixed) snippet.fixed = true;
 
         return snippet;
     }
@@ -80,6 +109,7 @@ class Fixer{
         }
         else{
             snippet = fix;
+            snippet.fixed = true;
             fixed = true;
         }
         return {snippet, fixed: fixed}

@@ -13,6 +13,22 @@ describe("Fixer", function () {
     });
 
     describe("unit tests", function(){
+        describe("wasFixed", function(){
+            it("should return fixed for fixing import error", function () {
+                var snippet = new Snippet("import 'a'")
+                var messagesA = fixer.linter.lint(snippet.code);
+                var messagesB = fixer.linter.fix(snippet.code).messages;
+                var fixed = fixer.wasFixed(messagesA, messagesB);
+                assert.strictEqual(fixed, true);
+            });
+            it("should return nonfixed for syntax only", function () {
+                var snippet = new Snippet("var a")
+                var messagesA = fixer.linter.lint(snippet.code);
+                var messagesB = fixer.linter.fix(snippet.code).messages;
+                var fixed = fixer.wasFixed(messagesA, messagesB);
+                assert.strictEqual(fixed, false);
+            });
+        });
         describe("hasCode", function(){
             it("tells us if a code snippet is all comments", function () {
                 const snippet = new Snippet("\n\n//<var a;");
@@ -25,21 +41,25 @@ describe("Fixer", function () {
                 const snippet = new Snippet("\tvar a;");
                 var result = fixer.fix(snippet);
                 assert.strictEqual(result.code, "var a;");
+                assert.strictEqual(result.fixed, false)
             });
-            it("fixes import/export", function () {
+            it("fixes import", function () {
                 const snippet = new Snippet("import 'a';");
                 var result = fixer.fix(snippet);
                 assert.strictEqual(result.code, "require('a');");
+                assert.strictEqual(result.fixed, true)
             });
             it("fixes import/export with other parsing errors", function () {
                 const snippet = new Snippet("import 'a';\n<jsx>");
                 var result = fixer.fix(snippet);
                 assert.strictEqual(result.code, "require('a');\n// <jsx>");
+                assert.strictEqual(result.fixed, true)
             });
             it("fixes parsing errors", function () {
                 const snippet = new Snippet("<jsx>");
                 var result = fixer.fix(snippet);
                 assert.strictEqual(result.code, "// <jsx>");
+                assert.strictEqual(result.fixed, true)
             });
             it("reports if commented out", function () {
                 const snippet = new Snippet("<jsx>");
@@ -50,11 +70,13 @@ describe("Fixer", function () {
                 const snippet = new Snippet("<jsx>\n\tvar a;");
                 var result = fixer.fix(snippet);
                 assert.strictEqual(result.code, "// <jsx>\nvar a;");
+                assert.strictEqual(result.fixed, true)
             });
             it("fixes multiple parsing errors", function () {
                 const snippet = new Snippet("<jsx>\n<html>");
                 var result = fixer.fix(snippet);
                 assert.strictEqual(result.code, "// <jsx>\n// <html>");
+                assert.strictEqual(result.fixed, true)
             });
         });
     //     describe("fix imports/exports", function(){

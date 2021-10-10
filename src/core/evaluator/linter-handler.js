@@ -113,7 +113,8 @@ class LinterHandler {
    * @returns {Linter.FixReport} Fix report object for the fixed code.
    */
     fix(code){
-        return this.linter.verifyAndFix(code, this.config, this.options);
+        var fix = this.linter.verifyAndFix(code, this.config, this.options);
+        return fix;
     }
 }
 
