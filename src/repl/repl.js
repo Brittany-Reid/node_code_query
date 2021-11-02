@@ -185,6 +185,7 @@ class REPL{
         state.write(".packages " + args);
         var result = await Service.packageSearch(args);
         if(result && result.toInstall){
+            logger.info("Installed package: \"" + result.packageName + "\"");
             this.install(result.packageName);
         }
     }
@@ -201,7 +202,6 @@ class REPL{
         } catch(e){
             return;
         }
-
         var installedSet = new Set(this.installedPackages);
         for(var p of packageArray)
             installedSet.add(p);
