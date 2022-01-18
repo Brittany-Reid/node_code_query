@@ -1,1 +1,1 @@
-These files use npm-code-snippets to mine, they were originally in that repository.
+These files use npm-code-snippets to mine, they were originally in that repository. They currently will not work, but serve as a record of how we mined the dataset.
