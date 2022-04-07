@@ -1,0 +1,1666 @@
+P,T,Package,Snippet,Used?,Runs?,Error
+1,1,fs-extra,const fs = require('fs'),0,1,
+1,1,fs-extra,const fs = require('fs-extra'),0,1,
+1,1,fs-extra,const fse = require('fs-extra'),0,1,
+1,1,fs-extra,"const fs = require('fs')
+const fse = require('fs-extra')",0,1,
+1,1,fs-extra,"const fs = require('fs-extra')
+
+// Async with promises:
+fs.copy('/tmp/myfile', '/tmp/mynewfile')
+  .then(() => console.log('success!'))
+  .catch(err => console.error(err))
+
+// Async with callbacks:
+fs.copy('/tmp/myfile', '/tmp/mynewfile', err => {
+  if (err) return console.error(err)
+  console.log('success!')
+})
+
+// Sync:
+try {
+  fs.copySync('/tmp/myfile', '/tmp/mynewfile')
+  console.log('success!')
+} catch (err) {
+  console.error(err)
+}
+
+// Async/Await:
+async function copyFiles () {
+  try {
+    await fs.copy('/tmp/myfile', '/tmp/mynewfile')
+    console.log('success!')
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+copyFiles()",0,0,Unknown file
+1,1,fs-extra,"// With Promises:
+fs.read(fd, buffer, offset, length, position)
+  .then(results => {
+    console.log(results)
+    // { bytesRead: 20, buffer: <Buffer 0f 34 5d ...> }
+  })
+
+// With async/await:
+async function example () {
+  const { bytesRead, buffer } = await fs.read(fd, Buffer.alloc(length), offset, length, position)
+}",0,0,fs not defined
+1,1,fs-extra,"// With Promises:
+fs.write(fd, buffer, offset, length, position)
+  .then(results => {
+    console.log(results)
+    // { bytesWritten: 20, buffer: <Buffer 0f 34 5d ...> }
+  })
+
+// With async/await:
+async function example () {
+  const { bytesWritten, buffer } = await fs.write(fd, Buffer.alloc(length), offset, length, position)
+}",0,0,fs not defined
+1,1,read-text-file,"var readTextFile = require('read-text-file');
+ 
+var contentsPromise = readTextFile.read('path/to/file.txt');
+var contents = readTextFile.readSync('path/to/file.txt');",1,0,Unknown file
+1,2,stable,const stable = require('stable')\n,1,1,
+1,2,stable,"// Regular sort() compatible comparator, that returns a number.
+// This demonstrates the default behavior.
+const lexCmp = (a, b) => String(a).localeCompare(b)
+stable(['foo', 'bar', 'baz'], lexCmp)  // => ['bar', 'baz', 'foo']
+// Boolean comparator. Sorts `b` before `a` if true.
+// This demonstrates a simple way to sort numerically.
+const greaterThan = (a, b) => a > b
+stable([10, 1, 5], greaterThan)  // => [1, 5, 10]",0,0,stable undefined
+1,2,stable,"const arr = [10, 1, 5]
+stable(arr) === arr          // => false
+stable.inplace(arr) === arr  // => true",0,0,stable undefined
+1,2,stable,"stable(['foo', 'bar', 'baz'])  // => ['bar', 'baz', 'foo']
+stable([10, 1, 5])             // => [1, 10, 5]",1,0,stable undefined
+2,1,,,,,
+2,2,write-csv,var writeCSV = require('write-csv'),1,1,
+2,1,write-csv,"writeCSV('./results.csv', [
+  {a: 'foo', b: 'bar', c: 'baz'},
+  {a: 'shoo', b: 'boo', c: 'chaz'},
+  {a: 'gaia', b: 'loves', c: 'you'},
+])",1,0,writeCSV undefined
+3,1,csv-parser,"const csv = require('csv-parser');
+const fs = require('fs');
+
+fs.createReadStream('data.csv')
+  .pipe(csv())
+  .on('data', (row) => {
+    console.log(row);
+  })
+  .on('end', () => {
+    console.log('CSV file successfully processed');
+  });",0,0,unknown file
+3,1,csv-writer,"const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csvWriter = createCsvWriter({
+  path: 'out.csv',
+  header: [
+    {id: 'name', title: 'Name'},
+    {id: 'surname', title: 'Surname'},
+    {id: 'age', title: 'Age'},
+    {id: 'gender', title: 'Gender'},
+  ]
+});
+
+const data = [
+  {
+    name: 'John',
+    surname: 'Snow',
+    age: 26,
+    gender: 'M'
+  }, {
+    name: 'Clair',
+    surname: 'White',
+    age: 33,
+    gender: 'F',
+  }, {
+    name: 'Fancy',
+    surname: 'Brown',
+    age: 78,
+    gender: 'F'
+  }
+];
+
+csvWriter
+  .writeRecords(data)
+  .then(()=> console.log('The CSV file was written successfully'));",1,1,
+3,2,connect-tedious,"CREATE TABLE [dbo].[Sessions](
+  [Sid] varchar(255) NOT NULL
+  CONSTRAINT [PK_Sessions] PRIMARY KEY CLUSTERED ([Sid] ASC),
+    [Expires] datetimeoffset NOT NULL,
+    [Sess] nvarchar(MAX) NULL
+    )",0,0,Unexpected Identifier
+3,2,mysql-node,var mysqlModel = require('mysql-model');,1,1,
+3,2,mysql-node,"var MyAppModel = mysqlModel.createConnection({
+  host     : 'database-host',
+  user     : 'database-user',
+  password : 'database-password',
+  database : 'database-name',});
+
+var Movie = MyAppModel.extend({
+  tableName: ""movies"",
+});
+
+movie = new Movie();
+// OR
+movie = new MyAppModel({tableName: ""movies""});",0,0,mysql model undefined
+3,2,mysql-node,"var Movie = MyAppModel.extend({
+  tableName: ""movies"",
+});",0,0,myappmodel undefiend
+3,2,mysql-node,"movie.find();
+movie.find(method);
+movie.find(callback);
+movie.find(method, conditions);
+movie.find(method, callback);
+movie.find(method, conditions, callback);",0,0,movie undefined
+3,2,mysql-node,"movie.find('all', {where: ""year > 2001""}, function(err, rows, fields) {
+  // Do something...
+});",0,0,movie undefined
+3,2,connect-mysql,"var express = require('express'), // express framework
+session = require('express-session'), // session middleware
+cookieParser = require('cookie-parser'), // cookie middleware
+MySQLStore = require('connect-mysql')(session), // mysql session store
+options = {
+  config: {
+    user: 'username',
+    password: 'password',
+    database: 'databasename' 
+  }
+},
+  app = express();
+app.use(cookieParser());
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: false,
+    secure: false,
+    maxAge: 1000 * 60 * 60 * 24 * 3,
+    expires: 1000 * 60 * 60 * 24 * 3
+  },  store: new MySQLStore(options) // Change the express session store
+}));
+
+app.get('/', function (req, res) {
+  if (req.session.views) { 
+    req.session.views++
+  } else {
+    req.session.views = 1;
+  }
+
+  res.send('Hello world! '+req.session.views);
+});
+app.listen(3000, 'localhost');",0,0,Error: connect ECONNREFUSED
+3,2,connect-mysql,"var mysql = require('mysql'),
+      options = {
+        pool: mysql.createPool({
+          user: 'dbuser',
+          password: 'dbpassword',
+          database: 'db'
+        })
+      };",0,1,
+3,2,connect-mysql,"var options = {
+      pool: true,
+      config: {
+        user: 'dbuser', 
+        password: 'dbpassword', 
+        database: 'db' 
+      }
+    };",0,1,
+3,2,connect-mysql,"var options = {
+      secret: 'thesessionsecret',
+      config: {
+        user: 'dbuser', 
+        password: 'dbpassword', 
+        database: 'db' 
+      }
+   };",0,1,
+3,2,mysql2,"// get the client
+const mysql = require('mysql2');
+
+// create the connection to database
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  database: 'test'
+});
+
+// simple query
+connection.query(
+  'SELECT * FROM `table` WHERE `name` = ""Page"" AND `age` > 45',
+  function(err, results, fields) {
+    console.log(results); // results contains rows returned by server
+    console.log(fields); // fields contains extra meta data about results, if available
+  }
+);
+
+// with placeholder
+connection.query(
+  'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?',
+  ['Page', 45],
+  function(err, results) {
+    console.log(results);
+  }
+);",1,1,
+4,1,mysql,"const mysql = require('mysql');
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'user',
+  password: 'password',
+  database: 'database name'
+});
+connection.connect((err) => {
+  if (err) throw err;
+  console.log('Connected!');
+});",0,0,Error: connect ECONNREFUSED
+4,1,mysql,"const mysql = require('mysql');
+
+// First you need to create a connection to the database
+// Be sure to replace 'user' and 'password' with the correct values
+const con = mysql.createConnection({
+  host: 'localhost',
+  user: 'user',
+  password: 'password',
+});
+
+con.connect((err) => {
+  if(err){
+    console.log('Error connecting to Db');
+    return;
+  }
+  console.log('Connection established');
+});
+
+con.end((err) => {
+  // The connection is terminated gracefully
+  // Ensures all remaining queries are executed
+  // Then sends a quit packet to the MySQL server.
+});",1,1,
+4,1,mysql,"const con = mysql.createConnection({
+  host: 'localhost',
+  user: 'user',
+  password: 'password',
+  database: 'sitepoint'
+});",1,0,mysql undefined
+4,1,mysql,"con.query('SELECT * FROM authors', (err,rows) => {
+  if(err) throw err;
+
+  console.log('Data received from Db:');
+  console.log(rows);
+});",0,0,con undefined
+4,2,grapha,"var Graph = require('grapha'); // ES5
+import {Graph} from 'grapha'; // ES6 ",1,0,import
+4,2,grapha,"const config = {
+  'isWeighted': false,
+  'isDirected': true
+}
+let graph = new Graph(config);",1,0,graph undefined
+4,2,grapha,"const json = {
+    ""nodes"": [
+        {""id"": ""1""},
+        {""id"": ""2""},
+        {""id"": ""3""}
+    ],
+    ""links"": [
+        {""source"": ""1"", ""target"": ""2""}
+        {""source"": ""3"", ""target"": ""1""}
+    ]
+};
+let graph = Graph.serialize(json);",1,0,missing comma
+4,2,datastructures-js,"const {
+  Queue,
+  Stack,
+  Set: EnhancedSet, // renamed to avoid conflict with es6 Set
+  LinkedList,
+  DoublyLinkedList,
+  MinHeap,
+  MaxHeap,
+  MinPriorityQueue,
+  MaxPriorityQueue,
+  Graph,
+  DirectedGraph,
+  BinarySearchTree,
+  AvlTree,
+  Trie
+} = require('datastructures-js');",0,1,
+4,2,datastructures-js,"// import your required classes
+import {
+  Queue,  
+  PriorityQueue,
+  Stack,
+  Set as EnhancedSet, // renamed to avoid conflict with es6 Set
+  LinkedList,
+  DoublyLinkedList,
+  MinHeap,
+  MaxHeap,
+  MinPriorityQueue,
+  MaxPriorityQueue,
+  Graph,
+  DirectedGraph,
+  BinarySearchTree,
+  AvlTree,
+  Trie
+} from 'datastructures-js';",0,0,import
+4,2,datastructures-js,"const { Graph } = require('datastructures-js'); // OR require('@datastructures-js/graph')
+
+class BusStationsGraph extends Graph {
+  findShortestPath(srcStationId, destStationId) {
+    // benefit from Graph to implement your own code
+  }
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.Graph(6); // 6 is the number vertices in the graph
+g.addEdge(0, 5); // add undirected edge connecting vertex 0 to vertex 5
+g.addEdge(2, 4);
+g.addEdge(2, 3);
+g.addEdge(1, 2);
+g.addEdge(0, 1);
+g.addEdge(3, 4);
+g.addEdge(3, 5);
+g.addEdge(0, 2);
+ 
+g.node(2).label = 'Hello'; // assigned 'Hello' as label for node 2
+g.edge(0, 2).label = 'World'; // edge between 0 and 2
+ 
+console.log(g.V); // display 6, which is the number of vertices in g
+console.log(g.adj(0)); // display [5, 1, 2], which is the adjacent list to vertex 0",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.DiGraph(13); // 13 is the number vertices in the graph
+g.addEdge(4,  2); // add directed edge from 4 to 2
+g.addEdge(2,  3);
+g.addEdge(3,  2);
+g.addEdge(6,  0);
+g.addEdge(0,  1);
+g.addEdge(2,  0);
+g.addEdge(11, 12);
+g.addEdge(12,  9);
+g.addEdge(9, 10);
+g.addEdge(9, 11);
+g.addEdge(7,  9);
+g.addEdge(10, 12);
+g.addEdge(11,  4);
+g.addEdge(4,  3);
+g.addEdge(3,  5);
+g.addEdge(6,  8);
+g.addEdge(8,  6);
+g.addEdge(5,  4);
+g.addEdge(0,  5);
+g.addEdge(6,  4);
+g.addEdge(6,  9);
+g.addEdge(7,  6);
+ 
+g.node(2).label = 'Hello'; // assign 'Hello' as label for node 2
+g.edge(0, 5).label = 'World'; // edge from 0 to 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g
+console.log(g.adj(0)); // display the adjacency list which are vertices directed from vertex 0",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedGraph(8); // 8 is the number vertices in the graph
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+g.node(2).label = 'Hello'; // assign 'Hello' as label for node 2
+g.edge(4, 5).label = 'World'; // edge between node 4 and 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g
+console.log(g.adj(0)); // display the adjacency list which are undirected edges connected to vertex 0",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedDiGraph(8); // 8 is the number vertices in the graph
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+g.node(2).label = 'Hello';
+g.edge(4, 5).label = 'World'; // edge from node 4 to node 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g
+console.log(g.adj(0)); // display the adjacency list which are directed edges from vertex 0",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.Graph(6);
+g.addEdge(0, 5);
+g.addEdge(2, 4);
+g.addEdge(2, 3);
+g.addEdge(1, 2);
+g.addEdge(0, 1);
+g.addEdge(3, 4);
+g.addEdge(3, 5);
+g.addEdge(0, 2);
+var s = 0;
+var dfs = new jsgraphs.DepthFirstSearch(g, s);
+ 
+ 
+for(var v=0; v < g.V; ++v) {
+ if(dfs.hasPathTo(v)) {
+    console.log(s + "" is connected to "" + v);
+    console.log(""path: "" + dfs.pathTo(v));
+ } else {
+     console.log('No path from ' + s + ' to ' + v);
+ }
+} ",1,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.Graph(13);
+g.addEdge(0, 5);
+g.addEdge(4, 3);
+g.addEdge(0, 1);
+g.addEdge(9, 12);
+g.addEdge(6, 4);
+g.addEdge(5, 4);
+g.addEdge(0, 2);
+g.addEdge(11, 12);
+g.addEdge(9,10);
+g.addEdge(0, 6);
+g.addEdge(7, 8);
+g.addEdge(9, 11);
+g.addEdge(5, 3); 
+ 
+var cc = new jsgraphs.ConnectedComponents(g);
+console.log(cc.componentCount()); // display 3
+for (var v = 0; v < g.V; ++v) {
+    console.log('id[' + v + ']: ' + cc.componentId(v));
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var dag = new jsgraphs.DiGraph(7); // must be directed acyclic graph
+ 
+dag.addEdge(0, 5);
+dag.addEdge(0, 2);
+dag.addEdge(0, 1);
+dag.addEdge(3, 6);
+dag.addEdge(3, 5);
+dag.addEdge(3, 4);
+dag.addEdge(5, 4);
+dag.addEdge(6, 4);
+dag.addEdge(6, 0);
+dag.addEdge(3, 2);
+dag.addEdge(1, 4);
+ 
+var ts = new jsgraphs.TopologicalSort(dag);
+ 
+var order = ts.order();
+console.log(order); // display array which is the topological sort order
+ ",1,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var graph = new jsgraphs.DiGraph(13);
+graph.addEdge(4, 2);
+graph.addEdge(2, 3);
+graph.addEdge(3, 2);
+graph.addEdge(6, 0);
+graph.addEdge(0, 1);
+graph.addEdge(2, 0);
+graph.addEdge(11, 12);
+graph.addEdge(12, 9);
+graph.addEdge(9, 10);
+graph.addEdge(9, 11);
+graph.addEdge(8, 9);
+graph.addEdge(10, 12);
+graph.addEdge(11, 4);
+graph.addEdge(4, 3);
+graph.addEdge(3, 5);
+graph.addEdge(7, 8);
+graph.addEdge(8, 7);
+graph.addEdge(5, 4);
+graph.addEdge(0, 5);
+graph.addEdge(6, 4);
+graph.addEdge(6, 9);
+graph.addEdge(7, 6);
+var scc = new jsgraphs.StronglyConnectedComponents(graph);
+console.log(scc.componentCount()); // display 5
+for (var v = 0; v < graph.V; ++v) {
+    console.log('id[' + v + ']: ' + scc.componentId(v));
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedGraph(8);
+ 
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+var kruskal = new jsgraphs.KruskalMST(g); 
+var mst = kruskal.mst;
+for(var i=0; i < mst.length; ++i) {
+    var e = mst[i];
+    var v = e.either();
+    var w = e.other(v);
+    console.log('(' + v + ', ' + w + '): ' + e.weight);
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedGraph(8);
+ 
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+var prim = new jsgraphs.LazyPrimMST(g); 
+var mst = prim.mst;
+for(var i=0; i < mst.length; ++i) {
+    var e = mst[i];
+    var v = e.either();
+    var w = e.other(v);
+    console.log('(' + v + ', ' + w + '): ' + e.weight);
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedGraph(8);
+ 
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+var prim = new jsgraphs.EagerPrimMST(g); 
+var mst = prim.mst;
+for(var i=0; i < mst.length; ++i) {
+    var e = mst[i];
+    var v = e.either();
+    var w = e.other(v);
+    console.log('(' + v + ', ' + w + '): ' + e.weight);
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedDiGraph(8);
+g.addEdge(new jsgraphs.Edge(0, 1, 5.0));
+g.addEdge(new jsgraphs.Edge(0, 4, 9.0));
+g.addEdge(new jsgraphs.Edge(0, 7, 8.0));
+g.addEdge(new jsgraphs.Edge(1, 2, 12.0));
+g.addEdge(new jsgraphs.Edge(1, 3, 15.0));
+g.addEdge(new jsgraphs.Edge(1, 7, 4.0));
+g.addEdge(new jsgraphs.Edge(2, 3, 3.0));
+g.addEdge(new jsgraphs.Edge(2, 6, 11.0));
+g.addEdge(new jsgraphs.Edge(3, 6, 9.0));
+g.addEdge(new jsgraphs.Edge(4, 5, 5.0));
+g.addEdge(new jsgraphs.Edge(4, 6, 20.0));
+g.addEdge(new jsgraphs.Edge(4, 7, 5.0));
+g.addEdge(new jsgraphs.Edge(5, 2, 1.0));
+g.addEdge(new jsgraphs.Edge(5, 6, 13.0));
+g.addEdge(new jsgraphs.Edge(7, 5, 6.0));
+g.addEdge(new jsgraphs.Edge(7, 2, 7.0));  
+ 
+ 
+var dijkstra = new jsgraphs.Dijkstra(g, 0);
+ 
+for(var v = 1; v < g.V; ++v){
+    if(dijkstra.hasPathTo(v)){
+        var path = dijkstra.pathTo(v);
+        console.log('=====path from 0 to ' + v + ' start==========');
+        for(var i = 0; i < path.length; ++i) {
+            var e = path[i];
+            console.log(e.from() + ' => ' + e.to() + ': ' + e.weight);
+        }
+        console.log('=====path from 0 to ' + v + ' end==========');
+        console.log('=====distance: '  + dijkstra.distanceTo(v) + '=========');
+    }
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedDiGraph(8);
+g.addEdge(new jsgraphs.Edge(0, 1, 5.0));
+g.addEdge(new jsgraphs.Edge(0, 4, 9.0));
+g.addEdge(new jsgraphs.Edge(0, 7, 8.0));
+g.addEdge(new jsgraphs.Edge(1, 2, 12.0));
+g.addEdge(new jsgraphs.Edge(1, 3, 15.0));
+g.addEdge(new jsgraphs.Edge(1, 7, 4.0));
+g.addEdge(new jsgraphs.Edge(2, 3, 3.0));
+g.addEdge(new jsgraphs.Edge(2, 6, 11.0));
+g.addEdge(new jsgraphs.Edge(3, 6, 9.0));
+g.addEdge(new jsgraphs.Edge(4, 5, 5.0));
+g.addEdge(new jsgraphs.Edge(4, 6, 20.0));
+g.addEdge(new jsgraphs.Edge(4, 7, 5.0));
+g.addEdge(new jsgraphs.Edge(5, 2, 1.0));
+g.addEdge(new jsgraphs.Edge(5, 6, 13.0));
+g.addEdge(new jsgraphs.Edge(7, 5, 6.0));
+g.addEdge(new jsgraphs.Edge(7, 2, 7.0));  
+ 
+ 
+var bf = new jsgraphs.BellmanFord(g, 0);
+ 
+for(var v = 1; v < g.V; ++v){
+    if(bf.hasPathTo(v)){
+        var path = bf.pathTo(v);
+        console.log('=====path from 0 to ' + v + ' start==========');
+        for(var i = 0; i < path.length; ++i) {
+            var e = path[i];
+            console.log(e.from() + ' => ' + e.to() + ': ' + e.weight);
+        }
+        console.log('=====path from 0 to ' + v + ' end==========');
+        console.log('=====distance: '  + bf.distanceTo(v) + '=========');
+    }
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedDiGraph(8);
+g.addEdge(new jsgraphs.Edge(0, 1, 5.0));
+g.addEdge(new jsgraphs.Edge(0, 4, 9.0));
+g.addEdge(new jsgraphs.Edge(0, 7, 8.0));
+g.addEdge(new jsgraphs.Edge(1, 2, 12.0));
+g.addEdge(new jsgraphs.Edge(1, 3, 15.0));
+g.addEdge(new jsgraphs.Edge(1, 7, 4.0));
+g.addEdge(new jsgraphs.Edge(2, 3, 3.0));
+g.addEdge(new jsgraphs.Edge(2, 6, 11.0));
+g.addEdge(new jsgraphs.Edge(3, 6, 9.0));
+g.addEdge(new jsgraphs.Edge(4, 5, 5.0));
+g.addEdge(new jsgraphs.Edge(4, 6, 20.0));
+g.addEdge(new jsgraphs.Edge(4, 7, 5.0));
+g.addEdge(new jsgraphs.Edge(5, 2, 1.0));
+g.addEdge(new jsgraphs.Edge(5, 6, 13.0));
+g.addEdge(new jsgraphs.Edge(7, 5, 6.0));
+g.addEdge(new jsgraphs.Edge(7, 2, 7.0));  
+ 
+ 
+var bf = new jsgraphs.TopologicalSortShortestPaths(g, 0);
+ 
+for(var v = 1; v < g.V; ++v){
+    if(bf.hasPathTo(v)){
+        var path = bf.pathTo(v);
+        console.log('=====path from 0 to ' + v + ' start==========');
+        for(var i = 0; i < path.length; ++i) {
+            var e = path[i];
+            console.log(e.from() + ' => ' + e.to() + ': ' + e.weight);
+        }
+        console.log('=====path from 0 to ' + v + ' end==========');
+        console.log('=====distance: '  + bf.distanceTo(v) + '=========');
+    }
+}",0,1,
+4,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.FlowNetwork(8);
+g.addEdge(new jsgraphs.FlowEdge(0, 1, 10));
+g.addEdge(new jsgraphs.FlowEdge(0, 2, 5));
+g.addEdge(new jsgraphs.FlowEdge(0, 3, 15));
+g.addEdge(new jsgraphs.FlowEdge(1, 4, 9));
+g.addEdge(new jsgraphs.FlowEdge(1, 5, 15));
+g.addEdge(new jsgraphs.FlowEdge(1, 2, 4));
+g.addEdge(new jsgraphs.FlowEdge(2, 5, 8));
+g.addEdge(new jsgraphs.FlowEdge(2, 3, 4));
+g.addEdge(new jsgraphs.FlowEdge(3, 6, 16));
+g.addEdge(new jsgraphs.FlowEdge(4, 5, 15));
+g.addEdge(new jsgraphs.FlowEdge(4, 7, 10));
+g.addEdge(new jsgraphs.FlowEdge(5, 7, 10));
+g.addEdge(new jsgraphs.FlowEdge(5, 6, 15));
+g.addEdge(new jsgraphs.FlowEdge(6, 2, 6));
+g.addEdge(new jsgraphs.FlowEdge(6, 7, 10)); 
+ 
+g.node(2).label = 'Hello';
+g.edge(0, 1).label = 'World';
+ 
+var source = 0;
+var target = 7;
+var ff = new jsgraphs.FordFulkerson(g, source, target);
+console.log('max-flow: ' + ff.value);
+ 
+var minCut = ff.minCut(g);
+ 
+for(var i = 0; i < minCut.length; ++i) {
+    var e = minCut[i];
+    console.log('min-cut: (' + e.from() + "", "" + e.to() + ')');
+}",0,1,
+5,1,directed-graph,"var Graph = require('directed-graph');
+ 
+// Either initialize and fill an empty graph
+var graphA = new Graph();
+graphA.addVertex('A');
+graphA.addVertex('B');
+graphA.addVertex('C');
+graphA.addEdge('A', 'B');
+graphA.addEdge('A', 'C');
+graphA.addEdge('B', 'A');
+graphA.addEdge('B', 'C');
+graphA.addEdge('C', 'A');
+graphA.addEdge('C', 'B');
+ 
+// Or predefine a new graph
+var graphB = new Graph({
+  'A': ['B', 'C'],
+  'B': ['A', 'C'],
+  'C': ['A', 'B'],
+});
+ 
+// Both graphA and graphB function the same
+graphA.setWeight('A', 'B', 10);
+graphA.setWeight('B', 'A', 10);
+graphA.addVertex('D');
+graphA.addEdge('A', 'D');
+console.log(graphA.pathExists('B', 'D'));",1,1,
+5,1,graph-data-structure,"var Graph = require(""graph-data-structure"");",1,1,
+5,1,graph-data-structure,var graph = Graph();,0,0,graph not defined
+5,1,graph-data-structure,"graph.addNode(""a"");
+graph.addNode(""b"");
+graph.addEdge(""a"", ""b"");",0,0,graph not defined
+5,1,graph-data-structure,"graph.addEdge(""b"", ""c"");",0,0,graph not defined
+5,1,graph-data-structure,"graph.topologicalSort(); // Returns [""a"", ""b"", ""c""]",0,0,graph not defined
+5,1,graph-data-structure,"var graph = Graph()
+  .addEdge(""socks"", ""shoes"")
+  .addEdge(""shirt"", ""belt"")
+  .addEdge(""shirt"", ""tie"")
+  .addEdge(""tie"", ""jacket"")
+  .addEdge(""belt"", ""jacket"")
+  .addEdge(""pants"", ""shoes"")
+  .addEdge(""underpants"", ""pants"")
+  .addEdge(""pants"", ""belt"");
+
+// prints [ ""underpants"", ""pants"", ""shirt"", ""tie"", ""belt"", ""jacket"", ""socks"", ""shoes"" ]
+console.log(graph.topologicalSort());",1,0,graph not defined
+5,2,file-reader,"var read = require('file-reader');
+read('*.js');
+//=> { a: [Function: aaa], b: [Function: bbb], c: [Function: ccc] }
+
+read('*.txt');
+//=> { a: 'AAA', b: 'BBB', c: 'CCC' }
+
+read('*.{yml,json}');
+//=> { a: { a: 'a' }, b: { b: 'b' }, c: { c: 'c' } }",1,1,
+5,2,file-reader,"var read = require('file-reader');
+read.file('a.js');
+//=> { a: [Function: foo] }
+
+read.file('a.txt');
+//=> { a: 'foo' }\n\nread('a.yml');
+//=> { a: { foo: 'bar' } }",1,0,unknown file
+6,1,named-merge-sort,"var mergeSort = require('named-merge-sort');
+
+var things = [
+    '2013-01',
+    '2014-12',
+    '2010-10',
+    '2011-02',
+    '2010-05',
+    '2010-07',
+    '2011-11'
+];
+    
+things = mergeSort(things, 0);
+console.dir(things);
+
+things = mergeSort(things, 0, 'desc');
+console.dir(things);
+
+var things = [
+    {name: 'Peter'},
+    {name: 'Lenny'},
+    {name: 'Scott'}
+];
+    
+things = mergeSort(things, 'name');
+console.dir(things);
+
+things = mergeSort(things, 'name', 'desc');
+console.dir(things);",1,1,
+6,2,promisify-file-reader,"const fileReader = new PromisifyFileReader()
+const result = await fileReader.readAsArrayBuffer(file)",1,0,await
+6,2,promisify-file-reader,const result = await PromisifyFileReader.readAsArrayBuffer(file),0,0,await
+6,2,promisify-file-reader,"const result = await PromisifyFileReader.arrayBuffer(file
+)// => same as readAsArrayBuffer",0,0,await
+6,2,promisify-file-reader,"// import default
+import PromisifyFileReader from 'promisify-file-reader'
+// import named
+import {
+  arrayBuffer,
+  // ...
+} from 'promisify-file-reader'
+// import both
+import PromisifyFileReader, {
+  arrayBuffer,
+  // ...
+} from 'promisify-file-reader'",0,0,import
+6,2,promisify-file,"import PromisifyFile from 'promisify-file';
+(async () => {
+  const testFile = new File(
+    ['hello from promisify-file.txt'],
+    'promisify-file.txt',
+    {
+      type: 'text/plain',
+      lastModified: Date.now()
+    }
+  )
+const promisifyFile = new PromisifyFile(file)
+  try {
+    console.log(await promisifyFile.text()) // print `hello from promisify-file.txt`
+} catch (err) {
+    console.error(err)
+  }
+})()",0,0,import
+6,2,promisify-file,"let promisifyFile = new PromisifyFile(data, options)",0,0,promisifyfile undefined
+6,2,promisify-file,"let promisifyFile = await PromisifyFile.from(data, options)",0,0,await
+6,2,promisify-file,"promisifyFile.arrayBuffer()
+// optional `encoding` use in `FileReader.readAsText`
+promisifyFile.text([encoding])
+  
+promisifyFile.dataURL()
+
+promisifyFile.binaryString()",0,0,promisifyfile undefined
+6,2,promisify-file,"promisifyFile.int8Array([byteOffset [, length]])
+
+promisifyFile.uint8Array([byteOffset [, length]])
+
+promisifyFile.uint8ClampedArray([byteOffset [, length]])
+
+promisifyFile.int16Array([byteOffset [, length]])
+  
+promisifyFile.uint16Array([byteOffset [, length]])
+  
+promisifyFile.uint32Array([byteOffset [, length]])
+  
+promisifyFile.float32Array([byteOffset [, length]])
+  
+promisifyFile.float64Array([byteOffset [, length]])",0,0,unexpected token
+6,2,promisify-file,"promisifyFile.dataView([byteOffset [, length]])",0,0,unexpected token
+6,2,promisify-file,promisifyFile.blob([options]]),0,0,promisifyfile undefined
+6,2,promisify-file,"promisifyFile.file([name [, options]])",0,0,promisifyfile undefined
+6,2,promisify-file,"promisifyFile.json([encoding [, reviver]])",0,0,promisifyfile undefined
+6,2,promisify-file,promisifyFile.url(),0,0,promisifyfile undefined
+6,2,promisify-file,promisifyFile.image(),0,0,promisifyfile undefined
+6,2,promisify-file,"promisifyFile.imageBitmap([options])
+promisifyFile.imageBitmap(sx, sy, sw, sh[, options])",0,0,promisifyfile undefined
+6,2,promisify-file,"promisifyFile.imageData([sx = 0[, sy = 0[, sw = image.width [, sh = image.height]]]])",0,0,promisifyfile undefined
+6,2,promisify-file,"promisifyFile.document([encoding [, overrideMimeType]])
+promisifyFile.xml([encoding]) // shortcut for promisifyFile.document(encoding, 'application/xml')
+promisifyFile.svg([encoding]) // shortcut for promisifyFile.document(encoding, 'image/svg+xml')
+promisifyFile.html([encoding]) // shortcut for promisifyFile.document(encoding, 'text/html')",0,0,unknown token
+6,2,promisify-file,"import PromisifyFile from 'promisify-file'
+  ;(async () => {
+    const testFile = new File(
+      ['hello from promisify-file.txt'],
+      'promisify-file.txt',
+      {
+        type: 'text/plain',
+        lastModified: Date.now()
+      }
+    )
+      
+const promisifyFile = new PromisifyFile(file)
+  try {
+    console.log(await promisifyFile.text()) // print `hello from promisify-file.txt`
+} catch (err) {
+    console.error(err)
+  }
+  })()",1,0,import
+6,2,fs-readfile-promise,"const readFilePromise = require('fs-readfile-promise');
+
+(async () => {
+  const buffer = await readFile('path/to/a/file');
+  buffer.toString(); //=> '... file contents ...'
+})();",1,0,readfile not defined
+7,1,csv-parser,"const csv = require('csv-parser');
+const fs = require('fs');
+
+fs.createReadStream('data.csv')
+  .pipe(csv())
+  .on('data', (row) => {
+    console.log(row);
+  })
+  .on('end', () => {
+    console.log('CSV file successfully processed');
+  });",0,0,file unknown
+7,1,csv-parser,"const csv = require('csv-parser')
+const fs = require('fs')
+const results = [];
+
+fs.createReadStream('data.csv')
+  .pipe(csv())
+  .on('data', (data) => results.push(data))
+  .on('end', () => {
+    console.log(results);
+    // [
+    //   { NAME: 'Daffy Duck', AGE: '24' },
+    //   { NAME: 'Bugs Bunny', AGE: '22' }
+    // ]
+  });",0,0,file unknown
+7,1,neat-csv,const neatCsv = require('neat-csv');,0,0,require not supported
+7,1,neat-csv,"const fs = require('fs')
+
+fs.readFile('./file.csv', async (err, data) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  console.log(await neatCsv(data))
+})",0,0,neatcsv undefined
+7,1,objects-to-csv,const ObjectsToCsv = require('objects-to-csv'),1,1,
+7,1,objects-to-csv,const csv = new ObjectsToCsv(list),1,0,objects undefined
+7,1,objects-to-csv,await csv.toDisk('./list.csv'),1,0,csv undefined
+7,1,objects-to-csv,"await csv.toDisk('./list.csv', { append: true })",0,0,await
+7,1,objects-to-csv,"// Write to CSV File
+const writeToCsv = async (data) => {
+  const csv = new ObjectsToCsv(data);// Save to file:
+  await csv.toDisk('./pokedex.csv');
+}",0,1,
+7,2,sort-algorithms-js,"const {
+  bubbleSort,
+  selectionSort,
+  insertionSort,
+  radixSort,
+  heapSort,
+  quickSort,
+  mergeSort}
+  = require('sort-algorithms-js');",1,1,
+7,2,sort-algorithms-js,"import {
+  bubbleSort,
+  selectionSort,
+  insertionSort,
+  radixSort,
+  heapSort,
+  quickSort,
+  mergeSort
+} from 'sort-algorithms-js';",0,0,import
+7,2,sort-algorithms-js,"const numbers = [4, 1, 8, 6, -3, -1, 0, 7, -6, 9];
+
+const strings = ['a', 'y', 'i', 'r', 'o', 'w', 'u', 'd', 'e', 'm'];
+
+const objects = [
+  { id: 4 }, { id: 1 }, { id: 8 }, { id: 6 }, { id: 3 },
+  { id: 2 }, { id: 0 },{ id: 7 }, { id: 5 }, { id: 9 }
+];",0,1,
+7,2,sort-algorithms-js,"console.log(bubbleSort(numbers));
+// [-6, -3, -1, 0, 1, 4, 6, 7, 8, 9]
+console.log(bubbleSort(strings));
+// ['a', 'd', 'e', 'i', 'm', 'o', 'r', 'u', 'w', 'y']
+
+console.log(bubbleSort(objects, (a, b) => a.id - b.id));
+// [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }]",0,0,bubbleSort undefiend
+8,1,sequelize,"const { Sequelize, Model, DataTypes } = require('@sequelize/core');
+const sequelize = new Sequelize('sqlite::memory:');
+
+class User extends Model {}
+User.init({
+  username: DataTypes.STRING,
+  birthday: DataTypes.DATE
+}, { sequelize, modelName: 'user' });
+
+(async () => {
+  await sequelize.sync();
+  const jane = await User.create({
+    username: 'janedoe',
+    birthday: new Date(1980, 6, 20)
+  });
+  console.log(jane.toJSON());
+})();",0,1,
+8,1,sequelize,"const { Sequelize } = require('@sequelize/core');
+
+// Option 1: Passing a connection URI
+const sequelize = new Sequelize('sqlite::memory:') // Example for sqlite
+const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname') // Example for postgres
+
+// Option 2: Passing parameters separately (sqlite)
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: 'path/to/database.sqlite'
+});
+
+// Option 3: Passing parameters separately (other dialects)
+const sequelize = new Sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+});",1,0,sequalize already declared
+8,1,sequelize,"try {
+  await sequelize.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
+}",1,0,await
+8,1,sequelize,"const [results, metadata] = await sequelize.query(""UPDATE users SET y = 42 WHERE x = 12"");",1,0,await
+8,1,sequelize,"const { QueryTypes } = require('@sequelize/core');
+const users = await sequelize.query(""SELECT * FROM `users`"", { type: QueryTypes.SELECT });
+// We didn't need to destructure the result here - the results were returned directly",0,0,await
+8,2,csv-writer,"const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csvWriter = createCsvWriter({
+  path: 'path/to/file.csv',
+  header: [
+    {id: 'name', title: 'NAME'},
+    {id: 'lang', title: 'LANGUAGE'}
+  ]
+});
+
+const records = [
+  {name: 'Bob',  lang: 'French, English'},
+  {name: 'Mary', lang: 'English'}
+];
+
+csvWriter.writeRecords(records)       // returns a promise
+.then(() => {
+  console.log('...Done');
+});
+
+// This will produce a file path/to/file.csv with following contents:
+//
+//   NAME,LANGUAGE
+//   Bob,""French, English""
+//   Mary,English",1,0,unknown file
+9,1,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.Graph(6); // 6 is the number vertices in the graph
+g.addEdge(0, 5); // add undirected edge connecting vertex 0 to vertex 5
+g.addEdge(2, 4);
+g.addEdge(2, 3);
+g.addEdge(1, 2);
+g.addEdge(0, 1);
+g.addEdge(3, 4);
+g.addEdge(3, 5);
+g.addEdge(0, 2);
+ 
+g.node(2).label = 'Hello'; // assigned 'Hello' as label for node 2
+g.edge(0, 2).label = 'World'; // edge between 0 and 2
+ 
+console.log(g.V); // display 6, which is the number of vertices in g
+console.log(g.adj(0)); // display [5, 1, 2], which is the adjacent list to vertex 0",1,1,
+9,1,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.DiGraph(13); // 13 is the number vertices in the graph
+g.addEdge(4,  2); // add directed edge from 4 to 2
+g.addEdge(2,  3);
+g.addEdge(3,  2);
+g.addEdge(6,  0);
+g.addEdge(0,  1);
+g.addEdge(2,  0);
+g.addEdge(11, 12);
+g.addEdge(12,  9);
+g.addEdge(9, 10);
+g.addEdge(9, 11);
+g.addEdge(7,  9);
+g.addEdge(10, 12);
+g.addEdge(11,  4);
+g.addEdge(4,  3);
+g.addEdge(3,  5);
+g.addEdge(6,  8);
+g.addEdge(8,  6);
+g.addEdge(5,  4);
+g.addEdge(0,  5);
+g.addEdge(6,  4);
+g.addEdge(6,  9);
+g.addEdge(7,  6);
+ 
+g.node(2).label = 'Hello'; // assign 'Hello' as label for node 2
+g.edge(0, 5).label = 'World'; // edge from 0 to 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g
+console.log(g.adj(0)); // display the adjacency list which are vertices directed from vertex 0",0,1,
+9,1,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedGraph(8); // 8 is the number vertices in the graph
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+g.node(2).label = 'Hello'; // assign 'Hello' as label for node 2
+g.edge(4, 5).label = 'World'; // edge between node 4 and 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g
+console.log(g.adj(0)); // display the adjacency list which are undirected edges connected to vertex 0",0,1,
+9,1,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedDiGraph(8); // 8 is the number vertices in the graph
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+g.node(2).label = 'Hello';
+g.edge(4, 5).label = 'World'; // edge from node 4 to node 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g
+console.log(g.adj(0)); // display the adjacency list which are directed edges from vertex 0",0,1,
+9,1,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.Graph(6);
+g.addEdge(0, 5);
+g.addEdge(2, 4);
+g.addEdge(2, 3);
+g.addEdge(1, 2);
+g.addEdge(0, 1);
+g.addEdge(3, 4);
+g.addEdge(3, 5);
+g.addEdge(0, 2);
+var s = 0;
+var dfs = new jsgraphs.DepthFirstSearch(g, s);
+ 
+ 
+for(var v=0; v < g.V; ++v) {
+ if(dfs.hasPathTo(v)) {
+    console.log(s + "" is connected to "" + v);
+    console.log(""path: "" + dfs.pathTo(v));
+ } else {
+     console.log('No path from ' + s + ' to ' + v);
+ }
+} ",1,1,
+9,2,knex,"knex('table').select()
+/* build query … */
+/* then use one of utilities: */
+.then(one)        // pick exact 1 row
+.then(one.maybe)  // pick 0..1 rows
+.then(exists)     // true/false depending on rows existence
+.then(exists.not) // negated true/false on existence
+.then(count)      // pick rows count
+.then(project('id')) // compose object with rows by ids",0,0,knex not defined
+9,2,knex,"/* create init point for this table queries: */
+var accounts = table(knex, 'accounts')
+/* `accounts()` creates new query at every invocation */
+accounts().select()
+accounts(trx).select() /* as a part of transaction `trx` */
+accounts.as('alias').select() /* with alias */
+accounts.as('alias', trx).select()
+/* … then build query … */",0,0,table not defined
+9,2,knex,"/* create method */
+var create = method(knex, (trx, name) =>
+  {
+  return accounts(trx).insert({ name })
+  })
+  /* then use it */
+create(trx, 'Name') /* as a part of transaction `trx` */
+create('Name') /* new transaction will be started */
+create(method.NOTX, 'Name') /* if you don't need transaction at all */
+  
+/* method can also be curried */
+var m = method(knex)
+  var create = m((trx, name) => { … })",0,0,unexpected token
+9,2,knex,"/* prepare two tables: */
+var accounts = table(knex, 'accounts')
+  var messages = table(knex, 'messages')
+    /* join by accounts.id = messages.user_id: */
+var accounts$messages = join(accounts, messages, [ 'id', 'user_id' ])
+  /* `accounts$messages()` creates new query at every invocation */
+/* then use as simple table */
+accounts$messages()
+  .select('user_id', 'text')
+  .where('user_id', user_id)
+  /* as a part of transaction `trx` */
+accounts$messages(trx).select()
+  /* supported join types: */
+join.left(accounts, messages, [ 'id', 'user_id' ])
+  join.right(messages, accounts, [ 'id', 'user_id' ])
+    join.full(table_a, table_b, [ 'id', 'user_id' ])
+      join.cross(table_a, table_b)
+        
+/* pick predicate: */
+join(accounts, messages, [ 'id', '=', 'user_id' ])
+  join.left(accounts, messages, [ 'id', '<>', 'user_id' ])
+    /* join by accounts.id = messages.id, like NATURAL JOIN: */
+join(accounts, messages, 'id')
+  
+/* join with aliases */
+/* accounts as A, messages as M,
+this will also pick proper aliases on join predicate
+*/
+join([ accounts, 'A' ], [ messages, 'M' ], [ 'id', 'user_id' ])
+  
+/*
+* multi-stage join is possible, by passing
+* join as the left argument in join().
+* different types of joins are supported
+*/
+var messages_read = table(knex, 'messages_read')
+var messages$read = join.left(messages, messages_read, 'id')
+var accounts$messages$read = join(messages$read, accounts, [ 'user_id', 'id' ])",0,0,table undefined
+9,2,knex,"var accounts = table(knex, 'accounts')
+var q = accounts().where('id', '>', 1000)
+  /* `query/count` transforms query into COUNT() one */
+var qc = count(q) // returning `number`
+/* `query/exists` transforms query into EXISTS(SELECT …) */
+var qe = exists(q) // returning `boolean`",0,0,table undefined
+9,2,knex,"var accounts = table(knex, 'accounts')
+/* guarantee one and only one row modification */
+accounts()
+.where('name', 'not found')
+.update('name', 'Not Found')
+.then(updated)",0,0,table undefined
+9,2,knex,"var accounts = table(knex, 'accounts')
+/* preventing too many (or zero) rows deletion */
+accounts()
+  .delete()
+  .then(updated)",0,0,table undefined
+9,2,knex,"var accounts = table(knex, 'accounts')
+function AlreadyExists (data)
+{
+  return { error: 'account_already_exists', conflict: data }
+}
+var id = 1
+  accounts()
+    .insert({ id, name: 'account' }).catch(...catch_constraint('accounts_pkey', { id }, AlreadyExists))",0,0,table undefined
+9,2,knex,"var accounts = table(knex, 'accounts')
+  
+function AlreadyExists ()
+{
+  return new TypeError('account_already_exists')
+}
+accounts()
+  .insert({ id: 1, name: 'account' })
+  .catch(...catch_constraint('accounts_pkey', AlreadyExists))",0,0,table undefined
+9,2,mysql,"var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'me',
+  password : 'secret',
+  database : 'my_db'
+});
+
+connection.connect();
+connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', results[0].solution);
+});
+
+connection.end();",1,0,ECONNREFUSED
+10,1,txt-reader,var TxtReader = require('txt-reader').TxtReader;,1,1,
+10,1,txt-reader,"import { TxtReader } from ""txt-reader""",0,0,import
+10,1,txt-reader,var reader = new TxtReader();,1,0,TxtReader undefined
+10,1,txt-reader,"reader.loadFile(file[, iteratorConfig])
+.progress(function(progress) {
+    // onProgress callback
+    // progress (number): task progress in Number value from 1-100
+})
+.then(function(response) {
+    // onComplete callback
+    // response.timeTaken (number): task time taken in millisecond
+    // response.result.lineCount (number): total line number
+    // response.result.scope (object): if you assigned an iterator, the iterator ""this"" scope can be accessed here
+})
+.catch(function(reason) {
+    // onFail callback
+    // reason (string): failure reason
+});",1,0,reader undefined
+10,1,load-text-file,"const loadTextFile = require('load-text-file')
+
+loadTextFile('foo.txt').then((text) => {
+  console.log(text)
+  //=> Hello, World!
+})",1,0,
+10,2,gotjs,"const { got } = require('gotjs');
+ 
+const friends = got()
+    .node({ id: 'person1', name: 'John' })
+    .node({ id: 'person2', name: 'Paul' })
+    .edge({
+        from: 'person1',
+        fromType: 'friend',
+        to: 'person2',
+        toType: 'friend'
+    });
+ 
+console.log(friends.state());",0,1,
+10,2,gotjs,"function addFriend(fromFriend, toFriend, gotOperator) {
+    return gotOperator
+        .node(toFriend)
+        .edge({
+            from: fromFriend.id,
+            fromType: 'friend',
+            to: toFriend.id,
+            toType: 'friend'
+        });
+}",0,1,
+10,2,gotjs,"const { got } = require('gotjs');
+ 
+const john = { id: 'person1', name: 'John' };
+const paul = { id: 'person2', name: 'Paul' };
+const george = { id: 'person3', name: 'George' };
+const ringo = { id: 'person4', name: 'Ringo' };
+ 
+const friends = got().node(john);
+const friends1 = addFriend(john, paul, friends);
+const friends2 = addFriend(john, george, friends1);
+const friends3 = addFriend(john, ringo, friends2);
+ 
+console.log(friends3.state());",0,0,addFreind undefined
+10,2,gotjs,"console.log(friends1.state().nodes.person1);
+// prints: { id: 'person1', name: 'John' }
+ 
+console.log(friends1.state().nodes.person3);
+// prints: undefined
+ 
+console.log(friends2.state().nodes.person3);
+// prints: { id: 'person3', name: 'George' }",0,0,friends1 undefined
+10,2,gotjs,"const person1FirstState = friends1.state().nodes.person1;
+const person1SecondState = friends2.state().nodes.person1;
+console.log(person1FirstState === person1SecondState);
+// prints: true",0,0,friends1 undefined
+10,2,gotjs,"const { got } = require('gotjs');
+const R = require('rambda');
+ 
+// Provide a curried version of addFriend
+const addFriend = (fromFriend, toFriend) => (gotOperator) => gotOperator
+    .node(toFriend)
+    .edge({
+        from: fromFriend.id,
+        fromType: 'friend',
+        to: toFriend.id,
+        toType: 'friend'
+    });
+ 
+const john = { id: 'person1', name: 'John' };
+const paul = { id: 'person2', name: 'Paul' };
+const george = { id: 'person3', name: 'George' };
+const ringo = { id: 'person4', name: 'Ringo' };
+ 
+const johnsGraph = got().node(john);
+ 
+// Pipe mutation operations together and execute them on johnsGraph
+const johnsFriends = R.pipe(
+    addFriend(john, paul),
+    addFriend(john, george),
+    addFriend(john, ringo)
+)(johnsGraph);
+ 
+console.log(johnsFriends.state());
+ 
+// prints the same state as before",0,1,
+10,2,gotjs,"const { got } = require('gotjs');
+ 
+const friends = got({
+    nodes: {
+        person1: { id: 'person1', name: 'John' },
+        person2: { id: 'person2', name: 'Paul' },
+        person3: { id: 'person3', name: 'George' },
+        person4: { id: 'person4', name: 'Ringo' }
+    },
+    edges: [{
+        from: 'person1',
+        fromType: 'friend',
+        to: 'person2',
+        toType: 'friend'
+    },
+    {
+        from: 'person1',
+        fromType: 'friend',
+        to: 'person3',
+        toType: 'friend'
+    },
+    {
+        from: 'person1',
+        fromType: 'friend',
+        to: 'person4',
+        toType: 'friend'
+    }]
+});",0,1,
+10,2,gotjs,"const person2 = friends.lens('person2').view();
+console.log(person2);
+ 
+// prints: { id: 'person2', name: 'Paul' }",0,0,
+10,2,gotjs,const johnsFriends = friends.lens('person1').list('friend');,0,0,
+10,2,gotjs,"const johnsFriends = friends.lens('person1').list('friend').map(friendLens => friendLens.view());
+console.log(johnsFriends);
+ 
+// prints:
+// [ { id: 'person2', name: 'Paul' },
+//   { id: 'person3', name: 'George' },
+//   { id: 'person4', name: 'Ringo' } ]",0,0,
+10,2,gotjs,"const { got } = require('gotjs');
+ 
+const humans = got({
+    nodes: {
+        human1: { id: 'human1', name: 'Anakin' },
+        human2: { id: 'human2', name: 'Luke' }
+    },
+    edges: [{
+        from: 'human1',
+        fromType: 'father',
+        to: 'human2',
+        toType: 'son'
+    }]
+});
+ 
+const lukesFather = humans.lens('human2').first('father').view();
+console.log(lukesFather);
+ 
+// prints: { id: 'human1', name: 'Anakin' }",0,1,
+10,2,gotjs,"const { got } = require('gotjs');
+ 
+const humans = got({
+    nodes: {
+        human1: { id: 'human1', name: 'Paul' },
+        human2: { id: 'human2' }
+    }
+});
+ 
+const name1 = humans.lens('human1').prop('name').get();
+console.log(name1);
+// prints: Paul
+ 
+const name2 = humans.lens('human2').prop('name').get();
+console.log(name2);
+// prints: undefined",0,1,
+10,2,gotjs,"function writeGreeting(lens) {
+    // .get() takes a default value as argument
+    return lens.prop('name').map(name => 'Greetings to you, ' + name + '! ??').get('There is no name ??');
+}
+ 
+console.log(writeGreeting(humans.lens('human1')));
+// prints: Greetings to you, Paul! ??
+console.log(writeGreeting(humans.lens('human2')));
+// prints: There is no name ??",0,0,
+10,2,async-depth-first,"var depthFirst = require('async-depth-first')
+ 
+var q = depthFirst()
+q.defer(function (cb) {
+  console.log('1')
+  q.defer(function (cb) {
+    console.log('1.1')
+    q.defer(function (cb) {
+      console.log('1.1.1')
+      cb()
+    })
+    cb()
+  })
+  q.defer(function (cb) {
+    console.log('1.2')
+    cb()
+  })
+  cb()
+})
+q.defer(function (cb) {
+  console.log('2')
+  cb()
+})
+q.done(function (err) {
+  console.log('done')
+})",1,1,
+10,2,async-depth-first,"1
+1.1
+1.1.1
+1.2
+2
+done",0,0,
+10,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.Graph(6); // 6 is the number vertices in the graph
+g.addEdge(0, 5); // add undirected edge connecting vertex 0 to vertex 5
+g.addEdge(2, 4);
+g.addEdge(2, 3);
+g.addEdge(1, 2);
+g.addEdge(0, 1);
+g.addEdge(3, 4);
+g.addEdge(3, 5);
+g.addEdge(0, 2);
+ 
+g.node(2).label = 'Hello'; // assigned 'Hello' as label for node 2
+g.edge(0, 2).label = 'World'; // edge between 0 and 2
+ 
+console.log(g.V); // display 6, which is the number of vertices in g
+console.log(g.adj(0)); // display [5, 1, 2], which is the adjacent list to vertex 0",0,1,
+10,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.DiGraph(13); // 13 is the number vertices in the graph
+g.addEdge(4,  2); // add directed edge from 4 to 2
+g.addEdge(2,  3);
+g.addEdge(3,  2);
+g.addEdge(6,  0);
+g.addEdge(0,  1);
+g.addEdge(2,  0);
+g.addEdge(11, 12);
+g.addEdge(12,  9);
+g.addEdge(9, 10);
+g.addEdge(9, 11);
+g.addEdge(7,  9);
+g.addEdge(10, 12);
+g.addEdge(11,  4);
+g.addEdge(4,  3);
+g.addEdge(3,  5);
+g.addEdge(6,  8);
+g.addEdge(8,  6);
+g.addEdge(5,  4);
+g.addEdge(0,  5);
+g.addEdge(6,  4);
+g.addEdge(6,  9);
+g.addEdge(7,  6);
+ 
+g.node(2).label = 'Hello'; // assign 'Hello' as label for node 2
+g.edge(0, 5).label = 'World'; // edge from 0 to 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g",0,1,
+10,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedGraph(8); // 8 is the number vertices in the graph
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+g.node(2).label = 'Hello'; // assign 'Hello' as label for node 2
+g.edge(4, 5).label = 'World'; // edge between node 4 and 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g
+console.log(g.adj(0)); // display the adjacency list which are undirected edges connected to vertex 0",0,1,
+10,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+var g = new jsgraphs.WeightedDiGraph(8); // 8 is the number vertices in the graph
+g.addEdge(new jsgraphs.Edge(0, 7, 0.16));
+g.addEdge(new jsgraphs.Edge(2, 3, 0.17));
+g.addEdge(new jsgraphs.Edge(1, 7, 0.19));
+g.addEdge(new jsgraphs.Edge(0, 2, 0.26));
+g.addEdge(new jsgraphs.Edge(5, 7, 0.28));
+g.addEdge(new jsgraphs.Edge(1, 3, 0.29));
+g.addEdge(new jsgraphs.Edge(1, 5, 0.32));
+g.addEdge(new jsgraphs.Edge(2, 7, 0.34));
+g.addEdge(new jsgraphs.Edge(4, 5, 0.35));
+g.addEdge(new jsgraphs.Edge(1, 2, 0.36));
+g.addEdge(new jsgraphs.Edge(4, 7, 0.37));
+g.addEdge(new jsgraphs.Edge(0, 4, 0.38));
+g.addEdge(new jsgraphs.Edge(6, 2, 0.4));
+g.addEdge(new jsgraphs.Edge(3, 6, 0.52));
+g.addEdge(new jsgraphs.Edge(6, 0, 0.58));
+g.addEdge(new jsgraphs.Edge(6, 4, 0.93));
+ 
+g.node(2).label = 'Hello';
+g.edge(4, 5).label = 'World'; // edge from node 4 to node 5
+ 
+console.log(g.V); // display 13, which is the number of vertices in g
+console.log(g.adj(0)); // display the adjacency list which are directed edges from vertex 0",0,1,
+10,2,js-graph-algorithms,"var jsgraphs = require('js-graph-algorithms');
+ 
+var g = new jsgraphs.Graph(6);
+g.addEdge(0, 5);
+g.addEdge(2, 4);
+g.addEdge(2, 3);
+g.addEdge(1, 2);
+g.addEdge(0, 1);
+g.addEdge(3, 4);
+g.addEdge(3, 5);
+g.addEdge(0, 2);
+var s = 0;
+var dfs = new jsgraphs.DepthFirstSearch(g, s);
+ 
+ 
+for(var v=0; v < g.V; ++v) {
+ if(dfs.hasPathTo(v)) {
+    console.log(s + "" is connected to "" + v);
+    console.log(""path: "" + dfs.pathTo(v));
+ } else {
+     console.log('No path from ' + s + ' to ' + v);
+ }
+} ",1,1,

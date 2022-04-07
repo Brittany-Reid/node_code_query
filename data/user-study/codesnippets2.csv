@@ -1,0 +1,1348 @@
+P,T,Package,Snippet,Used?,Runs?,Error
+1,1,file-system,"var fs = require('file-system');
+ 
+fs.mkdir('1/2/3/4/5', [mode], function(err) {});
+fs.mkdirSync('1/2/3/4/5', [mode]);
+fs.writeFile('path/test.txt', 'aaa', function(err) {})",0,0,mode undefined
+1,1,file-system,"var file = require('file-system');
+var fs = require('fs');
+ 
+file.readFile === fs.readFile // true",1,1,
+1,1,file-system,"fs.copyFile('deom.png', 'dest/demo.png', {
+  done: function(err) {
+    console.log('done');
+  }
+});",0,0,fs undefined
+1,1,file-system,"fs.copyFileSync('demo.png', 'dest/demo.png');
+fs.copyFileSync('demo.css', 'dest/demo.css', {
+  process: function(contents) {
+    return contents;
+  }
+})",0,0,fs undefined
+1,1,file-system,"fs.recurse('path', function(filepath, relative, filename) { });
+ 
+fs.recurse('path', [
+  '*.css',
+  '**/*.js', 
+  'path/*.html',
+  '!**/path/*.js'
+], function(filepath, relative, filename) {  
+  if (filename) {
+  // it's file
+  } else {
+  // it's folder
+  }
+});
+ 
+//  Only using files
+fs.recurse('path', function(filepath, relative, filename) {  
+  if (!filename) return;
+});",0,0,fs undefined
+1,1,file-system,"fs.recurseSync('path', function(filepath, relative, filename) {
+  
+});
+ 
+fs.recurseSync('path', ['**/*.js', 'path/**/*.html'], function(filepath, relative, filename) {
+  
+});",0,0,fs undefined
+1,1,file-system,fs.rmdirSync('path');,0,0,fs undefined
+1,1,file-system,"fs.copySync('path', 'dest', { clear: true });
+ 
+fs.copySync('src', 'dest/src');
+ 
+fs.copySync('src', 'dest/src', { filter: ['*.js', 'path/**/*.css'] });
+ 
+fs.copySync('path', 'dest', { 
+  noProcess: '**/*.{jpg, png}',            // Don't process images
+  process: function(contents, filepath, relative) {
+    // only process file content
+    return contents;
+    // or custom destpath
+    return {
+      contents: '',
+      filepath: ''
+    };
+  } 
+});
+ 
+//Handler self files
+fs.copySync('path', 'path', { filter: ['*.html.js'], process: function(contents, filepath) {} })",0,0,fs undefined
+1,1,fs-extra,const fs = require('fs'),0,1,
+1,1,fs-extra,const fs = require('fs-extra'),0,1,
+1,1,fs-extra,const fse = require('fs-extra'),0,1,
+1,1,fs-extra,"const fs = require('fs')
+const fse = require('fs-extra')",0,1,
+1,1,fs-extra,"const fs = require('fs-extra')
+
+// Async with promises:
+fs.copy('/tmp/myfile', '/tmp/mynewfile')
+  .then(() => console.log('success!'))
+  .catch(err => console.error(err))
+
+// Async with callbacks:
+fs.copy('/tmp/myfile', '/tmp/mynewfile', err => {
+  if (err) return console.error(err)
+  console.log('success!')
+})
+
+// Sync:
+try {
+  fs.copySync('/tmp/myfile', '/tmp/mynewfile')
+  console.log('success!')
+} catch (err) {
+  console.error(err)
+}
+
+// Async/Await:
+async function copyFiles () {
+  try {
+    await fs.copy('/tmp/myfile', '/tmp/mynewfile')
+    console.log('success!')
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+copyFiles()",0,0,Unknown file
+1,1,fs-extra,"const fs = require('fs-extra')
+
+const packageObj = fs.readJsonSync('./package.json')
+console.log(packageObj.version) // => 2.0.0",0,1,
+1,1,fs-extra,"const fs = require('fs-extra')
+
+const file = '/tmp/some-invalid.json'
+const data = '{not valid JSON'
+fs.writeFileSync(file, data)
+
+const obj = fs.readJsonSync(file, { throws: false })
+console.log(obj) // => null",0,1,
+1,1,fs-extra,"const fs = require('fs-extra')
+
+const file = '/tmp/this/path/does/not/exist/file.txt'
+fs.outputFileSync(file, 'hello!')
+
+const data = fs.readFileSync(file, 'utf8')
+console.log(data) // => hello!",1,1,
+1,2,merge-sort-io,"var mergeSort = require('merge-sort-io');
+var ascending = mergeSort(array);",1,0,array undefined
+2,1,@wholebuzz/binary-merge,"var merge = require(""binary-merge"")
+
+
+console.log(merge([1,3,7], [2,4,6]))
+
+// Prints:
+//
+//    1,2,3,4,6,7
+//",0,0,binary-merge not found
+2,1,js-sorting-algorithms,"jss.insertionSort(a);
+jss.selectionSort(a);
+jss.shellSort(a);
+jss.mergeSort(a);
+jss.quickSort(a);
+jss.threeWaysQuickSort(a);
+jss.heapSort(a);",0,1,jss undefined
+2,1,js-sorting-algorithms,"var comparer = function(a1, a2){
+    return a1 - a2;
+};
+
+jss.insertionSort(a, lo, hi, comparer);",0,0,jss undefined
+2,1,js-sorting-algorithms,"jssort = require('js-sorting-algorithms');
+
+//====================Simple====================//
+
+var a = [3, 4, 5, 1, 2, 4, 6, 8, 9, 3, 4, 67, 34, 53, 44, 2];
+jssort.insertionSort(a);
+console.log(a);
+
+//====================Sort with custom comparer function====================//
+var a = [[3, 2.3], [4, 3.1], [5, 1.1], [1, 4.2], [2, 4.2], [4, 5.3], [6, 7.4], [8, 5.1], [9, 1.9], [3, 1.2], [4, 3.4], [67, 6.7], [34, 3], [53, 5], [44, 4.2], [2, 0]];
+jssort.insertionSort(a, undefined, undefined, function(a1, a2){
+         return a1[1] - a2[1];
+});
+console.log(a);
+
+
+//====================Sort sub-arrray a[3:10] ====================//
+var a = [3, 4, 5, 1, 2, 4, 6, 8, 9, 3, 4, 67, 34, 53, 44, 2];
+jssort.insertionSort(a, 3, 10);
+console.log(a);",1,1,
+2,2,csv-it,"const CsvIt = require(""csv-it"");
+                      
+// Create a stream into a directory which is going to be created
+const testStream = CsvIt.writeAsync(`${__dirname}/csv/some/directory/first.csv`);
+testStream.write({ A: 42 , B: 33 });
+testStream.write({ A: 7 , B: -1 });
+testStream.end();
+
+// Write the rows which are already available
+const SECOND_PATH = `${__dirname}/csv/some/directory/second.csv`;
+CsvIt.write(SECOND_PATH, [
+  { A: 42 , B: 33 }
+  , { A: 7 , B: -1 }
+]).then(() => {
+  console.log(""Done"");
+  return CsvIt.read(SECOND_PATH);
+}).then(res => {
+  console.log(res);
+});",1,1,
+3,1,csv-parser,"const csv = require('csv-parser');
+const fs = require('fs');
+
+fs.createReadStream('data.csv')
+  .pipe(csv())
+  .on('data', (row) => {
+    console.log(row);
+  })
+  .on('end', () => {
+    console.log('CSV file successfully processed');
+  });",0,0,file not found
+3,1,csv-writer,"const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csvWriter = createCsvWriter({
+  path: 'out.csv',
+  header: [
+    {id: 'name', title: 'Name'},
+    {id: 'surname', title: 'Surname'},
+    {id: 'age', title: 'Age'},
+    {id: 'gender', title: 'Gender'},
+  ]
+});
+
+const data = [
+  {
+    name: 'John',
+    surname: 'Snow',
+    age: 26,
+    gender: 'M'
+  }, {
+    name: 'Clair',
+    surname: 'White',
+    age: 33,
+    gender: 'F',
+  }, {
+    name: 'Fancy',
+    surname: 'Brown',
+    age: 78,
+    gender: 'F'
+  }
+];
+
+csvWriter
+  .writeRecords(data)
+  .then(()=> console.log('The CSV file was written successfully'));",1,1,
+3,1,fast-csv,"const fastcsv = require('fast-csv');
+const fs = require('fs');
+const ws = fs.createWriteStream(""out.csv"");
+fastcsv
+  .write(data, { headers: true })
+  .pipe(ws);",0,0,data undefined
+3,2,db3,"var db = require('db3')();
+
+db.use(require('db3-streamify')); //optional plugin for streaming
+db.use(require('db3-mysql')({
+  host: 'example.org',
+  user: 'bob',
+  password: 'secret',
+  database : 'test'
+})); // MySQL plugin",1,0,require not function
+3,2,db4,"//db.end(cb)
+db.end(function (err) {
+  console.log('all connections closed gracefully');
+});",0,0,db undefined
+3,2,db5,"//db.createTable(table, fields, callback)
+/*
+create table `person` (
+id bigint primary key auto_increment,
+name text,
+gender text
+);
+*/
+db.createTable('person', ['id', 'name', 'gender'], function (err, data) {
+  console.log('created table `person` with field `id`, `name`, `gender`');
+});",0,0,db undefined
+3,2,db6,"//db.dropTable(table, callback)
+//drop table `person`;
+db.dropTable('person', function () {
+  console.log('table `person` dropped');
+});",0,0,db undefined
+3,2,db7,"//db.truncateTable(table, callback)
+//truncate table `person`;
+db.truncateTable('person', function () {
+  console.log('table `person` truncated')
+})",0,0,
+3,2,db8,"//db.copyTable(from, to, callback)
+//create table `personCopy` like `person`; insert `personCopy` select * from `person`;
+db.copyTable('person', 'personCopy', function () {
+  console.log('copied table `person` and all its data to table `personCopy`')
+})",0,0,
+3,2,db9,"//db.renameTable(from, to, callback)
+//rename table `person` to `nosrep`;
+db.renameTable('person', 'nosrep', function () {
+  console.log('renamed table `person` and all its data to table `nosrep`')
+})",0,0,
+3,2,db10,"//db.tableExists(table, callback)
+db.tableExists('person', function (err, exists) {
+  if (exists)
+    console.log('table `person` exists')
+  else
+    console.log('table `person` does not exist')
+})",0,0,
+3,2,db11,"//db.insert(table, data, callback)
+//insert `person` set `name` = ""Bob"";
+db.insert('person', {name: 'Bob'}, function (err, data) {
+  console.log('inserted row into table `person` with id ' + data.insertId + ' and `name` set to ""Bob""')
+})",0,0,
+3,2,db12,"//db.update(table, condition, data, callback)
+//update `person` set `name` = ""Bob"" where `name` = ""Alice"";
+db.update('person', {name: 'Bob'}, {name: 'Alice'}, function (err, data) {
+  console.log('updated table `person`: ' + data.changedRows + ' rows named ""Bob"" changed name to ""Alice""')
+})",0,0,
+3,2,db13,"//db.delete(table, condition, callback)
+//delete from `person` where `name` = ""Alice"";
+db.delete('person', {name: 'Alice'}, function (err, data) {
+  console.log('deleted ' + data.affectedRows + ' rows named ""Alice"" from table `person`')
+})",0,0,
+3,2,db14,"//db.save(table, data, callback)
+//insert `person` set `id` = 1, `name` = ""Bob"" on duplicate key update `id` = 1, `name` = ""Bob"";
+db.save('person', {id: 1, name: 'Bob'}, function (err, data) {
+  console.log('saved row with id ' + data.insertId + ' with name set to ""Bob"" into table `person`')
+})
+//db.save(table, data, field, callback)
+//insert `person` set `id` = 1, `name` = ""Bob"", gender = ""male"" on duplicate key update `gender` = ""male"";
+db.save('person', {id: 1, name: 'Bob', gender: 'male'}, 'gender', function (err, data) {
+  console.log('saved row with id ' + data.insertId + ' and gender set to ""male"" into table `person`')
+})",0,0,
+3,2,db15,"//db.select(table, condition, field, callback)
+//select `name`, `gender` from `person` where `name` = ""Bob"";
+db.select('person', {name: 'Bob'}, ['name', 'gender'], function (err, data) {
+  console.log('selected name, gender fields from table `person`, where `name` = ""Bob""')
+  console.log(data)
+  //[{name: 'Bob', gender: 'male'}, {name: 'Bob', gender: 'male'}, {name: 'Bob', gender: 'female'}, ...]
+})
+//if condition value is an array, its converted to in () statement
+//select * from `person` where `name` in ('Bob', 'Alice');
+db.select('person', {name: ['Bob', 'Alice']}, function (err, data) {
+  console.log('selected all fields table `person`, where `name` is ""Bob"" or ""Alice""')
+  console.log(data)
+  //[{id: 1, name: 'Bob', gender: 'male'}, {id: 2, name: 'Alice', gender: 'female'}]
+})
+//if condition is number or string or array, then its treated as condition on id field
+//select * from `person` where `id` = 1;
+db.select('person', 1, function (err, data) {
+  console.log('selected all fields from table `person`, where `id` = 1')
+  console.log(data)
+  //{id: 1, name: 'Bob', gender: 'male'}
+  //if id is set then row object is being returned, instead of array
+})
+//select * from `person` where id in (1, 2);
+db.select('person', [1, 2], function (err, data) {
+  console.log('selected all fields from table `person`, where `id` is 1 or 2')
+  console.log(data)
+  //[{id: 1, name: 'Bob', gender: 'male'}, {id: 2, name: 'Alice', gender: 'female'}]
+})
+//select `name` from `person` where gender = ""male"";
+db.select('person', {gender: 'male'}, 'name', function (err, data) {
+  console.log('selected `name` of all male persons')
+  console.log(data)
+  //[""Bob"", ""Bill"", ""Bob"", ...]
+  //if field is string then returned array contains this field value instead of row object
+})
+//select `name` from `person` where id = 1;
+db.select('person', 1, 'name', function (err, data) {
+  console.log('selected `name` of person with `id` = 1')
+  console.log(data)
+  //""Bob""
+  //if id is set and field is string then the field value returned, instead of array
+})",0,0,
+3,2,db16,"//db[functionName](table, condition, field, callback)
+//select count(*) from `person` where `name` = ""Bob"";
+db.count('person', {name: 'Bob'}, function (err, count) {
+  console.log('there are ' + count + ' persons named ""Bob""')  
+})
+//select min(id) from `person` where `name` = ""Bob"";
+db.min('person', {name: 'Bob'}, function (err, min) {
+  console.log('first ""Bob"" has id ' + min)  
+})
+//select name, avg(age) from `person` where `name` = ""Bob"";
+db.avg('person', {name: 'Bob'}, ['age'], function (err, avg) {
+  console.log('Bob average age is ' + avg)  
+})
+//select name, sum(income) from `person` where `city` = ""Hong Kong"" group by name;
+db.sum('person', {city: 'Hong Kong', year: '2015'}, ['name', 'income'], function (err, data) {
+  console.log('total income of HK citizens by name for 2015')  
+  console.log(data)
+  //[{name: 'Yun', sum: someNumber}, {name: 'Tony', sum: someNumber}, {name: 'Donnie', sum: someNumber}, ...]
+})",0,0,
+3,2,db17,"db.query('select ??, count(*) as count from ?? group by ?? order by id limit 10', ['gender', 'person', 'gender'], function (err, data) {
+  console.log(data)
+  //[{gender: 'male', count: someNumber}, {gender: 'female', count: someNumber}, ...]
+})",0,0,
+3,2,liqd-sql,"const SQL = new (require('liqd-sql'))(
+{
+    mysql :
+    {
+        host     : 'localhost',
+        user     : 'root',
+        password : '',
+        database : 'test'
+    }
+});",1,1,
+3,2,liqd-sql,SELECT * FROM `users` LIMIT 1';,0,1,
+3,2,liqd-sql,SELECT * FROM `users`;,0,0,select undefined
+3,2,liqd-sql,"// await SQL.query({
+columns :
+{
+  //         id      : { type: 'BIGINT:UNSIGNED', increment: true },
+//         name    : { type: 'VARCHAR:255' },
+//         surname : { type: 'VARCHAR:255' },
+cityID  : { type: 'BIGINT:UNSIGNED' }
+  //     },
+indexes : {
+  primary : 'id',
+    //         unique  : [],
+//         index   : [ 'city' ]
+//     }
+// }, 'users' ).create_table( true );
+
+// await SQL.query({
+//     columns :
+{
+  id   : { type: 'BIGINT:UNSIGNED', increment: true },
+  name : { type: 'VARCHAR:255' }
+},
+    //     indexes : {
+//         primary : 'id',
+//         unique  : [],
+//         index   : [ 'name' ]
+//     }
+// }, 'cities' ).create_table( true );",0,0,unexpected end of input
+3,2,liqd-sql,// let data = await SQL.query( 'users' ).select_row();,0,1,
+3,2,liqd-sql,// let data = await SQL.query( 'users' ).select();,0,1,
+3,2,liqd-sql,// let data = await SQL.query( 'users' ).select_row_query();,0,1,
+3,2,liqd-sql,// let data = await SQL.query( 'users' ).select_query();,0,1,
+3,2,liqd-sql,"// let data = await SQL.query( 'users u' ).join( 'cities c', 'u.cityID = c.id' ).select_query( '*' );",0,1,
+3,2,liqd-sql,// SELECT * FROM `users` `u` LEFT JOIN `cities` `c` ON `u`.`cityID` = `c`.`id`,0,1,
+3,2,liqd-sql,"// let data = await SQL.query( 'users u' ).inner_join( 'cities c', 'u.cityID = c.id' ).select_query( '*' );",0,1,
+3,2,liqd-sql,// SELECT * FROM `users` `u` INNER JOIN `work` `w` ON `u`.`id` = `w`.`userID`,0,1,
+3,2,liqd-sql,"// let data = await SQL.query( 'users' ).where( ' id > 10 AND name = :?', 'John' ).select_query( '*' );",1,1,
+3,2,liqd-sql,// SELECT * FROM `users` WHERE `id` > 10 AND `name` = 'John',0,1,
+3,2,liqd-sql,"// let data = await SQL.query( 'users' ).where( ' id > 10 ' ).where( 'name = :?', 'John' ).select_query( '*' );",0,1,
+3,2,liqd-sql,"// SELECT * FROM `users` ORDER BY `name` ASC, `surname` DESC",0,1,
+3,2,liqd-sql,"// let data = await SQL.query( 'users' ).order_by( 'name ASC, surname DESC' ).select_query( '*' );",0,1,
+3,2,liqd-sql,/ SELECT * FROM `users` GROUP BY `surname`,0,1,
+3,2,liqd-sql,// let data = await SQL.query( 'users' ).having( 'id > 3' ).select_query( '*' );,0,1,
+3,2,liqd-sql,// SELECT * FROM `users` HAVING id > 3,0,1,
+3,2,liqd-sql,// let data = await SQL.query( 'users' ).limit( 15 ).select_query( '*' );,0,1,
+3,2,liqd-sql,// SELECT * FROM `users` LIMIT 15 OFFSET 15,0,1,
+3,2,liqd-sql,// let data = await SQL.query( 'SELECT * FROM users' ).execute();,1,1,
+4,1,mysql,var mysql = require('mysql'); ,1,1,
+4,1,mysql,"var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: ""localhost"",
+  user: ""yourusername"",
+  password: ""yourpassword""
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log(""Connected!"");
+});",1,0,ECONNREFUSED
+4,1,mysql,"con.connect(function(err) {
+  if (err) throw err;
+  console.log(""Connected!"");
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(""Result: "" + result);
+  });
+}); ",1,0,con undefined
+4,1,N/A,"var el = document.getElementById(""someId"");
+for (var i = 0, atts = el.attributes, n = atts.length, arr = []; i < n; i++){
+    arr.push(atts[i].nodeName);
+}",0,0,document undefined
+4,1,N/A,"var nodes=[], values=[];
+for (var att, i = 0, atts = el.attributes, n = atts.length; i < n; i++){
+    att = atts[i];
+    nodes.push(att.nodeName);
+    values.push(att.nodeValue);
+}",0,0,el undefined
+4,1,N/A,const myJSON = JSON.stringify(obj); ,1,0,obj undefined
+4,1,N/A,"const obj = {name: ""John"", age: 30, city: ""New York""};
+const myJSON = JSON.stringify(obj);",0,1,
+4,2,graph-data-structure,"var Graph = require(""graph-data-structure"");",0,1,
+4,2,graph-data-structure,"var graph = Graph();
+graph.addEdge(""a"", ""b"");
+graph.addEdge(""b"", ""c"");
+var serialized = graph.serialize();",0,0,graph undefined
+4,2,graph-data-structure,var graph = Graph();,0,0,graph undefined
+4,2,graph-data-structure,"graph.addNode(""a"");
+graph.addNode(""b"");
+graph.addEdge(""a"", ""b"");",0,0,graph undefined
+4,2,graph-data-structure,"graph.addEdge(""b"", ""c"");",0,0,graph undefined
+4,2,graph-data-structure,"graph.topologicalSort(); // Returns [""a"", ""b"", ""c""]",0,0,graph undefined
+4,2,graph-data-structure,"var graph = Graph()
+  .addEdge(""socks"", ""shoes"")
+  .addEdge(""shirt"", ""belt"")
+  .addEdge(""shirt"", ""tie"")
+  .addEdge(""tie"", ""jacket"")
+  .addEdge(""belt"", ""jacket"")
+  .addEdge(""pants"", ""shoes"")
+  .addEdge(""underpants"", ""pants"")
+  .addEdge(""pants"", ""belt"");
+
+// prints [ ""underpants"", ""pants"", ""shirt"", ""tie"", ""belt"", ""jacket"", ""socks"", ""shoes"" ]
+console.log(graph.topologicalSort());",1,0,graph undefined
+5,1,graph-data-structure,"var Graph = require(""graph-data-structure"");",1,1,
+5,1,graph-data-structure,var graph = Graph();,0,0,graph undefined
+5,1,graph-data-structure,"graph.addNode(""a"");
+graph.addNode(""b"");
+graph.addEdge(""a"", ""b"");",1,0,graph undefined
+5,1,graph-data-structure,"graph.addEdge(""b"", ""c"");",1,0,graph undefined
+5,1,graph-data-structure,"graph.topologicalSort(); // Returns [""a"", ""b"", ""c""]",1,0,graph undefined
+5,1,graph-data-structure,"var graph = Graph()
+  .addEdge(""socks"", ""shoes"")
+  .addEdge(""shirt"", ""belt"")
+  .addEdge(""shirt"", ""tie"")
+  .addEdge(""tie"", ""jacket"")
+  .addEdge(""belt"", ""jacket"")
+  .addEdge(""pants"", ""shoes"")
+  .addEdge(""underpants"", ""pants"")
+  .addEdge(""pants"", ""belt"");
+
+// prints [ ""underpants"", ""pants"", ""shirt"", ""tie"", ""belt"", ""jacket"", ""socks"", ""shoes"" ]
+console.log(graph.topologicalSort());",0,0,graph undefined
+5,2,io_csv,const _csv = require('io_csv');,0,1,
+5,2,txt-to-json,"const txtToJson = require('txt-to-json');
+txtToJson('./data.txt');",1,0,file not found
+5,2,txt-to-json,"txtToJson('./data.txt', function (doc) {
+  return doc.split(',');
+}, function (line) {
+  const [key, value] = line.split('-');
+  return [key, value];
+});",1,0,txtToJson undefined
+6,1,sort-js,"var data = [1,2,3,4,5];",0,1,
+6,1,sort-js,"data.bubble({ order: 'desc' }); // data == [5,4,3,2,1]
+data.bubble({ order: 'asc' }); // data == [1,2,3,4,5]",0,0,data undefined
+6,1,sort-js,"data.quick({ order: 'desc' }); // data == [5,4,3,2,1]
+data.quick({ order: 'asc' }); // data == [1,2,3,4,5]",0,0,data undefined
+6,1,sort-js,"data.merge({ order: 'desc' }); // data == [5,4,3,2,1]
+data.merge({ order: 'asc' }); // data == [1,2,3,4,5]",0,0,data undefined
+6,1,js-algorithms,"> const algorithms: = require('js-algorithms')
+> algorithms
+{
+  dataStructures: {
+    binaryHeap: [Function],
+    binarySearchTree: [Function: bst],
+    linkedList: [Function],
+    maxHeap: [Function],
+    minHeap: [Function],
+    queue: [Function],
+    stack: [Function],
+    stackQueue: [Function],
+    trie: [Function],
+    suffixTree: [Function] },
+  algorithms: {
+    sorting: {
+      quickSort: [Function]
+      mergeSort: [Function]
+    },
+    shuffle: [Function],
+    enclosingCircle: [Function]
+  }}",1,0,unexpected token >
+6,2,read-utf8,"// Dependencies
+var ReadFile = require(""read-utf8"");
+                       
+// Sync
+console.log(ReadFile(__dirname + ""/1.txt""));
+debugger;
+// => 1.txt content
+
+// Async
+ReadFile(__dirname + ""/2.txt"", function (err, content) {
+  console.log(err || content);
+  // => An error or the 1.txt content
+});",1,0,unknown file
+7,1,node-create-csv,"const ObjectsToCsv = require('objects-to-csv');
+
+// Sample data - two columns, three rows:
+const data = [
+  {code: 'CA', name: 'California'},
+  {code: 'TX', name: 'Texas'},
+  {code: 'NY', name: 'New York'},
+];
+
+// If you use ""await"", code must be inside an asynchronous function:
+(async () => {
+  const csv = new ObjectsToCsv(data);
+
+  // Save to file:
+  await csv.toDisk('./test.csv');
+
+  // Return the CSV file as string:
+  console.log(await csv.toString());
+})();",1,0,wrong package
+7,1,node-create-csv,"const ObjectsToCsv = require('objects-to-csv');
+const sampleData = [{ id: 1, text: 'this is a test' }];
+
+// Run asynchronously, without awaiting:
+new ObjectsToCsv(sampleData).toDisk('./test.csv');
+
+// Alternatively, you can append to the existing file:
+new ObjectsToCsv(sampleData).toDisk('./test.csv', { append: true });
+
+// `allColumns: true` collects column names from all objects in the array,
+// instead of only using the first one. In this case the CSV file will
+// contain three columns:
+const mixedData = [
+  { id: 1, name: 'California' },
+  { id: 2, description: 'A long description.' },
+];
+new ObjectsToCsv(mixedData).toDisk('./test.csv', { allColumns: true });",0,0,wrong package
+7,1,csv-file-creator,const createCSVFile = require('csv-file-creator');,0,1,
+7,1,csv-file-creator,var csvFileCreator = require('csv-file-creator'),0,1,
+7,1,csv-file-creator,var anythingYouLike = require('csv-file-creator'),0,1,
+7,1,csv-file-creator,"anythingYouLike(fname, data);",0,0,anythingYouLike undefined
+7,1,csv-file-creator,"createCSVFile(fname, data);",0,0,createCSVFile undefined
+7,1,csv-file-creator,"const createCSVFile = require('csv-file-creator');
+var data = [['roll','diceResult']];
+var i,l;
+/* generate data consisting of 10000 rolls of a six sided ""random"" die */
+/* the data should be an array of array of numbers or strings */
+for(i=1,l=10000;i<=l;++i) 
+    data[i] = [i, 1+Math.floor(6*Math.random())];
+/* output the csv file */
+createCSVFile(""dicerolls.csv"", data);",0,1,
+7,1,json2csv,"const { Parser } = require('json2csv');
+
+const fields = ['field1', 'field2', 'field3'];
+const opts = { fields };
+
+try {
+  const parser = new Parser(opts);
+  const csv = parser.parse(myData);
+  console.log(csv);
+} catch (err) {
+  console.error(err);
+}",0,0,mydata undefined
+7,1,json2csv,"const { parse } = require('json2csv');
+
+const fields = ['field1', 'field2', 'field3'];
+const opts = { fields };
+
+try {
+  const csv = parse(myData, opts);
+  console.log(csv);
+} catch (err) {
+  console.error(err);
+}",0,0,mydata undefined
+7,1,json-2-csv,let converter = require('json-2-csv');,0,1,
+7,1,json-2-csv,import { json2csv } from 'json-2-csv';,0,0,import
+7,1,json-2-csv,"json2csv(array, (err, csv) => { ... }, options)
+// or ...
+json2csvAsync(array, options)
+    .then((csv) => { ... })
+    .catch((err) => { ... });",0,0,unknown token ...
+7,1,json-2-csv,"let converter = require('json-2-csv');
+
+let documents = [
+    {
+        Make: 'Nissan',
+        Model: 'Murano',
+        Year: '2013',
+        Specifications: {
+            Mileage: '7106',
+            Trim: 'S AWD'
+        }
+    },
+    {
+        Make: 'BMW',
+        Model: 'X5',
+        Year: '2014',
+        Specifications: {
+            Mileage: '3287',
+            Trim: 'M'
+        }
+    }
+];
+
+let json2csvCallback = function (err, csv) {
+    if (err) throw err;
+    console.log(csv);
+};
+
+converter.json2csv(documents, json2csvCallback);",1,1,
+7,2,merge-sort,"var mergeSort = require('merge-sort');
+// ...
+var ascending = mergeSort(array); // sort ascending
+var descending = mergeSort(array, undefined, undefined, false); // sort descending",1,0,array undefined
+8,1,tedious,"    var Connection = require('tedious').Connection;  
+    var config = {  
+        server: 'your_server.database.windows.net',  //update me
+        authentication: {
+            type: 'default',
+            options: {
+                userName: 'your_username', //update me
+                password: 'your_password'  //update me
+            }
+        },
+        options: {
+            // If you are on Microsoft Azure, you need encryption:
+            encrypt: true,
+            database: 'your_database'  //update me
+        }
+    };  
+    var connection = new Connection(config);  
+    connection.on('connect', function(err) {  
+        // If no error, then good to proceed.
+        console.log(""Connected"");  
+    });
+    
+    connection.connect();",1,1,
+8,1,tedious," var Connection = require('tedious').Connection;  
+    var config = {  
+        server: 'your_server.database.windows.net',  //update me
+        authentication: {
+            type: 'default',
+            options: {
+                userName: 'your_username', //update me
+                password: 'your_password'  //update me
+            }
+        },
+        options: {
+            // If you are on Microsoft Azure, you need encryption:
+            encrypt: true,
+            database: 'your_database'  //update me
+        }
+    }; 
+    var connection = new Connection(config);  
+    connection.on('connect', function(err) {  
+        // If no error, then good to proceed.  
+        console.log(""Connected"");  
+        executeStatement();  
+    });  
+    
+    connection.connect();
+  
+    var Request = require('tedious').Request;  
+    var TYPES = require('tedious').TYPES;  
+  
+    function executeStatement() {  
+        request = new Request(""SELECT c.CustomerID, c.CompanyName,COUNT(soh.SalesOrderID) AS OrderCount FROM SalesLT.Customer AS c LEFT OUTER JOIN SalesLT.SalesOrderHeader AS soh ON c.CustomerID = soh.CustomerID GROUP BY c.CustomerID, c.CompanyName ORDER BY OrderCount DESC;"", function(err) {  
+        if (err) {  
+            console.log(err);}  
+        });  
+        var result = """";  
+        request.on('row', function(columns) {  
+            columns.forEach(function(column) {  
+              if (column.value === null) {  
+                console.log('NULL');  
+              } else {  
+                result+= column.value + "" "";  
+              }  
+            });  
+            console.log(result);  
+            result ="""";  
+        });  
+  
+        request.on('done', function(rowCount, more) {  
+        console.log(rowCount + ' rows returned');  
+        });  
+        
+        // Close the connection after the final event emitted by the request, after the callback passes
+        request.on(""requestCompleted"", function (rowCount, more) {
+            connection.close();
+        });
+        connection.execSql(request);  
+    }  ",0,0,EINVALIDSTATE
+8,1,mysql,var mysql = require('mysql'); ,0,1,
+8,1,mysql,"var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: ""localhost"",
+  user: ""yourusername"",
+  password: ""yourpassword""
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log(""Connected!"");
+});",1,0,ECONNREFUSED
+8,1,mysql,"con.connect(function(err) {
+  if (err) throw err;
+  console.log(""Connected!"");
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(""Result: "" + result);
+  });
+}); ",1,0,con undefined
+8,1,express / mssql,"var express = require('express');
+var app = express();
+
+app.get('/', function (req, res) {
+   
+    var sql = require(""mssql"");
+
+    // config for your database
+    var config = {
+        user: 'sa',
+        password: 'mypassword',
+        server: 'localhost', 
+        database: 'SchoolDB' 
+    };
+
+    // connect to your database
+    sql.connect(config, function (err) {
+    
+        if (err) console.log(err);
+
+        // create Request object
+        var request = new sql.Request();
+           
+        // query to the database and get the records
+        request.query('select * from Student', function (err, recordset) {
+            
+            if (err) console.log(err)
+
+            // send records as a response
+            res.send(recordset);
+            
+        });
+    });
+});
+
+var server = app.listen(5000, function () {
+    console.log('Server is running..');
+});",0,0,ECONNREFUSED
+8,1,mysql,"var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: ""localhost"",
+  user: ""yourusername"",
+  password: ""yourpassword"",
+  database: ""mydb""
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  con.query(""SELECT * FROM customers"", function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+  });
+});",1,0,ECONNREFUSED
+8,1,mysql,"var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: ""localhost"",
+  user: ""yourusername"",
+  password: ""yourpassword"",
+  database: ""mydb""
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  con.query(""SELECT name, address FROM customers"", function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+  });
+});",0,0,ECONNREFUSED
+8,1,N/A,console.log(results),0,0,results undefined
+8,1,N/A,"console.log(""the solution is ""+results)",0,0,results undefined
+8,1,N/A,console.log(JSON.stringify(results)),0,0,results undefined
+8,1,N/A,results[0].someAttribute,0,0,results undefined
+8,2,csv-it,"// Create a stream into a directory which is going to be created
+const testStream = CsvIt.writeAsync(`${__dirname}/csv/some/directory/first.csv`);
+testStream.write({ A: 42 , B: 33 });
+testStream.write({ A: 7 , B: -1 });
+testStream.end();
+
+// Write the rows which are already available
+const SECOND_PATH = `${__dirname}/csv/some/directory/second.csv`;
+CsvIt.write(SECOND_PATH, [
+  { A: 42 , B: 33 }
+  , { A: 7 , B: -1 }
+]).then(() => {
+  console.log(""Done"");
+  return CsvIt.read(SECOND_PATH);
+}).then(res => {  console.log(res);
+});",1,1,
+9,1,node-graph,"var Graph = require('node-graph');
+
+var structure = {
+    nodes: [
+        {
+            name: 'A'
+        },
+        {
+            name: 'B',
+            youCanPutArbitraryDataOnYourNodes: { ... }
+        }
+    ],
+    edges: [
+        {
+            name: 'A->B',
+            from: 'A',
+            to: 'B',
+            youCanPutArbitraryDataOnYourEdgesToo: { ... }
+        }
+    ]
+}
+
+var gr = new Graph(structure);",1,0,unexpected token
+9,1,node-graph,"// You can pick outbound edges by node name
+var outboundEdges = gr.outboundEdges('B');
+
+// Or providing node object
+var node = gr.getNode('B');
+var outboundEdges2 = gr.outboundEdges(node);",0,0,gr undefined
+9,1,node-graph,"// You can pick outbound edges by node name
+var inboundEdges = gr.inboundEdges('D');
+
+// Or providing node object
+var node = gr.getNode('D');
+var inboundEdges2 = gr.inboundEdges(node);",0,0,gr undefined
+9,1,node-graph,"    // using node object
+    var node = gr.getNode('D');
+    gr.isTerminalNode(node);
+    
+    // using node name
+    gr.isTerminalNode('D');",0,0,gr undefined
+9,1,depth-first,"import dfs from ""depth-first"";
+ 
+// First, we define our edges.
+const edges = [
+  [""put on your shoes"", ""tie your shoes""],
+  [""put on your shirt"", ""put on your jacket""],
+  [""put on your shorts"", ""put on your jacket""],
+  [""put on your shorts"", ""put on your shoes""]
+];
+ 
+// List the vertices that can be reached starting at 'put on your shirt'
+dfs(edges, ""put on your shirt"");
+/* =>
+[
+  'put on your shirt',
+  'put on your jacket',
+]
+*/",1,0,import
+9,1,depth-first,"// List the vertices that can be reached starting at 'put on your jacket' when
+// the edges are reversed
+dfs(edges, ""put on your jacket"", { reverse: true });
+/* =>
+[
+  'put on your jacket',
+  'put on your shirt',
+  'put on your shorts',
+]
+*/",0,0,dfs undefined
+9,2,jm-ez-mysql,"var My = require(""jm-ez-mysql"");
+
+// Init DB Connection
+My.init({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'psu',
+});
+
+// Select All
+My.findAll(""psu_project"", [""id""], ""1=1"").then(function (r) {
+  console.log(r);
+});
+
+// Select All with count
+My.findAllWithCount(""psu_project"", ""id"", [""id""], ""1=1"", ""LIMIT 0, 5"").then(function (r) {
+  console.log(r);
+});
+
+// Select First
+My.first(""psu_project"", [""id""], ""1=1 "").then(function (r) {
+  console.log(r);
+});
+
+// Insert
+My.insert(""temp"", {
+  name: 'Jay'
+}).then(function (result) {
+  console.log(result.insertId);
+});
+
+// Insert Multiple Rows
+My.insertMany(""temp"", [{
+  name: 'Jay'
+}, {
+  name: 'Subham'
+}]).then(function (result) {
+  console.log(result.insertId);
+});
+
+// Update
+My.update(""temp"", {
+  name: 'Jayu'
+}, ""id = 2"").then(function (result) {
+  console.log(My.lQ);
+});
+
+// Update First
+My.updateFirst(""temp"", {
+  name: 'Jayu'
+}, ""id = 2"").then(function (result) {
+  console.log(My.lQ);
+});
+
+// Delete
+My.delete(""temp"", ""id = 6"").then(function () {
+  console.log(My.lQ);
+});
+
+// Pure MySQL Query
+var id = ""'4"";
+My.findRaw(""select * from psu_project where id = "" + My.escape(id))
+  .then(function (results) {
+    console.log('My query results', results);
+    console.log('Lq', My.lQ);
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+
+// Pure MySQL Query as Formatted String
+var id = ""'4"";
+My.query(""select * from psu_project where id = ?"", [id])
+  .then(function (results) {
+    console.log('My query results', results);
+    console.log('Lq', My.lQ);
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+
+// Select All using prepared statement
+My.findAll(""psu_project"", [""id""], ""id=?"", [id]).then(function (r) {
+  console.log(r);
+});
+
+// Select All with count using prepared statement
+My.findAllWithCount(""psu_project"", ""id"", [""id""], ""id=?"", ""LIMIT 0, 5"", [""id""]).then(function (r) {
+  console.log(r);
+});
+
+// Select First using prepared statement
+My.first(""psu_project"", [""id""], ""1=? "", [id]).then(function (r) {
+  console.log(r);
+});
+
+// Update using prepared statement
+My.update(""temp"", {
+  name: 'Jayu'
+}, ""id = ?"", [id]).then(function (result) {
+  console.log(My.lQ);
+});
+
+// Update First using prepared statement
+My.updateFirst(""temp"", {
+  name: 'Jayu'
+}, ""id = ?"", [id]).then(function (result) {
+  console.log(My.lQ);
+});
+
+// Delete using prepared statement
+My.delete(""temp"", ""id = ?"", [id]).then(function () {
+  console.log(My.lQ);
+});
+
+//Select Query with where condition
+const selectQuery = My.initQuery();
+selectQuery.where('id', 1);
+selectQuery.execute(""table"");
+
+//Select Query with multiple where condition
+// const selectQuery = My.initQuery();
+selectQuery.where('id', 1);
+selectQuery.where('name', 'somename');
+selectQuery.execute(""table"");
+
+
+//Select Query with multiple(AND/OR) where condition
+// const selectQuery = My.initQuery();
+selectQuery.where('id', 1);
+selectQuery.orWhere('name', 'searchContent');
+selectQuery.execute(""table"");
+//query : SELECT  *  FROM table  WHERE id = 1   OR  name = 'searchContent';
+
+//Select Query with multiple(AND/OR) with multple condition where condition
+// const selectQuery = My.initQuery();
+selectQuery.where('(id = ? OR id = ?)', [1, 50]);
+selectQuery.orWhere('name', 'searchContent');
+selectQuery.execute(""table"");
+
+//Another way to pass condition value
+// const selectQuery = My.initQuery();
+newQuery.where('(id = ? OR id = ?)');
+selectQuery.orWhere('name', 'searchContent');
+selectQuery.execute(""table"", [1, 50]);
+//query: SELECT  *  FROM table WHERE (id = 1 OR id = 50)  OR  name = 'searchContent';
+
+//Select custom fields
+// const selectQuery = My.initQuery();
+selectQuery.select('name, id, data'); // argument can be String|Array , Default is *
+selectQuery.execute(""table"", [1, 50]);
+//Query: SELECT name, id, data FROM table  WHERE 1=1
+
+//Use joins : 
+
+// Ex1. Left Join
+// const selectQuery = My.initQuery();
+selectQuery.leftJoin(""table2 as t2"", ""t2.t1ID = t1.id ""); 
+selectQuery.execute(""table as t1"");
+
+// Query: SELECT  *  FROM table1 as t1 LEFT  JOIN table2 as t2 ON t2.t1ID = t1.id  WHERE 1=1;
+
+// Ex2. Left and Right Join
+// const selectQuery = My.initQuery();
+selectQuery.leftJoin(""table2 as t2"", ""t2.t1ID = t1.id ""); 
+selectQuery.rightJoin(""table3 as t3"", ""t3.t1ID = t1.id ""); 
+selectQuery.execute(""table as t1"");
+//Query: SELECT  *  FROM table1 as t1 LEFT  JOIN table2 as t2 ON t2.t1ID = t1.id  RIGHT  JOIN table3 as t3 ON t3.t1ID = t1.id  WHERE 1=1;
+
+// Ex3. Left Join with Condition
+// const selectQuery = My.initQuery();
+selectQuery.leftJoin(""table2 as t2"", ""t2.t1ID = t1.id AND t2.name = ? ""); 
+selectQuery.execute(""table as t1"", ['somename']);
+//query: SELECT  *  FROM table as t1 LEFT  JOIN table2 as t2 ON t2.t1ID = t1.id AND t2.name = 'somename'  WHERE 1=1; 
+
+// Ex4. Inner Join
+
+// const selectQuery = My.initQuery();
+selectQuery.innerJoin(""table2 as t2"", ""t2.t1ID = t1.id"");
+selectQuery.execute(""table as t1"");
+// Query: SELECT  *  FROM table1 as t1 INNER  JOIN table2 as t2 ON t2.t1ID = t1.id  WHERE 1=1;
+
+// Ex5.
+// const selectQuery = My.initQuery();
+selectQuery.join(""table2 as t2"", ""t2.t1ID = t1.id"", ""left""); // third argument will join type ex. (left, right, right outer, ...), default is inner
+selectQuery.execute(""table as t1"");
+
+
+
+//Use query as count
+// const selectQuery = My.initQuery();
+selectQuery.select('name, id, data'); // argument can be String|Array , Default is *
+selectQuery.where('(id = ? OR id = ?)', [1, 50]);
+selectQuery.orWhere('name', 'searchContent');
+selectQuery.execute(""table"", [], true); // If third argument will be true than last condition will remains and used for further process, like for count.
+//Qeury: SELECT name, id, data FROM table  WHERE (id = 1 OR id = 50)  OR  name = 'searchContent'
+
+selectQuery.count(); // argument can be any field name, default is id 
+selectQuery.execute(""table"");
+//Qeury: SELECT COUNT(table.id) as count  FROM table  WHERE (id = 1 OR id = 50) OR  name = 'searchContent'
+
+
+//Use order by
+// const selectQuery = My.initQuery();
+selectQuery.orderBy('id', 'ASC');
+selectQuery.orderBy('name', 'DESC');
+selectQuery.execute(""table"");
+//Query: SELECT  *  FROM table  WHERE 1=1 ORDER BY id ASC, name DESC
+
+//Use group by
+// const selectQuery = My.initQuery();
+selectQuery.groupBy('id'); //
+selectQuery.execute(""table"");
+//Query:SELECT  *  FROM table  WHERE 1=1 GROUP BY id 
+
+//Use Limit 
+// const selectQuery = My.initQuery();
+selectQuery.skip(2); // records want to skip
+selectQuery.limit(10);
+selectQuery.execute(""table"");
+//Query:SELECT  *  FROM table  WHERE 1=1 LIMIT 2, 10
+
+
+// Get Last fired Query
+console.log(My.lQ);",1,0,ECONNREFUSED
+10,1,fs-extra,const fs = require('fs') // this is no longer necessary,0,1,
+10,1,fs-extra,const fs = require('fs-extra'),0,1,
+10,1,fs-extra,const fse = require('fs-extra'),0,1,
+10,1,fs-extra,"const fs = require('fs')
+const fse = require('fs-extra')",0,1,
+10,1,fs-extra,"const fs = require('fs-extra')
+
+// Async with promises:
+fs.copy('/tmp/myfile', '/tmp/mynewfile')
+  .then(() => console.log('success!'))
+  .catch(err => console.error(err))
+
+// Async with callbacks:
+fs.copy('/tmp/myfile', '/tmp/mynewfile', err => {
+  if (err) return console.error(err)
+  console.log('success!')
+})
+
+// Sync:
+try {
+  fs.copySync('/tmp/myfile', '/tmp/mynewfile')
+  console.log('success!')
+} catch (err) {
+  console.error(err)
+}
+
+// Async/Await:
+async function copyFiles () {
+  try {
+    await fs.copy('/tmp/myfile', '/tmp/mynewfile')
+    console.log('success!')
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+copyFiles()",0,0,No file
+10,1,jetpack,"const src = jetpack.cwd(""path/to/source"");
+const dest = jetpack.cwd(""/some/different/path/to/destination"");
+src.copy(""foo.txt"", dest.path(""bar.txt""));",0,0,jetback undefined
+10,1,jetpack,"const obj = { greet: ""Hello World!"" };
+jetpack.write(""file.json"", obj);",0,0,jetback undefined
+10,1,jetpack,"const obj = jetpack.read(""file.json"", ""json"");",0,0,jetback undefined
+10,1,jetpack,"// Synchronous call
+const data = jetpack.read('file.txt');
+console.log(data);
+
+// Asynchronous call
+const data = await jetpack.readAsync('file.txt');
+console.log(data);",0,0,jetback undefined
+10,1,jetpack,"// .
+// |- greets
+//    |- greet.txt
+//    |- greet.json
+// |- greets-i18n
+//    |- polish.txt
+
+jetpack
+  .dir(""greets"")
+  .file(""greet.txt"", { content: ""Hello world!"" })
+  .file(""greet.json"", { content: { greet: ""Hello world!"" } })
+  .cwd("".."")
+  .dir(""greets-i18n"")
+  .file(""polish.txt"", { content: ""Witaj świecie!"" });",0,0,jetback undefined
+10,1,jetpack,"const src = jetpack.cwd(""path/to/source/folder"");
+const dst = jetpack.cwd(""path/to/destination"");
+
+src.find({ matching: ""*"" }).forEach((path) => {
+  const content = src.read(path);
+  const transformedContent = transformTheFileHoweverYouWant(content);
+  dst.write(path, transformedContent);
+});",0,0,jetback undefined
+10,1,jetpack,"jetpack.find(""my_folder"", { matching: [""*.tmp"", ""*.log""] }).forEach(jetpack.remove);",0,0,jetback undefined
+10,1,jetpack,"const dir = jetpack.tmpDir();
+dir.write(""data.txt"", myData);
+// Perform some operations on the data and when you're done
+// and don't need the folder any longer just call...
+dir.remove();",0,0,jetback undefined
+10,1,jetpack,"const jetpack = require(""fs-jetpack"");",1,1,
+10,1,jetpack,"// Import fs-jetpack into TypeScript code (the jetpack typings will be loaded as well).
+import * as jetpack from ""fs-jetpack"";
+
+// Import one of jetpack's interfaces to cast it on a variable declaration.
+import { InspectResult } from ""fs-jetpack/types"";
+let result: InspectResult = jetpack.inspect(""foo"");",0,0,import
+10,2,digraphe,var graph = new Graph();,0,0,graph undefined
+10,2,digraphe,"var graph = new Graph();
+
+// This will add the `foo` node to the Graph.
+graph.addNode('foo');
+// You can also add an optional payload to the node.
+graph.addNode('bar', { key: 'value'});",0,0,graph undefined
+10,2,digraphe,"var graph = new Graph();
+
+graph.addNode('foo');
+graph.hasNode('foo'); // Returns true.
+// Retrieving the instance of the `foo` node.
+var node = graph.nodes['foo'];
+graph.hasNode(node); // Returns true.",1,0,graph undefined
+10,2,digraphe,"var graph = new Graph();
+// This will create a new edge between the `foo`
+// node and the `bar` node.
+graph.addEdge('foo', 'bar');
+// You can also specify a `weight` for an edge.
+graph.addEdge('bar', 'baz', { weight: 2 });",0,0,graph undefined
+10,2,digraphe,"var graph = new Graph();
+
+graph.addEdge('foo', 'bar');
+
+// Retrieving the node instances.
+var foo = graph.nodes['foo'];
+var bar = graph.nodes['bar'];
+graph.hasEdge(foo, bar); // Returns true.",1,0,graph undefined
+10,2,digraphe,"/**
+*                        Head Node
+*                          |  |
+*                          /  \\
+*                       1 /    \\ 1
+*                        /      \\
+*                       \\/      \\/
+*                      foo      bar
+*                      ||        ||
+*                       \\        /
+*                      2 \\      / 2
+*                         \\    /
+*                         \\/  \\/
+*                           baz
+*/
+var graph = new Graph();
+\ngraph.addEdge('head', 'foo', { weight: 1 });
+graph.addEdge('head', 'bar', { weight: 1 });
+graph.addEdge('foo', 'baz', { weight: 2 });
+graph.addEdge('bar', 'baz', { weight: 2 });",0,0,graph undefined
+10,2,digraphe,"Graph.Visitor.DFS(graph, 'head', function (node) {
+  // Do something with the discovered node
+});",1,0,graph undefined
+10,2,digraphe,"Graph.Visitor.BFS(graph, 'head', function (array_of_nodes, depth) {
+  // Do something with the discovered node
+});",0,0,graph undefined
+10,2,digraphe,"// The following call will return all the `routes`
+// having the `head` node as a starting point.
+var routes = graph.routes({ from: 'head' });",0,0,graph undefined
+10,2,digraphe,"var routes = graph.routes({ from: 'head', to: 'baz' });",0,0,graph undefined
+10,2,digraphe,"var routes = graph.routes({
+  from: 'head',
+  to: 'baz',
+  where: {
+    length: 3
+  }
+});",0,0,graph undefined
+10,2,digraphe,"var routes = graph.routes({ from: 'head' });
+
+// For each found route, we check whether
+// it is part of the graph.
+routes.forEach(function (route) {
+    // Obviously, this operation will always
+    // return `true`.
+    graph.hasRoute(route);
+});",0,0,graph undefined
+10,2,digraphe,"var route = graph.findRoute(['head', 'foo', 'baz']);",0,0,graph undefined
+10,2,digraphe,"var graph = new Graph();
+
+// This will represent our event receiver object.
+var receiver = {
+  onNodeAdded: function (node) {
+    console.log(node.id, 'has been added !');
+  },
+  onNodeRemoved: function (id) {
+    console.log(id, 'has been removed !');
+  },
+  onEdgeAdded: function (edge) {
+    console.log(edge.source.id, '->', edge.target.id, 'created !');
+  },
+  onEdgeRemoved: function (source, target) {
+    console.log(source, '->', target, 'removed !');
+  }
+};
+
+// Subscribing to the graph events.
+graph.on('node.added', receiver.onNodeAdded);
+graph.on('node.removed', receiver.onNodeRemoved);
+graph.on('edge.added', receiver.onEdgeAdded);
+graph.on('edge.removed', receiver.onEdgeRemoved);
+// Adding a new edge, and two new nodes.
+graph.addEdge('foo', 'bar');
+// Removing all nodes and edges.
+graph.clear();",0,0,graph undefined
